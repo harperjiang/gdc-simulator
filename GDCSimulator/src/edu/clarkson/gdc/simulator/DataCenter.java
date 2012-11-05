@@ -1,8 +1,12 @@
 package edu.clarkson.gdc.simulator;
 
-public interface DataCenter extends CommunicationPoint {
+public interface DataCenter {
 
 	public String getId();
 
 	public FailureStrategy getFailureStrategy();
+
+	public Data read(String key);
+
+	public void write(Data data);
 }

@@ -1,5 +1,7 @@
 package edu.clarkson.gdc.simulator;
 
+import java.util.List;
+
 public interface DataBlockDistribution {
 
 	/**
@@ -13,7 +15,7 @@ public interface DataBlockDistribution {
 	 * Determine which server(s) should this new key be placed on
 	 * 
 	 * @param key
-	 * @return
+	 * @return the id of data center that contains this key
 	 */
-	public void place(String key);
+	public List<String> locate(String key);
 }

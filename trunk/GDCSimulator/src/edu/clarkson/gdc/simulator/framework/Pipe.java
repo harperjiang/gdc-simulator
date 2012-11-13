@@ -40,6 +40,5 @@ public class Pipe extends Component {
 	
 	@Override
 	public void process() {
-		
 	}
 }

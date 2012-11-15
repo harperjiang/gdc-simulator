@@ -10,6 +10,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import edu.clarkson.gdc.simulator.framework.DataEvent.PathNode;
 
+/**
+ * 
+ * @author Hao Jiang
+ * @since Simulator 1.0
+ * @version 1.0
+ */
 public abstract class Node extends Component {
 
 	public static class ProcessResult {

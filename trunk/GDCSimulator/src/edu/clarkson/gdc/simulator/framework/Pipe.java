@@ -7,6 +7,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import edu.clarkson.gdc.simulator.framework.DataEvent.PathNode;
 
+/**
+ * 
+ * @author Hao Jiang
+ * @since Simulator 1.0
+ * @version 1.0
+ */
 public class Pipe extends Component {
 
 	private Queue<DataEvent> buffer;
@@ -19,8 +25,10 @@ public class Pipe extends Component {
 	public List<DataEvent> get() {
 		List<DataEvent> output = new ArrayList<DataEvent>();
 		while (true) {
+			if (this.buffer.isEmpty())
+				break;
 			DataEvent event = this.buffer.peek();
-			if (event.getTimestamp() >= getClock().getCounter())
+			if (event.getTimestamp() <= getClock().getCounter())
 				output.add(this.buffer.poll());
 			else {
 				break;
@@ -37,7 +45,7 @@ public class Pipe extends Component {
 	@Override
 	public void send() {
 	}
-	
+
 	@Override
 	public void process() {
 	}

@@ -4,5 +4,5 @@ import java.util.EventListener;
 
 public interface ClockListener extends EventListener {
 	
-	public void stepForward();
+	public void stepForward(ClockEvent event);
 }

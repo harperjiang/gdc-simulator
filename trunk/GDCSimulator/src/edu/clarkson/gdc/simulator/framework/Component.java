@@ -6,6 +6,8 @@ public abstract class Component implements Stepper {
 
 	private long latency;
 
+	private String id;
+
 	public Component() {
 		setClock(Clock.getInstance());
 		Clock.getInstance().register(this);
@@ -25,6 +27,14 @@ public abstract class Component implements Stepper {
 
 	public void setLatency(long latency) {
 		this.latency = latency;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

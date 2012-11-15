@@ -14,9 +14,12 @@ public class Clock {
 	private Clock() {
 		super();
 		steppers = new ArrayList<Stepper>();
+		listeners = new ArrayList<ClockListener>();
 	}
 
 	private List<Stepper> steppers;
+
+	private List<ClockListener> listeners;
 
 	public void register(Stepper stepper) {
 		steppers.add(stepper);
@@ -28,11 +31,27 @@ public class Clock {
 		return instance;
 	}
 
+	public void addListener(ClockListener listener) {
+		this.listeners.add(listener);
+	}
+
+	public void removeListener(ClockListener listener) {
+		this.listeners.remove(listener);
+	}
+
+	protected void stepForward() {
+		ClockEvent event = new ClockEvent(this);
+		for (ClockListener listener : listeners) {
+			listener.stepForward(event);
+		}
+	}
+
 	public void step() {
 		counter++;
 		for (Stepper stepper : steppers)
 			stepper.send();
 		for (Stepper stepper : steppers)
 			stepper.process();
+		stepForward();
 	}
 }

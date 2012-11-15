@@ -3,6 +3,16 @@ package edu.clarkson.gdc.simulator.framework;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <code>Clock</code> is the central driver in our clock-based step-forward
+ * simulator. <code>Clock</code> will send out signal to represent time step.
+ * Each part of the simulator will act one step only when they receive a new
+ * signal.
+ * 
+ * @author Hao Jiang
+ * @since Simulator 1.0
+ * @version 1.0
+ */
 public class Clock {
 
 	private long counter;

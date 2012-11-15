@@ -1,5 +1,11 @@
 package edu.clarkson.gdc.simulator.framework;
 
+/**
+ * 
+ * @author Hao Jiang
+ * @since Simulator 1.0
+ * @version 1.0
+ */
 public abstract class Component implements Stepper {
 
 	private Clock clock;

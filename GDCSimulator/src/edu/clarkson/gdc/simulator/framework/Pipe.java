@@ -15,9 +15,9 @@ import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
  */
 public class Pipe extends Component {
 
-	private Queue<DataMessage> buffer;
+	private Queue<DataMessage> requestBuffer;
 
-	private Queue<ResponseMessage> responseBuffer;
+	private Queue<DataMessage> responseBuffer;
 
 	private Node source;
 
@@ -25,8 +25,8 @@ public class Pipe extends Component {
 
 	public Pipe() {
 		super();
-		this.buffer = new ConcurrentLinkedQueue<DataMessage>();
-		this.responseBuffer = new ConcurrentLinkedQueue<ResponseMessage>();
+		this.requestBuffer = new ConcurrentLinkedQueue<DataMessage>();
+		this.responseBuffer = new ConcurrentLinkedQueue<DataMessage>();
 	}
 
 	public Pipe(Node source, Node destination) {
@@ -40,12 +40,14 @@ public class Pipe extends Component {
 
 	public List<DataMessage> get(Node receiver) {
 		List<DataMessage> output = new ArrayList<DataMessage>();
+		Queue<DataMessage> buffer = (receiver == destination) ? requestBuffer
+				: responseBuffer;
 		while (true) {
-			if (this.buffer.isEmpty())
+			if (buffer.isEmpty())
 				break;
-			DataMessage event = this.buffer.peek();
+			DataMessage event = buffer.peek();
 			if (event.getTimestamp() <= getClock().getCounter())
-				output.add(this.buffer.poll());
+				output.add(buffer.poll());
 			else {
 				break;
 			}
@@ -56,6 +58,8 @@ public class Pipe extends Component {
 	// Asynchronous Event Sending
 	public void put(Node sender, DataMessage event) {
 		event.access(new PathNode(this, getClock().getCounter() + getLatency()));
+		Queue<DataMessage> buffer = (sender == source) ? requestBuffer
+				: responseBuffer;
 		buffer.offer(event);
 	}
 

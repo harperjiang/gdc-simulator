@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator;
+package edu.clarkson.gdc.simulator.impl;
 
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.Cloud;

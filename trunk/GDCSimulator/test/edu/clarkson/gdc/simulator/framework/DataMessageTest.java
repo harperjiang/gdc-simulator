@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import edu.clarkson.gdc.simulator.framework.DataEvent.PathNode;
+import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
 
-public class DataEventTest {
+public class DataMessageTest {
 
 	@Test
 	public void testAccess() {
-		DataEvent event = new DataEvent();
+		DataMessage event = new DataMessage();
 		assertEquals(-1,event.getTimestamp());
 		
 		event.access(new PathNode(null,5));

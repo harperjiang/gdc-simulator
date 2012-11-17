@@ -14,35 +14,42 @@ public class PipeTest {
 	@Test
 	public void testGet() {
 
-		DataEvent event = new DataEvent();
-		Pipe pipe = new Pipe();
+		DataMessage event = new DataMessage();
+
+		Node src = new TestNode();
+		Node dest = new TestNode();
+		Pipe pipe = new Pipe(src, dest);
 
 		assertNotNull(pipe.getClock());
 
 		pipe.setLatency(4);
-		pipe.put(event);
+		pipe.put(src, event);
 
-		assertTrue(CollectionUtils.isEmpty(pipe.get()));
+		assertTrue(CollectionUtils.isEmpty(pipe.get(dest)));
 		Clock.getInstance().step();
-		assertTrue(CollectionUtils.isEmpty(pipe.get()));
+		assertTrue(CollectionUtils.isEmpty(pipe.get(dest)));
 		Clock.getInstance().step();
-		assertTrue(CollectionUtils.isEmpty(pipe.get()));
+		assertTrue(CollectionUtils.isEmpty(pipe.get(dest)));
 		Clock.getInstance().step();
-		assertTrue(CollectionUtils.isEmpty(pipe.get()));
+		assertTrue(CollectionUtils.isEmpty(pipe.get(dest)));
 		Clock.getInstance().step();
-		List<DataEvent> events = pipe.get();
+		List<DataMessage> events = pipe.get(dest);
 		assertTrue(!CollectionUtils.isEmpty(events));
+		assertEquals(1, events.size());
+		assertEquals(event, events.get(0));
 	}
 
 	@Test
 	public void testPut() {
-		DataEvent event = new DataEvent();
-		Pipe pipe = new Pipe();
+		DataMessage event = new DataMessage();
+		Node src = new TestNode();
+		Node dest = new TestNode();
+		Pipe pipe = new Pipe(src, dest);
 
 		assertNotNull(pipe.getClock());
 
 		pipe.setLatency(4);
-		pipe.put(event);
+		pipe.put(src, event);
 		assertEquals(event.getTimestamp(), Clock.getInstance().getCounter()
 				+ pipe.getLatency());
 	}

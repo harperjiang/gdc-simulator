@@ -8,7 +8,7 @@ import java.util.Stack;
  * @since Simulator 1.0
  * @version 1.0
  */
-public class DataEvent {
+public class DataMessage {
 
 	public static class PathNode {
 
@@ -50,7 +50,7 @@ public class DataEvent {
 
 	private Object load;
 
-	public DataEvent() {
+	public DataMessage() {
 		super();
 		this.paths = new Stack<PathNode>();
 	}

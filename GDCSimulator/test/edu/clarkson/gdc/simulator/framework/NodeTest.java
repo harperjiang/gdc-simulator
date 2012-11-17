@@ -18,7 +18,7 @@ public class NodeTest {
 	public void testSend() {
 		Node node = new Node() {
 			@Override
-			protected ProcessResult process(Map<Pipe, List<DataEvent>> events) {
+			protected ProcessResult process(Map<Pipe, List<DataMessage>> events) {
 				return null;
 			}
 		};

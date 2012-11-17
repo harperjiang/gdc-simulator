@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import edu.clarkson.gdc.simulator.framework.DataEvent.PathNode;
+import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
 
 /**
  * 
@@ -15,19 +15,35 @@ import edu.clarkson.gdc.simulator.framework.DataEvent.PathNode;
  */
 public class Pipe extends Component {
 
-	private Queue<DataEvent> buffer;
+	private Queue<DataMessage> buffer;
+
+	private Queue<ResponseMessage> responseBuffer;
+
+	private Node source;
+
+	private Node destination;
 
 	public Pipe() {
 		super();
-		this.buffer = new ConcurrentLinkedQueue<DataEvent>();
+		this.buffer = new ConcurrentLinkedQueue<DataMessage>();
+		this.responseBuffer = new ConcurrentLinkedQueue<ResponseMessage>();
 	}
 
-	public List<DataEvent> get() {
-		List<DataEvent> output = new ArrayList<DataEvent>();
+	public Pipe(Node source, Node destination) {
+		this();
+		this.source = source;
+		this.destination = destination;
+		// Build Connections
+		this.source.addPipe(this);
+		this.destination.addPipe(this);
+	}
+
+	public List<DataMessage> get(Node receiver) {
+		List<DataMessage> output = new ArrayList<DataMessage>();
 		while (true) {
 			if (this.buffer.isEmpty())
 				break;
-			DataEvent event = this.buffer.peek();
+			DataMessage event = this.buffer.peek();
 			if (event.getTimestamp() <= getClock().getCounter())
 				output.add(this.buffer.poll());
 			else {
@@ -37,9 +53,18 @@ public class Pipe extends Component {
 		return output;
 	}
 
-	public void put(DataEvent event) {
+	// Asynchronous Event Sending
+	public void put(Node sender, DataMessage event) {
 		event.access(new PathNode(this, getClock().getCounter() + getLatency()));
 		buffer.offer(event);
+	}
+
+	public Node getSource() {
+		return source;
+	}
+
+	public Node getDestination() {
+		return destination;
 	}
 
 	@Override

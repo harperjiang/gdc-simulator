@@ -3,16 +3,30 @@ package edu.clarkson.gdc.simulator.impl;
 import java.util.List;
 
 import edu.clarkson.gdc.simulator.Cloud;
-import edu.clarkson.gdc.simulator.DataBlockDistribution;
 import edu.clarkson.gdc.simulator.DataCenter;
-import edu.clarkson.gdc.simulator.IndexService;
 
 /**
  * 
  * @author harper
- *
+ * 
  */
 public class DefaultCloud implements Cloud {
+
+	private static DefaultCloud instance = new DefaultCloud();
+
+	public static DefaultCloud getInstance() {
+		return instance;
+	}
+
+	private DefaultCloud() {
+		super();
+		setIndexService(new DefaultIndexService());
+		setDataBlockDistribution(new DefaultDataDistribution());
+
+		// Load Data Centers from Configuration
+
+		getDataBlockDistribution().init(this);
+	}
 
 	@Override
 	public List<DataCenter> getDataCenters() {
@@ -38,15 +52,25 @@ public class DefaultCloud implements Cloud {
 		return null;
 	}
 
-	@Override
-	public IndexService getIndexService() {
-		// TODO Auto-generated method stub
-		return null;
+	private DefaultIndexService indexService;
+
+	private DefaultDataDistribution dataBlockDistribution;
+
+	public DefaultIndexService getIndexService() {
+		return indexService;
 	}
 
-	@Override
-	public DataBlockDistribution getDataBlockDistribution() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setIndexService(DefaultIndexService indexService) {
+		this.indexService = indexService;
 	}
+
+	public DefaultDataDistribution getDataBlockDistribution() {
+		return dataBlockDistribution;
+	}
+
+	public void setDataBlockDistribution(
+			DefaultDataDistribution dataBlockDistribution) {
+		this.dataBlockDistribution = dataBlockDistribution;
+	}
+
 }

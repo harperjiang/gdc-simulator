@@ -13,8 +13,11 @@ import edu.clarkson.gdc.simulator.framework.Clock;
 public class DefaultFailureStrategy implements FailureStrategy {
 
 	public static class Range {
+		
 		long start;
+		
 		long stop;
+		
 		boolean value;
 
 		public long getStart() {

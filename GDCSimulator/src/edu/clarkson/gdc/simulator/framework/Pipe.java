@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.commons.lang.Validate;
+
 import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
 
 /**
@@ -31,6 +33,8 @@ public class Pipe extends Component {
 
 	public Pipe(Node source, Node destination) {
 		this();
+		Validate.notNull(source);
+		Validate.notNull(destination);
 		this.source = source;
 		this.destination = destination;
 		// Build Connections
@@ -77,5 +81,10 @@ public class Pipe extends Component {
 
 	@Override
 	public void process() {
+	}
+
+	public Node getOpponent(Node me) {
+		Validate.notNull(me);
+		return getSource().equals(me) ? getDestination() : getSource();
 	}
 }

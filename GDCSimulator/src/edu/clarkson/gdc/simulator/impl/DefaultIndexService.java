@@ -12,13 +12,11 @@ public class DefaultIndexService extends Node implements IndexService {
 
 	@Override
 	public String locate(String key, String location) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected ProcessResult process(Map<Pipe, List<DataMessage>> events) {
-		// TODO Auto-generated method stub
+	protected ProcessGroup process(Map<Pipe, List<DataMessage>> events) {
 		return null;
 	}
 }

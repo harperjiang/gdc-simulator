@@ -19,6 +19,11 @@ public abstract class Component implements Stepper {
 		Clock.getInstance().register(this);
 	}
 
+	public Component(String id) {
+		this();
+		setId(id);
+	}
+
 	public Clock getClock() {
 		return clock;
 	}

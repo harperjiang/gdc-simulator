@@ -28,4 +28,10 @@ public class DemoDistribution implements DataBlockDistribution {
 		return null;
 	}
 
+	@Override
+	public List<String> choose(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

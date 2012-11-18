@@ -6,6 +6,15 @@ package edu.clarkson.gdc.simulator.framework;
  * @since Simulator 1.0
  * @version 1.0
  */
-public class ResponseMessage extends DataMessage {
+public abstract class ResponseMessage extends DataMessage {
 
+	private DataMessage request;
+
+	public DataMessage getRequest() {
+		return request;
+	}
+
+	public ResponseMessage(DataMessage request) {
+		this.request = request;
+	}
 }

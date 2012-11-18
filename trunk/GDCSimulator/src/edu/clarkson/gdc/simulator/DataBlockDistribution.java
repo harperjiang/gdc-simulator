@@ -12,10 +12,17 @@ public interface DataBlockDistribution {
 	public void init(Cloud cloud);
 
 	/**
-	 * Determine which server(s) should this new key be placed on
+	 * Determine which server(s) will this existing key be found on
 	 * 
 	 * @param key
 	 * @return the id of data center that contains this key
 	 */
 	public List<String> locate(String key);
+	
+	/**
+	 * Determine which server(s) should this new key be placed to
+	 * @param key
+	 * @return
+	 */
+	public List<String> choose(String key);
 }

@@ -84,7 +84,7 @@ public abstract class Node extends Component {
 
 	private Map<Node, Pipe> pipes;
 
-	private Queue<ProcessResult> buffer;
+	protected Queue<ProcessResult> buffer;
 
 	public Node() {
 		super();

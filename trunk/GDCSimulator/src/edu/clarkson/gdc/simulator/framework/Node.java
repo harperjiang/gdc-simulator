@@ -23,6 +23,7 @@ import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
 public abstract class Node extends Component {
 
 	public static class ProcessGroup {
+
 		private ProcessResult success;
 
 		private ProcessResult failed;
@@ -162,14 +163,14 @@ public abstract class Node extends Component {
 	}
 
 	protected void reportSuccess(ResponseMessage response) {
-		NodeResponseEvent event = new NodeResponseEvent(response);
+		NodeResponseEvent event = new NodeResponseEvent(this, response);
 		for (NodeListener listener : listenerList
 				.getListeners(NodeListener.class))
 			listener.successReceived(event);
 	}
 
 	protected void reportFailure(FailMessage fail) {
-		NodeResponseEvent event = new NodeResponseEvent(fail);
+		NodeResponseEvent event = new NodeResponseEvent(this, fail);
 		for (NodeListener listener : listenerList
 				.getListeners(NodeListener.class))
 			listener.failureReceived(event);

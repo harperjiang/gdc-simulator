@@ -10,5 +10,5 @@ public interface IndexService {
 	 * @param location
 	 * @return DataCEnter Id
 	 */
-	public String locate(String key, String location);
+	public String locate(String key, Object location);
 }

@@ -1,5 +1,6 @@
 package edu.clarkson.gdc.simulator.impl.client;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,6 +13,7 @@ import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.impl.DefaultCloud;
+import edu.clarkson.gdc.simulator.impl.WorkloadProvider;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCFail;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCRequest;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCResponse;
@@ -19,7 +21,24 @@ import edu.clarkson.gdc.simulator.impl.message.ReadKeyFail;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyRequest;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
 
+/**
+ * 
+ * @author Hao Jiang
+ * @since Simulator 1.0
+ * @version 1.0
+ * 
+ */
 public class RequestIndexClient extends Node implements Client {
+
+	private Point2D location;
+
+	public Point2D getLocation() {
+		return location;
+	}
+
+	public void setLocation(Point2D location) {
+		this.location = location;
+	}
 
 	@Override
 	public void read() {
@@ -38,16 +57,17 @@ public class RequestIndexClient extends Node implements Client {
 
 		ProcessGroup group = new ProcessGroup(result, failed);
 
-		// Send Query to Index Service
-		// TODO Find key somewhere, and limit the request sending count
-		String key = null;
-		LocateDCRequest readKey = new LocateDCRequest(key);
 		Node indexService = (Node) DefaultCloud.getInstance().getIndexService();
 		Pipe indexServicePipe = getPipe(indexService);
-		result.add(indexServicePipe, readKey);
+		// Send Query to Index Service
+		List<String> keys = getProvider()
+				.fetchReadLoad(getClock().getCounter());
+		for (String key : keys) {
+			LocateDCRequest locateDc = new LocateDCRequest(key, getLocation());
+			result.add(indexServicePipe, locateDc);
+		}
 		// Process Income Messages
-		for (Entry<Pipe, List<DataMessage>> entry : result.getMessages()
-				.entrySet()) {
+		for (Entry<Pipe, List<DataMessage>> entry : messages.entrySet()) {
 			Pipe pipe = entry.getKey();
 
 			// Get Response from Index Service, and send request to Data Center
@@ -85,4 +105,15 @@ public class RequestIndexClient extends Node implements Client {
 		}
 		return group;
 	}
+
+	private WorkloadProvider provider;
+
+	public WorkloadProvider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(WorkloadProvider provider) {
+		this.provider = provider;
+	}
+
 }

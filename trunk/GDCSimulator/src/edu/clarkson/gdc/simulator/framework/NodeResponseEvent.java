@@ -9,7 +9,15 @@ public class NodeResponseEvent extends EventObject {
 	 */
 	private static final long serialVersionUID = 3140900344176840221L;
 
-	public NodeResponseEvent(DataMessage source) {
+	private DataMessage message;
+
+	public NodeResponseEvent(Node source, DataMessage msg) {
 		super(source);
+		this.message = msg;
 	}
+
+	public DataMessage getMessage() {
+		return message;
+	}
+
 }

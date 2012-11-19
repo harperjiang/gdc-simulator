@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.impl;
+package edu.clarkson.gdc.simulator.impl.failstr;
 
 import java.util.List;
 
@@ -7,18 +7,24 @@ import edu.clarkson.gdc.simulator.framework.Clock;
 
 /**
  * 
- * @author harper
+ * @author Hao Jiang
+ * @since Simulator 1.0
+ * @version 1.0
  * 
  */
-public class DefaultFailureStrategy implements FailureStrategy {
+public class RangeFailureStrategy implements FailureStrategy {
 
 	public static class Range {
-		
+
 		long start;
-		
+
 		long stop;
-		
+
 		boolean value;
+
+		public Range(long start) {
+
+		}
 
 		public long getStart() {
 			return start;
@@ -83,7 +89,7 @@ public class DefaultFailureStrategy implements FailureStrategy {
 		}
 	}
 
-	public void load() {
+	public void load(String fileName, int unit) {
 
 	}
 

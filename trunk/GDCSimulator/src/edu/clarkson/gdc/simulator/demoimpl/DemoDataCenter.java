@@ -54,4 +54,9 @@ public class DemoDataCenter implements DataCenter {
 	public void write(Data data) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public Object getLocation() {
+		return null;
+	}
 }

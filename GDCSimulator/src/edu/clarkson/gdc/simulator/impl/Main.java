@@ -1,9 +1,7 @@
 package edu.clarkson.gdc.simulator.impl;
 
-import edu.clarkson.gdc.simulator.Client;
-import edu.clarkson.gdc.simulator.Cloud;
-import edu.clarkson.gdc.simulator.DataCenter;
-import edu.clarkson.gdc.simulator.demoimpl.DemoCloud;
+import edu.clarkson.gdc.simulator.framework.Clock;
+import edu.clarkson.gdc.simulator.impl.stat.StatisticListener;
 
 public class Main {
 
@@ -11,34 +9,15 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Client client = null;
-		final Cloud cloud = new DemoCloud();
 
-		client = new Client() {
-			public void read() {
-				String key = null;
-				String location = null;
-				String dcid = cloud.getIndexService().locate(key, location);
-				DataCenter dc = cloud.getDataCenter(dcid);
-				dc.read(key);
-			}
+		// Init the cloud
+		DefaultCloud.getInstance();
 
-			public void write() {
+		DefaultCloud.getInstance().addNodeListener(new StatisticListener());
 
-			}
-		};
-
-		Client client2 = new Client() {
-			public void read() {
-				String key = null;
-				String location = null;
-				DataCenter dc = cloud.getDataCenterByLocation(location);
-				dc.read(key);
-			}
-
-			public void write() {
-
-			}
-		};
+		long stop = 3600 * 1000 * 24 * 365;
+		while (Clock.getInstance().getCounter() < stop) {
+			Clock.getInstance().step();
+		}
 	}
 }

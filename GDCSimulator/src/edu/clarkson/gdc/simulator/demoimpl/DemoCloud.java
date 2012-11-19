@@ -15,24 +15,24 @@ import edu.clarkson.gdc.simulator.event.Tuple;
 
 public class DemoCloud implements Cloud {
 
-	private Map<String,DataCenter> dataCenters;
-	
+	private Map<String, DataCenter> dataCenters;
+
 	private DemoIndexService indexService;
-	
+
 	private DemoDistribution distribution;
-	
+
 	private SimulatorEventSupport eventSupport;
-	
+
 	public DemoCloud() {
 		super();
 		indexService = new DemoIndexService();
 		indexService.setCloud(this);
 		distribution = new DemoDistribution();
 		distribution.init(this);
-		
+
 		eventSupport = new SimulatorEventSupport();
 	}
-	
+
 	@Override
 	public List<DataCenter> getDataCenters() {
 		List<DataCenter> ds = new ArrayList<DataCenter>();
@@ -41,18 +41,13 @@ public class DemoCloud implements Cloud {
 	}
 
 	@Override
-	public DataCenter getNearbyDataCenter(String location) {
-		return dataCenters.get(0);
-	}
-
-	@Override
 	public DataCenter getDataCenter(String dcid) {
 		return dataCenters.get(dcid);
 	}
 
 	@Override
-	public DataCenter getDataCenterByLocation(String location) {
-		return getNearbyDataCenter(location);
+	public DataCenter getDataCenterByLocation(Object location) {
+		return dataCenters.get(0);
 	}
 
 	@Override
@@ -74,7 +69,7 @@ public class DemoCloud implements Cloud {
 	}
 
 	public void fireAccessBetweenNodeEvent(Object source, Object target) {
-		SimulatorEvent event = new SimulatorEvent(new Tuple(source,target));
+		SimulatorEvent event = new SimulatorEvent(new Tuple(source, target));
 		eventSupport.fireAccessBetweenNodeEvent(event);
 	}
 
@@ -82,6 +77,5 @@ public class DemoCloud implements Cloud {
 		SimulatorEvent event = new SimulatorEvent(server);
 		eventSupport.fireServerFailedEvent(event);
 	}
-	
-	
+
 }

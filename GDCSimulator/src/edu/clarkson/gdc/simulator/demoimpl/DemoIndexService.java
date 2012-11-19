@@ -16,7 +16,7 @@ public class DemoIndexService implements IndexService {
 	}
 
 	@Override
-	public String locate(String key, String location) {
+	public String locate(String key, Object location) {
 		try {
 			// Record the access
 			Object source = AccessStack.getInstance().peek();

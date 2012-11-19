@@ -1,29 +1,41 @@
 package edu.clarkson.gdc.simulator.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
 
 import edu.clarkson.gdc.simulator.Cloud;
 import edu.clarkson.gdc.simulator.DataBlockDistribution;
+import edu.clarkson.gdc.simulator.DataCenter;
 
-public class DefaultDataDistribution implements DataBlockDistribution {
+/**
+ * 
+ * @author Hao Jiang
+ * @since Simulator 1.0
+ * @version 1.0
+ * 
+ */
+public class UniformDataDistribution implements DataBlockDistribution {
 
 	@Override
 	public void init(Cloud cloud) {
 		Validate.isTrue(cloud instanceof DefaultCloud);
 		// Init Key Allocation Between Data Centers
-
+		dcids = new ArrayList<String>();
+		for (DataCenter dc : cloud.getDataCenters())
+			dcids.add(dc.getId());
 	}
+
+	private List<String> dcids;
 
 	@Override
 	public List<String> locate(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return dcids;
 	}
 
 	public List<String> choose(String key) {
-		return null;
+		return dcids;
 	}
 
 }

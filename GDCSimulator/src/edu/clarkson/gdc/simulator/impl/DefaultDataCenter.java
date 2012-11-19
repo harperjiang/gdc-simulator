@@ -1,5 +1,6 @@
 package edu.clarkson.gdc.simulator.impl;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,6 +15,13 @@ import edu.clarkson.gdc.simulator.impl.message.ReadKeyFail;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyRequest;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
 
+/**
+ * 
+ * @author Hao Jiang
+ * @since Simulator 1.0
+ * @version 1.0
+ * 
+ */
 public class DefaultDataCenter extends Node implements DataCenter {
 
 	private FailureStrategy failureStrategy;
@@ -24,6 +32,16 @@ public class DefaultDataCenter extends Node implements DataCenter {
 
 	public void setFailureStrategy(FailureStrategy failureStrategy) {
 		this.failureStrategy = failureStrategy;
+	}
+
+	private Point2D location;
+
+	public Point2D getLocation() {
+		return location;
+	}
+
+	public void setLocation(Point2D location) {
+		this.location = location;
 	}
 
 	@Override
@@ -52,7 +70,7 @@ public class DefaultDataCenter extends Node implements DataCenter {
 							success.add(pipe, resp);
 						}
 					}
-					// Add Other Request here
+					// {Add Other Request here}
 				}
 			}
 		}
@@ -60,14 +78,26 @@ public class DefaultDataCenter extends Node implements DataCenter {
 	}
 
 	@Override
-	public Data read(String key) {
-		// TODO Auto-generated method stub
-		return null;
+	public Data read(final String key) {
+		return new DefaultData(key);
 	}
 
 	@Override
 	public void write(Data data) {
-		// TODO Auto-generated method stub
+		// TODO Not Implemented
+	}
+
+	static final class DefaultData implements Data {
+
+		private String key;
+
+		public DefaultData(String key) {
+			this.key = key;
+		}
+
+		public String getKey() {
+			return key;
+		}
 
 	}
 

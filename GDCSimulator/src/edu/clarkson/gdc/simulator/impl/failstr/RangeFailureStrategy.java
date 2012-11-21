@@ -1,9 +1,16 @@
 package edu.clarkson.gdc.simulator.impl.failstr;
 
-import java.util.List;
+import java.text.DateFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.clarkson.gdc.simulator.FailureStrategy;
 import edu.clarkson.gdc.simulator.framework.Clock;
+import edu.clarkson.gdc.simulator.framework.utils.FileCursor;
+import edu.clarkson.gdc.simulator.framework.utils.FileCursor.LineProcessor;
 
 /**
  * 
@@ -22,8 +29,10 @@ public class RangeFailureStrategy implements FailureStrategy {
 
 		boolean value;
 
-		public Range(long start) {
-
+		public Range(long start, long stop, boolean val) {
+			this.start = start;
+			this.stop = stop;
+			this.value = val;
 		}
 
 		public long getStart() {
@@ -52,11 +61,12 @@ public class RangeFailureStrategy implements FailureStrategy {
 
 	}
 
-	private List<Range> ranges;
-
-	private int index;
+	private Range current;
 
 	private boolean defaultValue;
+
+	public RangeFailureStrategy() {
+	}
 
 	public boolean getDefaultValue() {
 		return defaultValue;
@@ -65,32 +75,54 @@ public class RangeFailureStrategy implements FailureStrategy {
 	public void setDefaultValue(boolean defaultValue) {
 		this.defaultValue = defaultValue;
 	}
-
-	public List<Range> getRanges() {
-		return ranges;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
+	
 	@Override
 	public boolean shouldFail() {
-		Range current = getRanges().get(getIndex());
+		if(null == current)
+			current = fileCursor.next();
+		if(null == current)
+			return defaultValue;
 		if (current.getStart() <= Clock.getInstance().getCounter()
 				&& current.getStop() > Clock.getInstance().getCounter()) {
 			return current.getValue();
 		} else {
-			index++;
-			if (index >= ranges.size()) {// No more data available, fail
-				return defaultValue;
-			}
+			current = null;
 			return shouldFail();
 		}
 	}
 
+	private FileCursor<Range> fileCursor;
+
+	static DateFormat format = new SimpleDateFormat("yyyyMMddHH");
+	static Pattern pattern = Pattern.compile("(\\d+),(\\d)");
+
 	public void load(String fileName, int unit) {
+		fileCursor = new FileCursor<Range>(fileName);
+		fileCursor.setLineProcessor(new LineProcessor<Range>() {
 
+			long last = 0;
+			long offset = 0;
+			boolean lastval = false;
+
+			@Override
+			public Range process(String line) {
+				Matcher matcher = pattern.matcher(line);
+				if (matcher.matches()) {
+					String dateString = matcher.group(1);
+					String value = matcher.group(2);
+					Date date = format.parse(dateString, new ParsePosition(0));
+					long time = date.getTime();
+					if (last == 0) {
+						offset = time;
+						lastval = value.equals("1");
+						last = time;
+						return null;
+					} else {
+						return new Range(last - offset, time - offset, lastval);
+					}
+				}
+				return null;
+			}
+		});
 	}
-
 }

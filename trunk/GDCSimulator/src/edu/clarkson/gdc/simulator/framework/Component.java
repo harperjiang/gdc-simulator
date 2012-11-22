@@ -10,7 +10,7 @@ public abstract class Component implements Stepper {
 
 	private Clock clock;
 
-	private long latency;
+	private long latency = 1;
 
 	private String id;
 

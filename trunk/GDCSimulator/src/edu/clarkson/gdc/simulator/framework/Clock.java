@@ -35,6 +35,10 @@ public class Clock {
 		steppers.add(stepper);
 	}
 
+	public void unregister(Stepper stepper) {
+		steppers.remove(stepper);
+	}
+	
 	private static Clock instance = new Clock();
 
 	public static Clock getInstance() {
@@ -58,6 +62,7 @@ public class Clock {
 
 	public void step() {
 		counter++;
+		// TODO Use a ThreadPool to concurrently execute them
 		for (Stepper stepper : steppers)
 			stepper.send();
 		for (Stepper stepper : steppers)

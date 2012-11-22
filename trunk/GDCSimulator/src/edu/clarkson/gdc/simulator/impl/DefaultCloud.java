@@ -54,6 +54,7 @@ public class DefaultCloud implements Cloud, NodeListener {
 		// Init Data Distribution
 		getDataBlockDistribution().init(this);
 		// Register Listeners
+
 		// Create Pipes between nodes
 		for (int i = 0; i < dataCenters.size(); i++) {
 			for (int j = i; j < dataCenters.size(); j++) {
@@ -62,12 +63,15 @@ public class DefaultCloud implements Cloud, NodeListener {
 				new Pipe(ddc1, ddc2).setId(ddc1.getId() + "-" + ddc2.getId());
 			}
 		}
+		// Create Pipes between clients and dcs/ is
 		clients = loader.loadClients();
 		for (Client client : clients) {
 			for (DataCenter dc : dataCenters) {
 				new Pipe((Node) client, (Node) dc).setId(((Node) client)
 						.getId() + "-" + dc.getId());
 			}
+			new Pipe((Node) client, (Node) getIndexService())
+					.setId(((Node) client).getId() + "-IndexService");
 		}
 
 		for (DataCenter dc : getDataCenters()) {

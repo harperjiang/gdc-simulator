@@ -6,18 +6,22 @@ import edu.clarkson.gdc.simulator.impl.stat.StatisticListener;
 public class Main {
 
 	/**
-	 * @param args
+	 * @param args	
 	 */
 	public static void main(String[] args) {
 
 		// Init the cloud
 		DefaultCloud.getInstance();
 
-		DefaultCloud.getInstance().addNodeListener(new StatisticListener());
+		StatisticListener listener = new StatisticListener();
+		DefaultCloud.getInstance().addNodeListener(listener);
 
-		long stop = 3600 * 1000 * 24 * 365;
+		long stop = 3600 * 24;
 		while (Clock.getInstance().getCounter() < stop) {
 			Clock.getInstance().step();
 		}
+		System.out.println(listener.getReport().getRequestCount());
+		System.out.println(listener.getReport().getFailedCount());
+		System.out.println(listener.getReport().getAvailability());
 	}
 }

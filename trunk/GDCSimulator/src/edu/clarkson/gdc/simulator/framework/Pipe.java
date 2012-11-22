@@ -29,6 +29,8 @@ public class Pipe extends Component {
 		super();
 		this.requestBuffer = new ConcurrentLinkedQueue<DataMessage>();
 		this.responseBuffer = new ConcurrentLinkedQueue<DataMessage>();
+		// Unregister the pipe for performance
+		getClock().unregister(this);
 	}
 
 	public Pipe(Node source, Node destination) {

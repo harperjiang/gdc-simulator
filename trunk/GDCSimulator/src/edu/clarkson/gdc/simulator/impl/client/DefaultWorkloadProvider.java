@@ -112,5 +112,5 @@ public class DefaultWorkloadProvider implements WorkloadProvider {
 		});
 	}
 
-	static final DateFormat df = new SimpleDateFormat("yyyyMMddHHmmSS");
+	static final DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 }

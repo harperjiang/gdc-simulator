@@ -18,7 +18,7 @@ public class WorkloadGenerator {
 
 	static final DateFormat detail = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
-	public static void generate(String fileName, Date start, Date end)
+	public static void generateRandom(String fileName, Date start, Date end)
 			throws Exception {
 		PrintWriter pw = new PrintWriter(new FileOutputStream(fileName));
 		Random random = new Random(System.currentTimeMillis());
@@ -47,15 +47,38 @@ public class WorkloadGenerator {
 		pw.close();
 	}
 
+	public static void generateUniform(String fileName, Date start, Date end,
+			int unit) throws Exception {
+		PrintWriter pw = new PrintWriter(new FileOutputStream(fileName));
+		Random random = new Random(System.currentTimeMillis());
+		while (start.compareTo(end) < 0) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(start);
+			calendar.add(Calendar.MILLISECOND, unit);
+			start = calendar.getTime();
+			// Generate Words
+			List<String> words = new ArrayList<String>();
+			int wordCount = 10;
+			for (int i = 0; i < wordCount; i++) {
+				int wordLength = 1 + random.nextInt(8);
+				StringBuilder wordBuffer = new StringBuilder();
+				for (int j = 0; j < wordLength; j++) {
+					wordBuffer.append((char) ('a' + random.nextInt(26)));
+				}
+				words.add(wordBuffer.toString());
+			}
+			StringBuilder wordsb = new StringBuilder();
+			for (String word : words)
+				wordsb.append(word + ";");
+			pw.println(MessageFormat.format("{0},{1}", df.format(start),
+					wordsb.toString()));
+		}
+		pw.close();
+	}
+
 	public static void main(String[] args) throws Exception {
-		generate("workload_file1.txt",
-				detail.parse("20110101000000000", new ParsePosition(0)),
-				detail.parse("20110601000000000", new ParsePosition(0)));
-		generate("workload_file2.txt",
-				detail.parse("20110101000000000", new ParsePosition(0)),
-				detail.parse("20110601000000000", new ParsePosition(0)));
-		generate("workload_file3.txt",
-				detail.parse("20110101000000000", new ParsePosition(0)),
-				detail.parse("20110601000000000", new ParsePosition(0)));
+		generateUniform("uniform_workload",
+				df.parse("20110101000000", new ParsePosition(0)),
+				df.parse("20110601000000", new ParsePosition(0)), 10000);
 	}
 }

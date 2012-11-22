@@ -3,30 +3,27 @@
 	xsi:schemaLocation="http://gdc.clarkson.edu/cloud cloud.xsd ">
 	<config unit="1000" />
 	<datacenters>
-		<datacenter id="dca" latency="5" datafile="data_site1.txt">
+		<datacenter id="dca" latency="1" datafile="data_site1.txt">
 			<location x="0.0" y="0.0" />
 		</datacenter>
-		<datacenter id="dcb" latency="5" datafile="data_site2.txt">
+		<datacenter id="dcb" latency="1" datafile="data_site2.txt">
 			<location x="0.0" y="0.0" />
 		</datacenter>
-		<datacenter id="dcc" latency="5" datafile="data_site3.txt">
+		<datacenter id="dcc" latency="1" datafile="data_site3.txt">
 			<location x="0.0" y="0.0" />
 		</datacenter>
-		<datacenter id="dcd" latency="5" datafile="data_site4.txt">
+		<datacenter id="dcd" latency="1" datafile="data_site4.txt">
 			<location x="0.0" y="0.0" />
 		</datacenter>
-		<datacenter id="dce" latency="5" datafile="data_site5.txt">
+		<datacenter id="dce" latency="1" datafile="data_site5.txt">
 			<location x="0.0" y="0.0" />
 		</datacenter>
 	</datacenters>
 	<clients>
-		<client id="clienta" workload_file="workload_file1.txt">
+		<client id="clienta" workload_file="uniform_workload2">
 			<location x="0.0" y="0.0" />
 		</client>
-		<client id="clientb" workload_file="workload_file2.txt">
-			<location x="0.0" y="0.0" />
-		</client>
-		<client id="clientc" workload_file="workload_file3.txt">
+		<client id="clientb" workload_file="uniform_workload2">
 			<location x="0.0" y="0.0" />
 		</client>
 	</clients>

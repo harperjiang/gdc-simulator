@@ -75,16 +75,16 @@ public class RangeFailureStrategy implements FailureStrategy {
 	public void setDefaultValue(boolean defaultValue) {
 		this.defaultValue = defaultValue;
 	}
-	
+
 	@Override
 	public boolean shouldFail() {
-		if(null == current)
+		if (null == current)
 			current = fileCursor.next();
-		if(null == current)
-			return defaultValue;
+		if (null == current)
+			return !defaultValue;
 		if (current.getStart() <= Clock.getInstance().getCounter()
 				&& current.getStop() > Clock.getInstance().getCounter()) {
-			return current.getValue();
+			return !current.getValue();
 		} else {
 			current = null;
 			return shouldFail();
@@ -96,7 +96,7 @@ public class RangeFailureStrategy implements FailureStrategy {
 	static DateFormat format = new SimpleDateFormat("yyyyMMddHH");
 	static Pattern pattern = Pattern.compile("(\\d+),(\\d)");
 
-	public void load(String fileName, int unit) {
+	public void load(String fileName, final int unit) {
 		fileCursor = new FileCursor<Range>(fileName);
 		fileCursor.setLineProcessor(new LineProcessor<Range>() {
 
@@ -112,14 +112,16 @@ public class RangeFailureStrategy implements FailureStrategy {
 					String value = matcher.group(2);
 					Date date = format.parse(dateString, new ParsePosition(0));
 					long time = date.getTime();
+					Range retval = null;
 					if (last == 0) {
 						offset = time;
-						lastval = value.equals("1");
-						last = time;
-						return null;
 					} else {
-						return new Range(last - offset, time - offset, lastval);
+						retval = new Range((last - offset) / unit,
+								(time - offset) / unit, lastval);
 					}
+					lastval = value.equals("1");
+					last = time;
+					return retval;
 				}
 				return null;
 			}

@@ -105,7 +105,7 @@ public abstract class Node extends Component {
 		ProcessGroup resultGroup = process(events);
 		if (null != resultGroup) {
 			ProcessResult result = resultGroup.getSuccess();
-			if (null != result) {
+			if (null != result && !result.getMessages().isEmpty()) {
 				result.setTimestamp(getLatency() + getClock().getCounter());
 				for (List<DataMessage> eventList : result.getMessages()
 						.values())
@@ -116,7 +116,7 @@ public abstract class Node extends Component {
 				buffer.offer(result);
 			}
 			ProcessResult failed = resultGroup.getFailed();
-			if (null != failed) {
+			if (null != failed && !failed.getMessages().isEmpty()) {
 				// Failed Result returns immediately
 				failed.setTimestamp(getClock().getCounter());
 				for (List<DataMessage> fail : failed.getMessages().values())

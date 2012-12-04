@@ -2,6 +2,12 @@ package edu.clarkson.gdc.simulator.framework;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+
+import org.slf4j.LoggerFactory;
 
 /**
  * <code>Clock</code> is the central driver in our clock-based step-forward
@@ -38,7 +44,7 @@ public class Clock {
 	public void unregister(Stepper stepper) {
 		steppers.remove(stepper);
 	}
-	
+
 	private static Clock instance = new Clock();
 
 	public static Clock getInstance() {
@@ -62,11 +68,89 @@ public class Clock {
 
 	public void step() {
 		counter++;
-		// TODO Use a ThreadPool to concurrently execute them
+		
+		// Use a ThreadPool to concurrently execute them makes things even slower
+		/*
+		List<Callable<Object>> tasks = new ArrayList<Callable<Object>>();
 		for (Stepper stepper : steppers)
+			tasks.add(new SendTask(stepper));
+		try {
+			threadPool.invokeAll(tasks);
+		} catch (InterruptedException e) {
+			LoggerFactory.getLogger(getClass()).error(
+					"Task was interrupted on send phase", e);
+		}
+		tasks.clear();
+		for (Stepper stepper : steppers)
+			tasks.add(new ProcessTask(stepper));
+		try {
+			threadPool.invokeAll(tasks);
+		} catch (InterruptedException e) {
+			LoggerFactory.getLogger(getClass()).error(
+					"Task was interrupted on process phase", e);
+		}*/
+		for(Stepper stepper: steppers) {
 			stepper.send();
-		for (Stepper stepper : steppers)
+		}
+		for(Stepper stepper: steppers) {
 			stepper.process();
+		}
 		stepForward();
+	}
+
+	private ExecutorService threadPool = Executors.newFixedThreadPool(100,
+			new ThreadFactory() {
+
+				int count = 0;
+
+				@Override
+				public Thread newThread(Runnable r) {
+					Thread thread = new Thread(r);
+					thread.setDaemon(true);
+					thread.setName("Clock-ThreadPool-" + count++);
+					return thread;
+				}
+
+			});
+
+	static class SendTask implements Callable<Object> {
+		private Stepper stepper;
+
+		public SendTask(Stepper stepper) {
+			this.stepper = stepper;
+		}
+
+		@Override
+		public Object call() throws Exception {
+			try {
+				stepper.send();
+			} catch (RuntimeException e) {
+				LoggerFactory.getLogger(getClass()).error(
+						"Error while executing send in thread pool", e);
+				throw e;
+			}
+
+			return null;
+		}
+	}
+
+	static class ProcessTask implements Callable<Object> {
+		private Stepper stepper;
+
+		public ProcessTask(Stepper stepper) {
+			this.stepper = stepper;
+		}
+
+		@Override
+		public Object call() throws Exception {
+			try {
+				stepper.process();
+			} catch (RuntimeException e) {
+				LoggerFactory.getLogger(getClass()).error(
+						"Error while executing process in thread pool", e);
+				throw e;
+			}
+			return null;
+		}
 	}
 }

@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.clarkson.gdc.simulator.FailureStrategy;
-import edu.clarkson.gdc.simulator.framework.Clock;
 import edu.clarkson.gdc.simulator.framework.utils.FileCursor;
 import edu.clarkson.gdc.simulator.framework.utils.FileCursor.LineProcessor;
 
@@ -77,17 +76,16 @@ public class RangeFailureStrategy implements FailureStrategy {
 	}
 
 	@Override
-	public boolean shouldFail() {
+	public boolean shouldFail(long tick) {
 		if (null == current)
 			current = fileCursor.next();
 		if (null == current)
 			return !defaultValue;
-		if (current.getStart() <= Clock.getInstance().getCounter()
-				&& current.getStop() > Clock.getInstance().getCounter()) {
+		if (current.getStart() <= tick && current.getStop() > tick) {
 			return !current.getValue();
 		} else {
 			current = null;
-			return shouldFail();
+			return shouldFail(tick);
 		}
 	}
 

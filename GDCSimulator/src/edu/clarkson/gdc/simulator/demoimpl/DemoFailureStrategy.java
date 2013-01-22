@@ -18,7 +18,7 @@ public class DemoFailureStrategy implements FailureStrategy {
 	}
 
 	@Override
-	public boolean shouldFail() {
+	public boolean shouldFail(long tick) {
 		Float rate = new Random(System.currentTimeMillis()).nextFloat();
 		return rate >= failureRate.floatValue();
 	}

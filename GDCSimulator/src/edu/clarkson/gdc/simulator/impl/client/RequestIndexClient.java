@@ -11,11 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.clarkson.gdc.simulator.Client;
+import edu.clarkson.gdc.simulator.Cloud;
 import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.impl.DefaultCloud;
 import edu.clarkson.gdc.simulator.impl.WorkloadProvider;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCFail;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCRequest;
@@ -43,16 +43,6 @@ public class RequestIndexClient extends Node implements Client {
 		this.location = location;
 	}
 
-	@Override
-	public void read() {
-
-	}
-
-	@Override
-	public void write() {
-
-	}
-
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
@@ -62,7 +52,7 @@ public class RequestIndexClient extends Node implements Client {
 
 		ProcessGroup group = new ProcessGroup(result, failed);
 
-		Node indexService = (Node) DefaultCloud.getInstance().getIndexService();
+		Node indexService = (Node) ((Cloud) getEnvironment()).getIndexService();
 		Pipe indexServicePipe = getPipe(indexService);
 		// Send Query to Index Service
 		List<String> keys = getProvider()
@@ -98,7 +88,7 @@ public class RequestIndexClient extends Node implements Client {
 
 							reportSuccess(ldcr);
 							String dcId = ldcr.getDataCenterId();
-							Node dataCenter = (Node) DefaultCloud.getInstance()
+							Node dataCenter = (Node) ((Cloud) getEnvironment())
 									.getDataCenter(dcId);
 							LocateDCRequest request = (LocateDCRequest) ldcr
 									.getRequest();

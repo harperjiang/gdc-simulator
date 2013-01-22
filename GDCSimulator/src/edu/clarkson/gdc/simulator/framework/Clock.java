@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <code>Clock</code> is the central driver in our clock-based step-forward
- * simulator. <code>Clock</code> will send out signal to represent time step.
+ * simulator. <code>Clock</code> will send out signal to represent time tick.
  * Each part of the simulator will act one step only when they receive a new
  * signal.
  * 
@@ -27,7 +27,7 @@ public class Clock {
 		return counter;
 	}
 
-	private Clock() {
+	public Clock() {
 		super();
 		steppers = new ArrayList<Stepper>();
 		listeners = new ArrayList<ClockListener>();
@@ -43,12 +43,6 @@ public class Clock {
 
 	public void unregister(Stepper stepper) {
 		steppers.remove(stepper);
-	}
-
-	private static Clock instance = new Clock();
-
-	public static Clock getInstance() {
-		return instance;
 	}
 
 	public void addListener(ClockListener listener) {
@@ -68,31 +62,24 @@ public class Clock {
 
 	public void step() {
 		counter++;
-		
-		// Use a ThreadPool to concurrently execute them makes things even slower
+
+		// Use a ThreadPool to concurrently execute them makes things even
+		// slower
 		/*
-		List<Callable<Object>> tasks = new ArrayList<Callable<Object>>();
-		for (Stepper stepper : steppers)
-			tasks.add(new SendTask(stepper));
-		try {
-			threadPool.invokeAll(tasks);
-		} catch (InterruptedException e) {
-			LoggerFactory.getLogger(getClass()).error(
-					"Task was interrupted on send phase", e);
-		}
-		tasks.clear();
-		for (Stepper stepper : steppers)
-			tasks.add(new ProcessTask(stepper));
-		try {
-			threadPool.invokeAll(tasks);
-		} catch (InterruptedException e) {
-			LoggerFactory.getLogger(getClass()).error(
-					"Task was interrupted on process phase", e);
-		}*/
-		for(Stepper stepper: steppers) {
+		 * List<Callable<Object>> tasks = new ArrayList<Callable<Object>>(); for
+		 * (Stepper stepper : steppers) tasks.add(new SendTask(stepper)); try {
+		 * threadPool.invokeAll(tasks); } catch (InterruptedException e) {
+		 * LoggerFactory.getLogger(getClass()).error(
+		 * "Task was interrupted on send phase", e); } tasks.clear(); for
+		 * (Stepper stepper : steppers) tasks.add(new ProcessTask(stepper)); try
+		 * { threadPool.invokeAll(tasks); } catch (InterruptedException e) {
+		 * LoggerFactory.getLogger(getClass()).error(
+		 * "Task was interrupted on process phase", e); }
+		 */
+		for (Stepper stepper : steppers) {
 			stepper.send();
 		}
-		for(Stepper stepper: steppers) {
+		for (Stepper stepper : steppers) {
 			stepper.process();
 		}
 		stepForward();

@@ -39,7 +39,7 @@ public class DemoDataCenter implements DataCenter {
 		AccessStack.getInstance().push(this);
 		getCloud().fireAccessBetweenNodeEvent(prev, this);
 		try {
-			if (getFailureStrategy().shouldFail()) {
+			if (getFailureStrategy().shouldFail(0)) {
 				getCloud().fireServerFailedEvent(this);
 				return null;
 			} else {

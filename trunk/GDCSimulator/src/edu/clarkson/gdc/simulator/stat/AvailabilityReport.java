@@ -72,6 +72,8 @@ public class AvailabilityReport {
 	}
 
 	public BigDecimal getAvailability() {
+		if (getRequestCount() == 0)
+			return null;
 		return new BigDecimal(getFailedCount()).divide(new BigDecimal(
 				getRequestCount()), 4, BigDecimal.ROUND_HALF_UP);
 	}

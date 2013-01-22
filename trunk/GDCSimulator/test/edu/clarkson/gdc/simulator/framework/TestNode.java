@@ -16,7 +16,7 @@ public class TestNode extends Node {
 	}
 
 	@Override
-	protected ProcessResult process(Map<Pipe, List<DataMessage>> events) {
+	protected ProcessGroup process(Map<Pipe, List<DataMessage>> events) {
 		return null;
 	}
 

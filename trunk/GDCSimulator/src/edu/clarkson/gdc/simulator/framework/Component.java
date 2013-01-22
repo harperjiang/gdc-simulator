@@ -8,15 +8,19 @@ package edu.clarkson.gdc.simulator.framework;
  */
 public abstract class Component implements Stepper {
 
-	private Clock clock;
+	private Environment environment;
 
 	private long latency = 1;
 
 	private String id;
 
+	public Component(Environment env) {
+		this.environment = env;
+		env.add(this);
+	}
+
 	public Component() {
-		setClock(Clock.getInstance());
-		Clock.getInstance().register(this);
+
 	}
 
 	public Component(String id) {
@@ -24,12 +28,21 @@ public abstract class Component implements Stepper {
 		setId(id);
 	}
 
-	public Clock getClock() {
-		return clock;
+	public Environment getEnvironment() {
+		return environment;
 	}
 
-	public void setClock(Clock clock) {
-		this.clock = clock;
+	public void setEnvironment(Environment env) {
+		if (null != getEnvironment()) {
+			getEnvironment().remove(this);
+		}
+		this.environment = env;
+	}
+
+	public Clock getClock() {
+		if (null == getEnvironment())
+			return null;
+		return getEnvironment().getClock();
 	}
 
 	public long getLatency() {

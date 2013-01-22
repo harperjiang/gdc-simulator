@@ -29,8 +29,6 @@ public class Pipe extends Component {
 		super();
 		this.requestBuffer = new ConcurrentLinkedQueue<DataMessage>();
 		this.responseBuffer = new ConcurrentLinkedQueue<DataMessage>();
-		// Unregister the pipe for performance
-		getClock().unregister(this);
 	}
 
 	public Pipe(Node source, Node destination) {
@@ -42,6 +40,17 @@ public class Pipe extends Component {
 		// Build Connections
 		this.source.addPipe(this);
 		this.destination.addPipe(this);
+	}
+
+	@Override
+	public Clock getClock() {
+		if (null != super.getClock())
+			return super.getClock();
+		if (source.getClock() != null)
+			return source.getClock();
+		if (destination.getClock() != null)
+			return destination.getClock();
+		return null;
 	}
 
 	public List<DataMessage> get(Node receiver) {

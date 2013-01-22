@@ -59,7 +59,8 @@ public class DefaultDataCenter extends Node implements DataCenter {
 					// Read Key Request
 					if (message instanceof ReadKeyRequest) {
 						ReadKeyRequest request = (ReadKeyRequest) message;
-						if (getFailureStrategy().shouldFail()) {
+						if (getFailureStrategy().shouldFail(
+								getClock().getCounter())) {
 							ReadKeyFail resp = new ReadKeyFail(
 									(ReadKeyRequest) message);
 							failed.add(pipe, resp);

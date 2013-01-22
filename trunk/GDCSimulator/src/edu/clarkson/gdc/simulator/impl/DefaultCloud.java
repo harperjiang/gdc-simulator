@@ -10,6 +10,8 @@ import javax.swing.event.EventListenerList;
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.Cloud;
 import edu.clarkson.gdc.simulator.DataCenter;
+import edu.clarkson.gdc.simulator.framework.Component;
+import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.NodeListener;
 import edu.clarkson.gdc.simulator.framework.NodeResponseEvent;
@@ -24,22 +26,18 @@ import edu.clarkson.gdc.simulator.impl.client.RequestIndexClient;
  * @version 1.0
  * 
  */
-public class DefaultCloud implements Cloud, NodeListener {
+public class DefaultCloud extends Environment implements Cloud, NodeListener {
 
-	private static DefaultCloud instance = new DefaultCloud();
-
-	public static DefaultCloud getInstance() {
-		return instance;
-	}
-
-	private DefaultCloud() {
+	public DefaultCloud() {
 		super();
 		// Init Attributes
 		listenerList = new EventListenerList();
 		dataCenters = new ArrayList<DataCenter>();
 		dataCenterIndex = new HashMap<String, DataCenter>();
 
-		setIndexService(new DefaultIndexService());
+		// Create Index Service
+		DefaultIndexService dis = new DefaultIndexService();
+		setIndexService(dis);
 		setDataBlockDistribution(new UniformDataDistribution());
 		setLoader(new XMLFileCloudLoader());
 
@@ -48,6 +46,9 @@ public class DefaultCloud implements Cloud, NodeListener {
 
 		// TODO Switch to Spring Configuration
 		for (DataCenter dc : loader.loadDataCenters()) {
+			if (dc instanceof Component) {
+				add((Component) dc);
+			}
 			dataCenters.add(dc);
 			dataCenterIndex.put(dc.getId(), dc);
 		}
@@ -66,6 +67,8 @@ public class DefaultCloud implements Cloud, NodeListener {
 		// Create Pipes between clients and dcs/ is
 		clients = loader.loadClients();
 		for (Client client : clients) {
+			if (client instanceof Component)
+				add((Component) client);
 			for (DataCenter dc : dataCenters) {
 				new Pipe((Node) client, (Node) dc).setId(((Node) client)
 						.getId() + "-" + dc.getId());
@@ -125,6 +128,7 @@ public class DefaultCloud implements Cloud, NodeListener {
 
 	public void setIndexService(DefaultIndexService indexService) {
 		this.indexService = indexService;
+		add(indexService);
 	}
 
 	public UniformDataDistribution getDataBlockDistribution() {
@@ -166,6 +170,12 @@ public class DefaultCloud implements Cloud, NodeListener {
 
 	public void removeNodeListener(NodeListener listener) {
 		listenerList.remove(NodeListener.class, listener);
+	}
+
+	public void run(long stop) {
+		while (getClock().getCounter() < stop) {
+			getClock().step();
+		}
 	}
 
 }

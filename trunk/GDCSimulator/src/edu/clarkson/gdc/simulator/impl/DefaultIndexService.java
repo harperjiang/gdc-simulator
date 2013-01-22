@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.clarkson.gdc.simulator.Cloud;
 import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.IndexService;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
@@ -38,19 +39,20 @@ public class DefaultIndexService extends Node implements IndexService {
 		Point2D loc = (Point2D) location;
 
 		if (StringUtils.isEmpty(key)) {
-			return DefaultCloud.getInstance().getDataCenterByLocation(location)
-					.getId();
+			return ((DefaultCloud) getEnvironment()).getDataCenterByLocation(
+					location).getId();
 		} else {
 			// Get Distribution, compare the location
-			List<String> dcids = DefaultCloud.getInstance()
+			List<String> dcids = ((DefaultCloud) getEnvironment())
 					.getDataBlockDistribution().locate(key);
 			DataCenter minDc = null;
 			Double minVal = Double.MAX_VALUE;
 			for (String dcid : dcids) {
-				DataCenter currentDc = DefaultCloud.getInstance()
+				DataCenter currentDc = ((Cloud) getEnvironment())
 						.getDataCenter(dcid);
 				// Ignore Failed Data Center
-				if (currentDc.getFailureStrategy().shouldFail())
+				if (currentDc.getFailureStrategy().shouldFail(
+						getClock().getCounter()))
 					continue;
 				Point2D currentLoc = (Point2D) currentDc.getLocation();
 				Double length = currentLoc.distance(loc);

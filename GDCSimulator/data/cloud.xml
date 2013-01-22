@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cloud xmlns="http://gdc.clarkson.edu/cloud" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://gdc.clarkson.edu/cloud cloud.xsd ">
-	<config unit="1000" />
+	<config unit="100" />
 	<datacenters>
 		<datacenter id="dca" latency="1" datafile="data_site1.txt">
 			<location x="0.0" y="0.0" />

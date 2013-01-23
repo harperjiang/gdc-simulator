@@ -3,10 +3,12 @@ package edu.clarkson.gdc.simulator.framework;
 import java.util.EventObject;
 
 /**
+ * ClockEvent is sent out when the clock goes forward
  * 
  * @author Hao Jiang
  * @since Simulator 1.0
  * @version 1.0
+ * @see ClockListener
  */
 public class ClockEvent extends EventObject {
 

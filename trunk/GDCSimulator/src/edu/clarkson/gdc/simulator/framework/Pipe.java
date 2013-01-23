@@ -72,7 +72,8 @@ public class Pipe extends Component {
 
 	// Asynchronous Event Sending
 	public void put(Node sender, DataMessage event) {
-		event.access(new PathNode(this, getClock().getCounter() + getLatency()));
+		event.access(new PathNode(this, getClock().getCounter()
+				+ getLatency(null)));
 		Queue<DataMessage> buffer = (sender == source) ? requestBuffer
 				: responseBuffer;
 		buffer.offer(event);

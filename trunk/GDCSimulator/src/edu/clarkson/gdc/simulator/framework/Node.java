@@ -22,6 +22,14 @@ import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
  */
 public abstract class Node extends Component {
 
+	public static enum State {
+		UP, DOWN
+	}
+
+	private transient long until = -1;
+
+	private transient State state = State.UP;
+
 	public static class ProcessGroup {
 
 		private ProcessResult success;
@@ -97,34 +105,67 @@ public abstract class Node extends Component {
 	@Override
 	public void process() {
 		Map<Pipe, List<DataMessage>> events = new HashMap<Pipe, List<DataMessage>>();
-		// Collect Input & Response
-		for (Pipe inputPipe : pipes.values()) {
-			events.put(inputPipe, inputPipe.get(this));
-		}
-		// Process Event
-		ProcessGroup resultGroup = process(events);
-		if (null != resultGroup) {
-			ProcessResult result = resultGroup.getSuccess();
-			if (null != result && !result.getMessages().isEmpty()) {
-				result.setTimestamp(getLatency() + getClock().getCounter());
-				for (List<DataMessage> eventList : result.getMessages()
-						.values())
-					for (DataMessage event : eventList) {
-						event.access(new PathNode(this, result.getTimestamp()));
-					}
-				// Put Events to send buffer
-				buffer.offer(result);
+		try {
+			if (state == State.DOWN) {
+				throw new ServerDownException(this);
 			}
-			ProcessResult failed = resultGroup.getFailed();
-			if (null != failed && !failed.getMessages().isEmpty()) {
-				// Failed Result returns immediately
-				failed.setTimestamp(getClock().getCounter());
-				for (List<DataMessage> fail : failed.getMessages().values())
-					for (DataMessage failms : fail) {
-						failms.access(new PathNode(this, failed.getTimestamp()));
+			// Do nothing until the time
+			if (getClock().getCounter() < until) {
+				return;
+			}
+			// Collect Input & Response
+			for (Pipe inputPipe : pipes.values()) {
+				events.put(inputPipe, inputPipe.get(this));
+			}
+
+			// Calculate Latency
+			until = getLatency(events) + getClock().getCounter();
+			// Process Event
+			ProcessGroup resultGroup = process(events);
+			if (null != resultGroup) {
+				ProcessResult result = resultGroup.getSuccess();
+				if (null != result && !result.getMessages().isEmpty()) {
+					result.setTimestamp(until);
+					for (List<DataMessage> eventList : result.getMessages()
+							.values())
+						for (DataMessage event : eventList) {
+							event.access(new PathNode(this, result
+									.getTimestamp()));
+						}
+					// Put Events to send buffer
+					buffer.offer(result);
+				}
+				ProcessResult failed = resultGroup.getFailed();
+				if (null != failed && !failed.getMessages().isEmpty()) {
+					failed.setTimestamp(until);
+					for (List<DataMessage> fail : failed.getMessages().values())
+						for (DataMessage failms : fail) {
+							failms.access(new PathNode(this, failed
+									.getTimestamp()));
+						}
+					// Put Events to send buffer
+					buffer.offer(failed);
+				}
+			}
+		} catch (Exception e) {
+			if (e instanceof NodeException) {
+				state = State.DOWN;
+				// Send a response indicating node is done
+				// No further request will be respond
+				ProcessResult result = new ProcessResult();
+				for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
+					for (DataMessage msg : entry.getValue()) {
+						FailMessage fail = new ServerFailMessage(msg,
+								(NodeException) e);
+						result.add(entry.getKey(), fail);
 					}
-				// Put Events to send buffer
-				buffer.offer(failed);
+				}
+				result.setTimestamp(getClock().getCounter());
+				buffer.offer(result);
+			} else if (e instanceof RuntimeException) {
+				throw (RuntimeException) e;
+			} else {
+				throw new RuntimeException(e);
 			}
 		}
 	}

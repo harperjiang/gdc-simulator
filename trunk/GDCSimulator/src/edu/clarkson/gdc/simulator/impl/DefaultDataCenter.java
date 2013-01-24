@@ -16,10 +16,42 @@ import edu.clarkson.gdc.simulator.impl.message.ReadKeyRequest;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
 
 /**
+ * Revision History:
+ * <table border="1" style="border-collapse:collapse;" cellpadding="5">
+ * <tr>
+ * <th>Version</th>
+ * <th>Date</th>
+ * <th>Description</th>
+ * </tr>
+ * <tr>
+ * <td>1.0</td>
+ * <td>Sep-01-2012</td>
+ * <td>Implement the basic function of processing data. All data is processed as
+ * soon as they are received. A latency is apply so that only after this latency
+ * will the processed data be sent out. Data received at time T will be sent out
+ * at time T+&lt;latency&gt;</td>
+ * </tr>
+ * <tr>
+ * <td>1.1</td>
+ * <td>Jan-20-2013</td>
+ * <td>
+ * <p>
+ * Implement a exponential decay model. This model adjust the message latency
+ * based on received message count. The processing time will increase
+ * exponentially.
+ * </p>
+ * <p>
+ * There will be 2 parameters in the scenario: processing power P and scale S,
+ * which satisfies:<br/>
+ * t = exp(S*&lt;message_count&gt;)/P
+ * </p>
+ * </td>
+ * </tr>
+ * </table>
  * 
  * @author Hao Jiang
  * @since Simulator 1.0
- * @version 1.0
+ * @version 1.1
  * 
  */
 public class DefaultDataCenter extends Node implements DataCenter {
@@ -101,5 +133,4 @@ public class DefaultDataCenter extends Node implements DataCenter {
 		}
 
 	}
-
 }

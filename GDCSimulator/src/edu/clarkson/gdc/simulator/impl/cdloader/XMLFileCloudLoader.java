@@ -14,6 +14,7 @@ import org.w3c.dom.NodeList;
 
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.DataCenter;
+import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
 import edu.clarkson.gdc.simulator.impl.CloudDataLoader;
 import edu.clarkson.gdc.simulator.impl.DefaultDataCenter;
 import edu.clarkson.gdc.simulator.impl.client.DefaultWorkloadProvider;
@@ -73,8 +74,8 @@ public class XMLFileCloudLoader implements CloudDataLoader {
 							dc.setLocation(new Point2D.Double(Double
 									.valueOf(dcLocNode.getAttribute("x")),
 									Double.valueOf(dcLocNode.getAttribute("y"))));
-							dc.setLatency(Long.valueOf(dcNode
-									.getAttribute("latency")));
+							dc.setTimeModel(new ConstantTimeModel(Long
+									.valueOf(dcNode.getAttribute("latency"))));
 							RangeFailureStrategy rfs = new RangeFailureStrategy();
 							rfs.load(
 									dcNode.getAttribute("datafile").toString(),
@@ -100,8 +101,9 @@ public class XMLFileCloudLoader implements CloudDataLoader {
 									Double.valueOf(clientLocNode
 											.getAttribute("y"))));
 							DefaultWorkloadProvider workloadProvider = new DefaultWorkloadProvider();
-							workloadProvider.load(clientNode
-									.getAttribute("workload_file"),unit);
+							workloadProvider.load(
+									clientNode.getAttribute("workload_file"),
+									unit);
 							client.setProvider(workloadProvider);
 
 							clients.add(client);

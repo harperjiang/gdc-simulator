@@ -9,9 +9,14 @@ public class NodeTest {
 
 	@Test
 	public void testProcess() {
-
+		
 	}
 
+	@Test
+	public void testProcessFailure() {
+		
+	}
+	
 	@Test
 	public void testSend() {
 		Node node = new Node() {

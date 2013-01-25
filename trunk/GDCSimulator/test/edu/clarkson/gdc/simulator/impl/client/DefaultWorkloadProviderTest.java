@@ -17,20 +17,21 @@ public class DefaultWorkloadProviderTest {
 		List<String> value = dwlp.fetchReadLoad(0);
 		assertEquals(4, value.size());
 
-		while ((value = dwlp.fetchReadLoad(Clock.getInstance().getCounter())) == null
+		int counter = 0;
+		while ((value = dwlp.fetchReadLoad(counter)) == null
 				|| value.size() == 0) {
-			Clock.getInstance().step();
+			counter++;
 		}
 		assertEquals(7, value.size());
 
 		int count = 0;
 		while (true) {
-			value = dwlp.fetchReadLoad(Clock.getInstance().getCounter());
+			value = dwlp.fetchReadLoad(counter);
 			if (value != null && value.size() != 0)
 				count++;
 			if (count > 500)
 				break;
-			Clock.getInstance().step();
+			counter++;
 		}
 	}
 

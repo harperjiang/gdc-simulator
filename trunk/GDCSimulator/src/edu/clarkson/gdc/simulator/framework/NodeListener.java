@@ -10,6 +10,8 @@ import java.util.EventListener;
  */
 
 public interface NodeListener extends EventListener {
+	
+	public void stateChanged(NodeStateEvent event);
 
 	public void successReceived(NodeResponseEvent event);
 	

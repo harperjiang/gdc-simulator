@@ -1,6 +1,6 @@
 package edu.clarkson.gdc.simulator.framework;
 
-public class ServerDownException extends NodeException {
+public class NodeDownException extends NodeException {
 
 	/**
 	 * 
@@ -9,12 +9,19 @@ public class ServerDownException extends NodeException {
 
 	private Node server;
 
-	public ServerDownException(Node server) {
+	private NodeState state;
+
+	public NodeDownException(Node server, NodeState state) {
 		this.server = server;
+		this.state = state;
 	}
 
 	public Node getServer() {
 		return server;
+	}
+
+	public NodeState getState() {
+		return state;
 	}
 
 }

@@ -19,7 +19,7 @@ import edu.clarkson.gdc.simulator.impl.CloudDataLoader;
 import edu.clarkson.gdc.simulator.impl.DefaultDataCenter;
 import edu.clarkson.gdc.simulator.impl.client.DefaultWorkloadProvider;
 import edu.clarkson.gdc.simulator.impl.client.RequestIndexClient;
-import edu.clarkson.gdc.simulator.impl.failstr.RangeFailureStrategy;
+import edu.clarkson.gdc.simulator.impl.exstr.RangeExceptionStrategy;
 
 /**
  * 
@@ -76,7 +76,7 @@ public class XMLFileCloudLoader implements CloudDataLoader {
 									Double.valueOf(dcLocNode.getAttribute("y"))));
 							dc.setTimeModel(new ConstantTimeModel(Long
 									.valueOf(dcNode.getAttribute("latency"))));
-							RangeFailureStrategy rfs = new RangeFailureStrategy();
+							RangeExceptionStrategy rfs = new RangeExceptionStrategy();
 							rfs.load(
 									dcNode.getAttribute("datafile").toString(),
 									unit);

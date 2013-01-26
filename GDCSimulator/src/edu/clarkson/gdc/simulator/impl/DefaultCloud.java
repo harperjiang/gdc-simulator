@@ -18,6 +18,7 @@ import edu.clarkson.gdc.simulator.framework.NodeResponseEvent;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.impl.cdloader.XMLFileCloudLoader;
 import edu.clarkson.gdc.simulator.impl.client.RequestIndexClient;
+import edu.clarkson.gdc.simulator.impl.datadist.UniformDistribution;
 
 /**
  * 
@@ -38,7 +39,7 @@ public class DefaultCloud extends Environment implements Cloud, NodeListener {
 		// Create Index Service
 		DefaultIndexService dis = new DefaultIndexService();
 		setIndexService(dis);
-		setDataBlockDistribution(new UniformDataDistribution());
+		setDataBlockDistribution(new UniformDistribution());
 		setLoader(new XMLFileCloudLoader());
 
 		// Load Data Centers
@@ -118,7 +119,7 @@ public class DefaultCloud extends Environment implements Cloud, NodeListener {
 
 	private DefaultIndexService indexService;
 
-	private UniformDataDistribution dataBlockDistribution;
+	private UniformDistribution dataBlockDistribution;
 
 	private CloudDataLoader loader;
 
@@ -131,12 +132,12 @@ public class DefaultCloud extends Environment implements Cloud, NodeListener {
 		add(indexService);
 	}
 
-	public UniformDataDistribution getDataBlockDistribution() {
+	public UniformDistribution getDataBlockDistribution() {
 		return dataBlockDistribution;
 	}
 
 	public void setDataBlockDistribution(
-			UniformDataDistribution dataBlockDistribution) {
+			UniformDistribution dataBlockDistribution) {
 		this.dataBlockDistribution = dataBlockDistribution;
 	}
 

@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 
 import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.DataCenter;
-import edu.clarkson.gdc.simulator.FailureStrategy;
+import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
@@ -56,13 +56,13 @@ import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
  */
 public class DefaultDataCenter extends Node implements DataCenter {
 
-	private FailureStrategy failureStrategy;
+	private ExceptionStrategy failureStrategy;
 
-	public FailureStrategy getFailureStrategy() {
+	public ExceptionStrategy getFailureStrategy() {
 		return failureStrategy;
 	}
 
-	public void setFailureStrategy(FailureStrategy failureStrategy) {
+	public void setFailureStrategy(ExceptionStrategy failureStrategy) {
 		this.failureStrategy = failureStrategy;
 	}
 

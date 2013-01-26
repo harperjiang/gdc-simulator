@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.impl.failstr;
+package edu.clarkson.gdc.simulator.impl.exstr;
 
 import java.text.DateFormat;
 import java.text.ParsePosition;
@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.clarkson.gdc.simulator.FailureStrategy;
+import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.utils.FileCursor;
 import edu.clarkson.gdc.simulator.framework.utils.FileCursor.LineProcessor;
 
@@ -18,7 +18,7 @@ import edu.clarkson.gdc.simulator.framework.utils.FileCursor.LineProcessor;
  * @version 1.0
  * 
  */
-public class RangeFailureStrategy implements FailureStrategy {
+public class RangeExceptionStrategy implements ExceptionStrategy {
 
 	public static class Range {
 
@@ -64,7 +64,7 @@ public class RangeFailureStrategy implements FailureStrategy {
 
 	private boolean defaultValue;
 
-	public RangeFailureStrategy() {
+	public RangeExceptionStrategy() {
 	}
 
 	public boolean getDefaultValue() {

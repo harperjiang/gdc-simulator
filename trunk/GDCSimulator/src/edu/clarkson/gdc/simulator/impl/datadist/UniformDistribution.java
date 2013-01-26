@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.impl;
+package edu.clarkson.gdc.simulator.impl.datadist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.apache.commons.lang.Validate;
 import edu.clarkson.gdc.simulator.Cloud;
 import edu.clarkson.gdc.simulator.DataBlockDistribution;
 import edu.clarkson.gdc.simulator.DataCenter;
+import edu.clarkson.gdc.simulator.impl.DefaultCloud;
 
 /**
  * 
@@ -16,7 +17,7 @@ import edu.clarkson.gdc.simulator.DataCenter;
  * @version 1.0
  * 
  */
-public class UniformDataDistribution implements DataBlockDistribution {
+public class UniformDistribution implements DataBlockDistribution {
 
 	@Override
 	public void init(Cloud cloud) {

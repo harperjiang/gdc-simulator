@@ -29,8 +29,8 @@ public class ClockTest {
 			}
 		});
 
-		clock.step();
-		clock.step();
+		clock.tick();
+		clock.tick();
 
 		assertEquals(2, atomInt.intValue());
 	}

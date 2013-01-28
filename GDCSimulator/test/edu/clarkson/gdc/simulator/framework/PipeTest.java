@@ -30,13 +30,13 @@ public class PipeTest {
 		pipe.put(src, event);
 
 		assertTrue(CollectionUtils.isEmpty(pipe.get(dest)));
-		env.getClock().step();
+		env.getClock().tick();
 		assertTrue(CollectionUtils.isEmpty(pipe.get(dest)));
-		env.getClock().step();
+		env.getClock().tick();
 		assertTrue(CollectionUtils.isEmpty(pipe.get(dest)));
-		env.getClock().step();
+		env.getClock().tick();
 		assertTrue(CollectionUtils.isEmpty(pipe.get(dest)));
-		env.getClock().step();
+		env.getClock().tick();
 		List<DataMessage> events = pipe.get(dest);
 		assertTrue(!CollectionUtils.isEmpty(events));
 		assertEquals(1, events.size());

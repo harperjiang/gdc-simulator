@@ -1,11 +1,10 @@
 package edu.clarkson.gdc.simulator.impl;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.event.EventListenerList;
 
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.Cloud;
@@ -14,10 +13,9 @@ import edu.clarkson.gdc.simulator.framework.Component;
 import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
-import edu.clarkson.gdc.simulator.framework.NodeResponseEvent;
-import edu.clarkson.gdc.simulator.framework.NodeStateEvent;
 import edu.clarkson.gdc.simulator.framework.NodeStateListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.framework.utils.EventListenerProxy;
 import edu.clarkson.gdc.simulator.impl.cdloader.XMLFileCloudLoader;
 import edu.clarkson.gdc.simulator.impl.client.RequestIndexClient;
 import edu.clarkson.gdc.simulator.impl.datadist.UniformDistribution;
@@ -29,15 +27,16 @@ import edu.clarkson.gdc.simulator.impl.datadist.UniformDistribution;
  * @version 1.0
  * 
  */
-public class DefaultCloud extends Environment implements Cloud,
-		NodeMessageListener, NodeStateListener {
+public class DefaultCloud extends Environment implements Cloud {
 
 	public DefaultCloud() {
 		super();
 		// Init Attributes
-		listenerList = new EventListenerList();
 		dataCenters = new ArrayList<DataCenter>();
 		dataCenterIndex = new HashMap<String, DataCenter>();
+
+		// Creating Event Proxy
+		proxy = new EventListenerProxy();
 
 		// Create Index Service
 		DefaultIndexService dis = new DefaultIndexService();
@@ -45,13 +44,19 @@ public class DefaultCloud extends Environment implements Cloud,
 		setDataBlockDistribution(new UniformDistribution());
 		setLoader(new XMLFileCloudLoader());
 
+		// Create Probes
+		NodeMessageListener messageProbe = proxy
+				.getProbe(NodeMessageListener.class);
+		NodeStateListener stateProbe = proxy.getProbe(NodeStateListener.class);
+
 		// Load Data Centers
 		setUnit(loader.loadUnit());
 
 		// TODO Switch to Spring Configuration
 		for (DefaultDataCenter dc : loader.loadDataCenters()) {
 			add(dc);
-			dc.addListener(NodeStateListener.class, this);
+			dc.addListener(NodeMessageListener.class, messageProbe);
+			dc.addListener(NodeStateListener.class, stateProbe);
 			dataCenters.add(dc);
 			dataCenterIndex.put(dc.getId(), dc);
 		}
@@ -72,22 +77,22 @@ public class DefaultCloud extends Environment implements Cloud,
 		for (Client client : clients) {
 			if (client instanceof Component)
 				add((Component) client);
+
 			for (DataCenter dc : dataCenters) {
 				new Pipe((Node) client, (Node) dc).setId(((Node) client)
-						.getId()
-						+ "-" + dc.getId());
+						.getId() + "-" + dc.getId());
 			}
 			new Pipe((Node) client, (Node) getIndexService())
 					.setId(((Node) client).getId() + "-IndexService");
 		}
 
-		for (DataCenter dc : getDataCenters()) {
-			((DefaultDataCenter) dc).addListener(this);
-		}
 		for (Client client : clients) {
-			((RequestIndexClient) client).addListener(this);
+			((RequestIndexClient) client).addListener(
+					NodeMessageListener.class, messageProbe);
 		}
 	}
+
+	private EventListenerProxy proxy;
 
 	private List<DataCenter> dataCenters;
 
@@ -152,32 +157,20 @@ public class DefaultCloud extends Environment implements Cloud,
 		this.loader = loader;
 	}
 
-	@Override
-	public void successReceived(NodeResponseEvent event) {
-		for (NodeMessageListener nl : listenerList
-				.getListeners(NodeMessageListener.class)) {
-			nl.successReceived(event);
-		}
-	}
-
-	@Override
-	public void failureReceived(NodeResponseEvent event) {
-		for (NodeMessageListener nl : listenerList
-				.getListeners(NodeMessageListener.class)) {
-			nl.failureReceived(event);
-		}
-	}
-
 	public void run(long stop) {
 		while (getClock().getCounter() < stop) {
 			getClock().tick();
 		}
 	}
 
-	@Override
-	public void stateChanged(NodeStateEvent event) {
-		// TODO Auto-generated method stub
+	public <EL extends EventListener> void addListener(Class<EL> clazz,
+			EL listener) {
+		proxy.addListener(clazz, listener);
+	}
 
+	public <EL extends EventListener> void removeListener(Class<EL> clazz,
+			EL listener) {
+		proxy.removeListener(clazz, listener);
 	}
 
 }

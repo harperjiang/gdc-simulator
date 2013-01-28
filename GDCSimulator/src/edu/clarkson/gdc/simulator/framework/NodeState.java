@@ -18,11 +18,19 @@ public enum NodeState {
 			return currentState;
 		}
 
+		protected void setState(NodeState newState) {
+			NodeState oldState = getState();
+			this.currentState = newState;
+			if (oldState != currentState) {
+
+			}
+		}
+
 		public void tick() {
 			if (counter != 0)
 				counter--;
 			if (counter == 0 && currentState == BUSY) {
-				currentState = FREE;
+				setState(FREE);
 			}
 		}
 
@@ -30,29 +38,29 @@ public enum NodeState {
 
 		public void busy(long period) {
 			counter = period;
-			currentState = BUSY;
+			setState(BUSY);
 		}
 
 		private NodeException exception;
 
 		public void exception(NodeException e) {
-			if (currentState != DOWN)
-				currentState = EXCEPTION;
+			if (getState() != DOWN)
+				setState(EXCEPTION);
 			this.exception = e;
 		}
 
 		public NodeException getException() {
-			if (currentState == EXCEPTION)
+			if (getState() == EXCEPTION)
 				return this.exception;
 			return null;
 		}
 
 		public void free() {
-			currentState = FREE;
+			setState(FREE);
 		}
 
 		public void shutdown() {
-			currentState = DOWN;
+			setState(DOWN);
 		}
 
 		protected void fireStateChanged(NodeState from, NodeState to) {
@@ -72,7 +80,5 @@ public enum NodeState {
 				Class<EL> listenerClass) {
 			return listenerDelegate.getListeners(listenerClass);
 		}
-		
-		
 	}
 }

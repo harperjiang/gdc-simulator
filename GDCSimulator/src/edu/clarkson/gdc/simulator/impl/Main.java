@@ -2,6 +2,7 @@ package edu.clarkson.gdc.simulator.impl;
 
 import org.apache.commons.lang.time.StopWatch;
 
+import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.impl.stat.StatisticListener;
 
 public class Main {
@@ -17,7 +18,7 @@ public class Main {
 		StopWatch watch = new StopWatch();
 
 		StatisticListener listener = new StatisticListener();
-		cloud.addNodeListener(listener);
+		cloud.addListener(NodeMessageListener.class, listener);
 
 		long stop = 3600 * 24 * 10;
 

@@ -11,13 +11,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.Cloud;
 import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.NodeFailMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.impl.DefaultClient;
 import edu.clarkson.gdc.simulator.impl.WorkloadProvider;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCFail;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCRequest;
@@ -32,7 +32,7 @@ import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
  * @version 1.0
  * 
  */
-public class RequestIndexClient extends Node implements Client {
+public class RequestIndexClient extends DefaultClient {
 
 	private Point2D location;
 

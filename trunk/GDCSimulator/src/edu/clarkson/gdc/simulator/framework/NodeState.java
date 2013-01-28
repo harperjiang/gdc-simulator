@@ -1,5 +1,7 @@
 package edu.clarkson.gdc.simulator.framework;
 
+import java.util.EventListener;
+
 import edu.clarkson.gdc.simulator.framework.utils.EventListenerDelegate;
 
 public enum NodeState {
@@ -60,5 +62,17 @@ public enum NodeState {
 				listener.stateChanged(event);
 			}
 		}
+
+		public <EL extends EventListener> void addListener(Class<EL> clazz,
+				EL listener) {
+			listenerDelegate.addListener(clazz, listener);
+		}
+
+		public <EL extends EventListener> EL[] getListeners(
+				Class<EL> listenerClass) {
+			return listenerDelegate.getListeners(listenerClass);
+		}
+		
+		
 	}
 }

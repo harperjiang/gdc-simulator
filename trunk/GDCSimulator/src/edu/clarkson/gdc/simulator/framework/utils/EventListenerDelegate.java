@@ -9,12 +9,14 @@ public class EventListenerDelegate {
 	private EventListenerList listenerList = new EventListenerList();
 
 	@SuppressWarnings("unchecked")
-	public <EL extends EventListener> void addListener(EL listener) {
+	public <EL extends EventListener> void addListener(Class<EL> clazz,
+			EL listener) {
 		listenerList.add((Class<EL>) listener.getClass(), listener);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <EL extends EventListener> void removeListener(EL listener) {
+	public <EL extends EventListener> void removeListener(Class<EL> clazz,
+			EL listener) {
 		listenerList.remove((Class<EL>) listener.getClass(), listener);
 	}
 

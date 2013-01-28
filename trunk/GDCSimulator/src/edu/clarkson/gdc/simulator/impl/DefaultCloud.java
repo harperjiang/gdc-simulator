@@ -15,6 +15,8 @@ import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.NodeResponseEvent;
+import edu.clarkson.gdc.simulator.framework.NodeStateEvent;
+import edu.clarkson.gdc.simulator.framework.NodeStateListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.impl.cdloader.XMLFileCloudLoader;
 import edu.clarkson.gdc.simulator.impl.client.RequestIndexClient;
@@ -28,7 +30,7 @@ import edu.clarkson.gdc.simulator.impl.datadist.UniformDistribution;
  * 
  */
 public class DefaultCloud extends Environment implements Cloud,
-		NodeMessageListener {
+		NodeMessageListener, NodeStateListener {
 
 	public DefaultCloud() {
 		super();
@@ -47,10 +49,9 @@ public class DefaultCloud extends Environment implements Cloud,
 		setUnit(loader.loadUnit());
 
 		// TODO Switch to Spring Configuration
-		for (DataCenter dc : loader.loadDataCenters()) {
-			if (dc instanceof Component) {
-				add((Component) dc);
-			}
+		for (DefaultDataCenter dc : loader.loadDataCenters()) {
+			add(dc);
+			dc.addListener(NodeStateListener.class, this);
 			dataCenters.add(dc);
 			dataCenterIndex.put(dc.getId(), dc);
 		}
@@ -73,7 +74,8 @@ public class DefaultCloud extends Environment implements Cloud,
 				add((Component) client);
 			for (DataCenter dc : dataCenters) {
 				new Pipe((Node) client, (Node) dc).setId(((Node) client)
-						.getId() + "-" + dc.getId());
+						.getId()
+						+ "-" + dc.getId());
 			}
 			new Pipe((Node) client, (Node) getIndexService())
 					.setId(((Node) client).getId() + "-IndexService");
@@ -166,20 +168,16 @@ public class DefaultCloud extends Environment implements Cloud,
 		}
 	}
 
-	private EventListenerList listenerList;
-
-	public void addNodeListener(NodeMessageListener listener) {
-		listenerList.add(NodeMessageListener.class, listener);
-	}
-
-	public void removeNodeListener(NodeMessageListener listener) {
-		listenerList.remove(NodeMessageListener.class, listener);
-	}
-
 	public void run(long stop) {
 		while (getClock().getCounter() < stop) {
 			getClock().tick();
 		}
+	}
+
+	@Override
+	public void stateChanged(NodeStateEvent event) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

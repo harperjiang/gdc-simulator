@@ -153,12 +153,12 @@ public abstract class Node extends Component implements NodeStateListener {
 				break;
 			if (NodeState.EXCEPTION == getState()
 					|| NodeState.DOWN == getState()) { // Exception case,
-														// immediate send out
-														// all pending message
+				// immediate send out
+				// all pending message
 				timeoutResult = buffer.poll();
 				NodeException e = (getState() == NodeState.EXCEPTION) ? stateMachine
-						.getException() : new NodeStateException(this,
-						getState());
+						.getException()
+						: new NodeStateException(this, getState());
 				for (Entry<Pipe, List<DataMessage>> entry : timeoutResult
 						.getMessages().entrySet()) {
 					for (DataMessage event : entry.getValue()) {
@@ -166,8 +166,8 @@ public abstract class Node extends Component implements NodeStateListener {
 							entry.getKey().put(this, event);
 						} else if (event instanceof ResponseMessage) {
 							ResponseMessage rm = (ResponseMessage) event;
-							FailMessage exm = new NodeFailMessage(
-									rm.getRequest(), e);
+							FailMessage exm = new NodeFailMessage(rm
+									.getRequest(), e);
 							entry.getKey().put(this, exm);
 						} else {
 							// In exception state node cannot send
@@ -239,12 +239,14 @@ public abstract class Node extends Component implements NodeStateListener {
 		fireStateChange(new NodeStateEvent(this, event.getFrom(), event.getTo()));
 	}
 
-	public <EL extends EventListener> void addListener(EL listener) {
-		listenerDelegate.addListener(listener);
+	public <EL extends EventListener> void addListener(Class<EL> clazz,
+			EL listener) {
+		listenerDelegate.addListener(clazz, listener);
 	}
 
-	public <EL extends EventListener> void removeListener(EL listener) {
-		listenerDelegate.removeListener(listener);
+	public <EL extends EventListener> void removeListener(Class<EL> clazz,
+			EL listener) {
+		listenerDelegate.removeListener(clazz, listener);
 	}
 
 	public <EL extends EventListener> EL[] getListeners(Class<EL> listenerClass) {

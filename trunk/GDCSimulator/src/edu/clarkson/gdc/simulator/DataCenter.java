@@ -6,7 +6,7 @@ public interface DataCenter {
 	
 	public Object getLocation();
 
-	public FailureStrategy getFailureStrategy();
+	public ExceptionStrategy getExceptionStrategy();
 
 	public Data read(String key);
 

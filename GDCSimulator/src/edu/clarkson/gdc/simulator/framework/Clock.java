@@ -60,7 +60,7 @@ public class Clock {
 		}
 	}
 
-	public void step() {
+	public void tick() {
 		counter++;
 
 		// Use a ThreadPool to concurrently execute them makes things even
@@ -76,11 +76,12 @@ public class Clock {
 		 * LoggerFactory.getLogger(getClass()).error(
 		 * "Task was interrupted on process phase", e); }
 		 */
-		for (Stepper stepper : steppers) {
-			stepper.send();
-		}
+
 		for (Stepper stepper : steppers) {
 			stepper.process();
+		}
+		for (Stepper stepper : steppers) {
+			stepper.send();
 		}
 		stepForward();
 	}

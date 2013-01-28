@@ -1,7 +1,7 @@
 package edu.clarkson.gdc.simulator.impl.stat;
 
 import edu.clarkson.gdc.simulator.Client;
-import edu.clarkson.gdc.simulator.framework.NodeListener;
+import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.NodeResponseEvent;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCFail;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCResponse;
@@ -14,7 +14,7 @@ import edu.clarkson.gdc.simulator.stat.AvailabilityReport;
  * @version 1.0
  * 
  */
-public class StatisticListener implements NodeListener {
+public class StatisticListener implements NodeMessageListener {
 
 	private AvailabilityReport report;
 

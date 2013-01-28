@@ -80,7 +80,7 @@ public class XMLFileCloudLoader implements CloudDataLoader {
 							rfs.load(
 									dcNode.getAttribute("datafile").toString(),
 									unit);
-							dc.setFailureStrategy(rfs);
+							dc.setExceptionStrategy(rfs);
 
 							dataCenters.add(dc);
 						}

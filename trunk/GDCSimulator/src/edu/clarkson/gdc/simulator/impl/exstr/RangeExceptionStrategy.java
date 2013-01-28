@@ -8,6 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.clarkson.gdc.simulator.ExceptionStrategy;
+import edu.clarkson.gdc.simulator.framework.NodeException;
+import edu.clarkson.gdc.simulator.framework.StrategyException;
 import edu.clarkson.gdc.simulator.framework.utils.FileCursor;
 import edu.clarkson.gdc.simulator.framework.utils.FileCursor.LineProcessor;
 
@@ -62,30 +64,20 @@ public class RangeExceptionStrategy implements ExceptionStrategy {
 
 	private Range current;
 
-	private boolean defaultValue;
-
 	public RangeExceptionStrategy() {
 	}
 
-	public boolean getDefaultValue() {
-		return defaultValue;
-	}
-
-	public void setDefaultValue(boolean defaultValue) {
-		this.defaultValue = defaultValue;
-	}
-
 	@Override
-	public boolean shouldFail(long tick) {
+	public NodeException getException(long tick) {
 		if (null == current)
 			current = fileCursor.next();
 		if (null == current)
-			return !defaultValue;
+			return null;
 		if (current.getStart() <= tick && current.getStop() > tick) {
-			return !current.getValue();
+			return new StrategyException();
 		} else {
 			current = null;
-			return shouldFail(tick);
+			return getException(tick);
 		}
 	}
 

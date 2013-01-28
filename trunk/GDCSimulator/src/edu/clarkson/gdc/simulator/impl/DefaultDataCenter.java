@@ -1,6 +1,7 @@
 package edu.clarkson.gdc.simulator.impl;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,8 +11,8 @@ import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
+import edu.clarkson.gdc.simulator.framework.NodeException;
 import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.impl.message.ReadKeyFail;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyRequest;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
 
@@ -56,14 +57,14 @@ import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
  */
 public class DefaultDataCenter extends Node implements DataCenter {
 
-	private ExceptionStrategy failureStrategy;
+	private ExceptionStrategy exceptionStrategy;
 
-	public ExceptionStrategy getFailureStrategy() {
-		return failureStrategy;
+	public ExceptionStrategy getExceptionStrategy() {
+		return exceptionStrategy;
 	}
 
-	public void setFailureStrategy(ExceptionStrategy failureStrategy) {
-		this.failureStrategy = failureStrategy;
+	public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
+		this.exceptionStrategy = exceptionStrategy;
 	}
 
 	private Point2D location;
@@ -77,11 +78,13 @@ public class DefaultDataCenter extends Node implements DataCenter {
 	}
 
 	@Override
-	protected ProcessGroup process(Map<Pipe, List<DataMessage>> events) {
+	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> events) {
 		ProcessResult success = new ProcessResult();
 		ProcessResult failed = new ProcessResult();
 
-		ProcessGroup group = new ProcessGroup(success, failed);
+		List<ProcessResult> results = new ArrayList<ProcessResult>();
+		results.add(success);
+		results.add(failed);
 
 		// Read Request
 		for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
@@ -91,23 +94,17 @@ public class DefaultDataCenter extends Node implements DataCenter {
 					// Read Key Request
 					if (message instanceof ReadKeyRequest) {
 						ReadKeyRequest request = (ReadKeyRequest) message;
-						if (getFailureStrategy().shouldFail(
-								getClock().getCounter())) {
-							ReadKeyFail resp = new ReadKeyFail(
-									(ReadKeyRequest) message);
-							failed.add(pipe, resp);
-						} else {
-							ReadKeyResponse resp = new ReadKeyResponse(
-									(ReadKeyRequest) message);
-							resp.setLoad(read(request.getKey()));
-							success.add(pipe, resp);
-						}
+						ReadKeyResponse resp = new ReadKeyResponse(
+								(ReadKeyRequest) message);
+						resp.setLoad(read(request.getKey()));
+						success.add(pipe, resp);
 					}
+
 					// {Add Other Request here}
 				}
 			}
 		}
-		return group;
+		return results;
 	}
 
 	@Override

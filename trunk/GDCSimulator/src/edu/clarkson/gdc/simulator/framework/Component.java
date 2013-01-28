@@ -53,8 +53,10 @@ public abstract class Component implements Stepper {
 	}
 
 	protected long getLatency(Map<Pipe, List<DataMessage>> msgs) {
+		if (null == msgs || msgs.isEmpty() == true)
+			return 0;
 		if (null == getTimeModel())
-			return -1;
+			return 1;
 		return getTimeModel().latency(this, msgs);
 	}
 

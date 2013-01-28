@@ -2,6 +2,7 @@ package edu.clarkson.gdc.simulator.impl;
 
 import java.awt.geom.Point2D;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -51,7 +52,7 @@ public class DefaultIndexService extends Node implements IndexService {
 				DataCenter currentDc = ((Cloud) getEnvironment())
 						.getDataCenter(dcid);
 				// Ignore Failed Data Center
-				if (currentDc.getFailureStrategy().shouldFail(
+				if (null != currentDc.getExceptionStrategy().getException(
 						getClock().getCounter()))
 					continue;
 				Point2D currentLoc = (Point2D) currentDc.getLocation();
@@ -68,10 +69,12 @@ public class DefaultIndexService extends Node implements IndexService {
 	}
 
 	@Override
-	protected ProcessGroup process(Map<Pipe, List<DataMessage>> events) {
+	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> events) {
 		ProcessResult success = new ProcessResult();
 		ProcessResult failed = new ProcessResult();
-		ProcessGroup group = new ProcessGroup(success, failed);
+		List<ProcessResult> results = new ArrayList<ProcessResult>();
+		results.add(success);
+		results.add(failed);
 
 		for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
 			Pipe pipe = entry.getKey();
@@ -98,6 +101,6 @@ public class DefaultIndexService extends Node implements IndexService {
 				}
 			}
 		}
-		return group;
+		return results;
 	}
 }

@@ -9,9 +9,7 @@ import java.util.EventListener;
  * @version 1.0
  */
 
-public interface NodeListener extends EventListener {
-	
-	public void stateChanged(NodeStateEvent event);
+public interface NodeMessageListener extends EventListener {
 
 	public void successReceived(NodeResponseEvent event);
 	

@@ -13,7 +13,7 @@ import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.Component;
 import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.Node;
-import edu.clarkson.gdc.simulator.framework.NodeListener;
+import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.NodeResponseEvent;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.impl.cdloader.XMLFileCloudLoader;
@@ -27,7 +27,8 @@ import edu.clarkson.gdc.simulator.impl.datadist.UniformDistribution;
  * @version 1.0
  * 
  */
-public class DefaultCloud extends Environment implements Cloud, NodeListener {
+public class DefaultCloud extends Environment implements Cloud,
+		NodeMessageListener {
 
 	public DefaultCloud() {
 		super();
@@ -151,31 +152,33 @@ public class DefaultCloud extends Environment implements Cloud, NodeListener {
 
 	@Override
 	public void successReceived(NodeResponseEvent event) {
-		for (NodeListener nl : listenerList.getListeners(NodeListener.class)) {
+		for (NodeMessageListener nl : listenerList
+				.getListeners(NodeMessageListener.class)) {
 			nl.successReceived(event);
 		}
 	}
 
 	@Override
 	public void failureReceived(NodeResponseEvent event) {
-		for (NodeListener nl : listenerList.getListeners(NodeListener.class)) {
+		for (NodeMessageListener nl : listenerList
+				.getListeners(NodeMessageListener.class)) {
 			nl.failureReceived(event);
 		}
 	}
 
 	private EventListenerList listenerList;
 
-	public void addNodeListener(NodeListener listener) {
-		listenerList.add(NodeListener.class, listener);
+	public void addNodeListener(NodeMessageListener listener) {
+		listenerList.add(NodeMessageListener.class, listener);
 	}
 
-	public void removeNodeListener(NodeListener listener) {
-		listenerList.remove(NodeListener.class, listener);
+	public void removeNodeListener(NodeMessageListener listener) {
+		listenerList.remove(NodeMessageListener.class, listener);
 	}
 
 	public void run(long stop) {
 		while (getClock().getCounter() < stop) {
-			getClock().step();
+			getClock().tick();
 		}
 	}
 

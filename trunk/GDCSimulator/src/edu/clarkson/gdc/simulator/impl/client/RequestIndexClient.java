@@ -2,6 +2,7 @@ package edu.clarkson.gdc.simulator.impl.client;
 
 import java.awt.geom.Point2D;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,12 +16,12 @@ import edu.clarkson.gdc.simulator.Cloud;
 import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
+import edu.clarkson.gdc.simulator.framework.NodeFailMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.impl.WorkloadProvider;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCFail;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCRequest;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCResponse;
-import edu.clarkson.gdc.simulator.impl.message.ReadKeyFail;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyRequest;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
 
@@ -46,11 +47,11 @@ public class RequestIndexClient extends Node implements Client {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
-	protected ProcessGroup process(Map<Pipe, List<DataMessage>> messages) {
+	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> messages) {
 		ProcessResult result = new ProcessResult();
 		ProcessResult failed = new ProcessResult();
 
-		ProcessGroup group = new ProcessGroup(result, failed);
+		List<ProcessResult> results = new ArrayList<ProcessResult>();
 
 		Node indexService = (Node) ((Cloud) getEnvironment()).getIndexService();
 		Pipe indexServicePipe = getPipe(indexService);
@@ -76,7 +77,7 @@ public class RequestIndexClient extends Node implements Client {
 				if (!CollectionUtils.isEmpty(indexServiceResp)) {
 					for (DataMessage resp : indexServiceResp) {
 						if (resp instanceof LocateDCFail) {
-							reportFailure((LocateDCFail) resp);
+							fireFailure((LocateDCFail) resp);
 							if (logger.isDebugEnabled()) {
 								logger.debug(MessageFormat
 										.format("{0} at tick {1} received LocateDC Failure",
@@ -86,7 +87,7 @@ public class RequestIndexClient extends Node implements Client {
 						} else {
 							LocateDCResponse ldcr = (LocateDCResponse) resp;
 
-							reportSuccess(ldcr);
+							fireSuccess(ldcr);
 							String dcId = ldcr.getDataCenterId();
 							Node dataCenter = (Node) ((Cloud) getEnvironment())
 									.getDataCenter(dcId);
@@ -109,14 +110,18 @@ public class RequestIndexClient extends Node implements Client {
 			if (pipe.getOpponent(this) instanceof DataCenter) {
 				List<DataMessage> dcResponse = entry.getValue();
 				for (DataMessage resp : dcResponse)
-					if (resp instanceof ReadKeyFail) {
-						reportFailure((ReadKeyFail) resp);
+					if (resp instanceof NodeFailMessage) {
+						fireFailure((NodeFailMessage) resp);
 					} else {
-						reportSuccess((ReadKeyResponse) resp);
+						fireSuccess((ReadKeyResponse) resp);
 					}
 			}
 		}
-		return group;
+
+		results.add(result);
+		results.add(failed);
+
+		return results;
 	}
 
 	private WorkloadProvider provider;

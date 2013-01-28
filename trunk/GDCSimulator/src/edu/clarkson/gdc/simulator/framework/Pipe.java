@@ -2,12 +2,14 @@ package edu.clarkson.gdc.simulator.framework;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang.Validate;
 
 import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
+import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
 
 /**
  * 
@@ -29,6 +31,8 @@ public class Pipe extends Component {
 		super();
 		this.requestBuffer = new ConcurrentLinkedQueue<DataMessage>();
 		this.responseBuffer = new ConcurrentLinkedQueue<DataMessage>();
+		
+		setTimeModel(new ConstantTimeModel(1));
 	}
 
 	public Pipe(Node source, Node destination) {
@@ -61,7 +65,7 @@ public class Pipe extends Component {
 			if (buffer.isEmpty())
 				break;
 			DataMessage event = buffer.peek();
-			if (event.getTimestamp() <= getClock().getCounter())
+			if (event.getTimestamp() < getClock().getCounter())
 				output.add(buffer.poll());
 			else {
 				break;
@@ -98,5 +102,12 @@ public class Pipe extends Component {
 	public Node getOpponent(Node me) {
 		Validate.notNull(me);
 		return getSource().equals(me) ? getDestination() : getSource();
+	}
+	
+	@Override
+	protected long getLatency(Map<Pipe, List<DataMessage>> msgs) {
+		if (null == getTimeModel())
+			return 1;
+		return getTimeModel().latency(this, msgs);
 	}
 }

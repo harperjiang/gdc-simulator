@@ -13,7 +13,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.clarkson.gdc.simulator.Client;
-import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
 import edu.clarkson.gdc.simulator.impl.CloudDataLoader;
 import edu.clarkson.gdc.simulator.impl.DefaultDataCenter;
@@ -34,14 +33,14 @@ public class XMLFileCloudLoader implements CloudDataLoader {
 
 	private int unit;
 
-	private List<DataCenter> dataCenters;
+	private List<DefaultDataCenter> dataCenters;
 
 	private List<Client> clients;
 
 	protected void init() {
 		if (!init) {
 
-			dataCenters = new ArrayList<DataCenter>();
+			dataCenters = new ArrayList<DefaultDataCenter>();
 			clients = new ArrayList<Client>();
 			// Load XML files
 
@@ -124,7 +123,7 @@ public class XMLFileCloudLoader implements CloudDataLoader {
 	}
 
 	@Override
-	public List<DataCenter> loadDataCenters() {
+	public List<DefaultDataCenter> loadDataCenters() {
 		init();
 		return dataCenters;
 	}

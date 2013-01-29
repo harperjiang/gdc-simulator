@@ -80,7 +80,6 @@ public class DefaultIndexService extends Node implements IndexService {
 			Pipe pipe = entry.getKey();
 			for (DataMessage message : entry.getValue()) {
 				if (message instanceof LocateDCRequest) {
-
 					LocateDCRequest ldcr = (LocateDCRequest) message;
 					String key = ldcr.getKey();
 					if (logger.isDebugEnabled()) {

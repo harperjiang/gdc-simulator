@@ -74,7 +74,7 @@ public class RangeExceptionStrategy implements ExceptionStrategy {
 		if (null == current)
 			return null;
 		if (current.getStart() <= tick && current.getStop() > tick) {
-			return new StrategyException();
+			return current.value ? null : new StrategyException();
 		} else {
 			current = null;
 			return getException(tick);

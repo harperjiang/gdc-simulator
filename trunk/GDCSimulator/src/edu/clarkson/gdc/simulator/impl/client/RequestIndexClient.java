@@ -49,7 +49,6 @@ public class RequestIndexClient extends DefaultClient {
 	@Override
 	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> messages) {
 		ProcessResult result = new ProcessResult();
-		ProcessResult failed = new ProcessResult();
 
 		List<ProcessResult> results = new ArrayList<ProcessResult>();
 
@@ -119,7 +118,6 @@ public class RequestIndexClient extends DefaultClient {
 		}
 
 		results.add(result);
-		results.add(failed);
 
 		return results;
 	}

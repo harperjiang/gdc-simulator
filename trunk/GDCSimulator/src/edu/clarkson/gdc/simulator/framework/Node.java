@@ -176,7 +176,7 @@ public abstract class Node extends Component implements NodeStateListener {
 					}
 				}
 			} else { // Normal case, wait till message is ready to be sent
-				if (timeoutResult.getTimestamp() < getClock().getCounter()) {
+				if (timeoutResult.getTimestamp() <= getClock().getCounter()) {
 					timeoutResult = buffer.poll();
 					// Distribute
 					for (Entry<Pipe, List<DataMessage>> entry : timeoutResult

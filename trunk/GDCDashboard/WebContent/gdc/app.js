@@ -41,32 +41,7 @@ var batteryStore = Ext.create('Ext.data.ArrayStore', {
 });
 batteryStore.loadData([ [ 20 ] ]);
 
-var treeStore = Ext.create('Ext.data.TreeStore', {
-	root : {
-		expanded : true,
-		children : [ {
-			text : "Data Center 1",
-			expanded : true,
-			children : [ {
-				text : 'Battery 1',
-				leaf : true
-			}, {
-				text : 'Battery 2',
-				leaf : true
-			} ]
-		}, {
-			text : "Data Center 2",
-			expanded : true,
-			children : [ {
-				text : 'Battery 3',
-				leaf : true
-			}, {
-				text : 'Battery 4',
-				leaf : true
-			} ]
-		} ]
-	}
-});
+var treeStore = Ext.create('Ext.data.TreeStore');
 
 Ext.application({
 	name : 'Kooobao Ecom System',
@@ -88,10 +63,8 @@ Ext.application({
 					xtype : 'panel',
 					width : '100%',
 					height : 30,
-					style : {
-						background : '#dddddd',
-						fontSize : '20px'
-					},
+					styleHtmlContent : true,
+					styleHtmlCls : 'banner',
 					html : 'Brief'
 				}, {
 					xtype : 'chart',
@@ -178,4 +151,17 @@ Ext.application({
 			} ]
 		});
 	}
+});
+
+structureService.getDataCenters(function(dss) {
+	debugger;
+	var root = {};
+	root.expanded = true;
+	root.children = new Array();
+	for ( var i = 0; i < dss.length; i++)
+		root.children.push({
+			text : dss[i].name,
+			leaf : true
+		});
+	treeStore.setRootNode(root);
 });

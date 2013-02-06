@@ -1,0 +1,16 @@
+
+.contentDiv {
+	width:700px;
+	position:absolute;
+	overflow:auto;
+}
+
+.visibleTab {
+	visibility:visible;
+	z-index:1;
+}
+
+.hiddenTab {
+	visibility:hidden;
+	z-index:2;
+}

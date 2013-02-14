@@ -9,6 +9,9 @@ Ext.define("GDC.MainViewPort", {
 	}, {
 		xtype : 'tabpanel',
 		id : 'maintab',
-		region : 'center'
+		region : 'center',
+		items : [ {
+			xtype : 'summaryPanel'
+		} ]
 	} ]
 });

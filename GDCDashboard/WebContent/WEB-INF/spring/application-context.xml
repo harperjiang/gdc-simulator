@@ -5,4 +5,6 @@
 
 	<bean id="structureService"
 		class="edu.clarkson.gdc.dashboard.service.DefaultStructureService" />
+	<bean id="nodeService"
+		class="edu.clarkson.gdc.dashboard.service.DefaultNodeService" />
 </beans>

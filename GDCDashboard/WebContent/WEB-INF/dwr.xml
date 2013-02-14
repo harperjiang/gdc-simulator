@@ -9,6 +9,11 @@
 			<param name="beanName" value="structureService" />
 			<include method="getDataCenters" />
 		</create>
+		
+		<create creator="spring" javascript="nodeService">
+			<param name="beanName" value="nodeService" />
+			<include method="getData" />
+		</create>
 
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.entity.DataCenter" />

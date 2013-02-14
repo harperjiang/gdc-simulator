@@ -20,10 +20,12 @@ public class DefaultStructureService implements StructureService {
 
 		Battery battery11 = new Battery();
 		battery11.setName("Battery 1");
+		battery11.setId("bty11");
 		dc1.getBatteries().add(battery11);
 
 		Machine machine111 = new Machine();
 		machine111.setName("Machine 1");
+		machine111.setId("mc111");
 		battery11.getMachines().add(machine111);
 
 		VirtualMachine vm1 = new VirtualMachine();

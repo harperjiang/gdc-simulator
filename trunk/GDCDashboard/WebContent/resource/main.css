@@ -6,9 +6,22 @@ div {
 .banner {
 	font-size: 30px;
 	border: 0px solid black;
-	font-weight: bold; 
-	color : #8888EE;
+	font-weight: bold;
+	color: #8888EE;
 	padding-left: 20px;
 	padding-top: 5px;
 	padding-left: 20px;
+}
+
+.labeled_text {
+	font-size: 12px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.labeled_text label {
+	float: left;
+	display: block;
+	width: 250px;
+	font-weight: bold;
 }

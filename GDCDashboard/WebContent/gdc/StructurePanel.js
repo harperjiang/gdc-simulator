@@ -1,8 +1,6 @@
 Ext.namespace("GDC");
 GDC.structureStore = Ext.create('Ext.data.TreeStore');
-
 structureService.getDataCenters(function(dcs) {
-	debugger;
 	var root = {};
 	root.expanded = true;
 	root.children = new Array();
@@ -48,27 +46,33 @@ structureService.getDataCenters(function(dcs) {
 	GDC.structureStore.setRootNode(root);
 });
 
-function loadNode(id) {
+function displayNode(id) {
 	nodeService.getData(id, function(data) {
-		var newView = undefined;
 		data = {
+			id : '313',
 			title : 'Machine View',
 			cpu : 40,
 			memory : 30,
 			battery : 80
 		};
-		switch (data.type) {
-		case 'machine':
-		default:
-			newView = Ext.create('GDC.MachineViewPanel');
-		}
-		newView.loadData(data);
-		newView.title = data.title;
-
+		debugger;
+		var newid = "tab" + data.id;
 		var mainTabPanel = Ext.getCmp('maintab');
-		mainTabPanel.add(newView);
+		var existed = Ext.getCmp(newid);
+		if (undefined === existed) {
+			switch (data.type) {
+			case 'dc':
+			default:
+				existed = Ext.create('GDC.node.DCViewPanel');
+			}
+			existed.updateId(newid);
+			existed.title = data.title;
+			mainTabPanel.add(existed);
+		}
+		// Refresh Data
+		existed.loadData(data);
 		// Set it as the active one
-		mainTabPanel.setActiveTab(mainTabPanel.items.length - 1);
+		mainTabPanel.setActiveTab(newid);
 	});
 
 }
@@ -82,7 +86,7 @@ Ext.define("GDC.StructurePanel", {
 	width : 200,
 	listeners : {
 		select : function(tree, record, row, opt) {
-			loadNode(record.raw.id);
+			displayNode(record.raw.id);
 		}
 	}
 });

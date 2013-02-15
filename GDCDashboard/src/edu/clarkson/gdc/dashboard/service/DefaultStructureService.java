@@ -3,10 +3,10 @@ package edu.clarkson.gdc.dashboard.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.clarkson.gdc.dashboard.entity.Battery;
-import edu.clarkson.gdc.dashboard.entity.DataCenter;
-import edu.clarkson.gdc.dashboard.entity.Machine;
-import edu.clarkson.gdc.dashboard.entity.VirtualMachine;
+import edu.clarkson.gdc.dashboard.domain.entity.Battery;
+import edu.clarkson.gdc.dashboard.domain.entity.DataCenter;
+import edu.clarkson.gdc.dashboard.domain.entity.Machine;
+import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 
 public class DefaultStructureService implements StructureService {
 

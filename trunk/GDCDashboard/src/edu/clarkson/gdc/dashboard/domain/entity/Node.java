@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.dashboard.entity;
+package edu.clarkson.gdc.dashboard.domain.entity;
 
 public class Node {
 

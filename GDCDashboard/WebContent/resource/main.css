@@ -15,14 +15,30 @@ div {
 
 .labeled_text {
 	font-size: 12px;
-	margin-top: 10px;
-	margin-bottom: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	float: left;
 }
 
 .labeled_text label {
 	float: left;
 	display: block;
 	width: 250px;
+	font-weight: bold;
+}
+
+.slabeled_text {
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	float: left;
+	width:270px;
+}
+
+.slabeled_text label {
+	float: left;
+	display: block;
+	width: 120px;
 	font-weight: bold;
 }
 

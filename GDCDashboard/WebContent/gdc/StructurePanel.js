@@ -82,6 +82,8 @@ function displayNode(id) {
 			mainTabPanel.add(existed);
 		}
 		// Refresh Data
+		// Preprocess data
+		data.image = data.status ? 'green_light.png' : 'red_light.png';
 		existed.loadData(data);
 		// Set it as the active one
 		mainTabPanel.setActiveTab(newid);

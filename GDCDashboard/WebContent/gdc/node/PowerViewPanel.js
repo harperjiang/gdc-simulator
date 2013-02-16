@@ -30,20 +30,51 @@ Ext.define('GDC.node.PowerViewPanel', {
 				itemId : 'info',
 				collapsible : true,
 				width : 700,
-				items : [ {
-					xtype : 'image',
-					style : 'float:left;',
-					width : 100,
-					height : 100,
-					margin : 10,
-					src : 'image/battery.jpg'
-				}, {
-					xtype : 'component',
-					itemId : 'desc',
-					width : 500,
-					style : 'float:left;',
-					margin : 10
-				} ]
+				items : [
+						{
+							xtype : 'image',
+							style : 'float:left;',
+							width : 100,
+							height : 100,
+							margin : 10,
+							src : 'image/battery.jpg'
+						},
+						,
+						{
+							xtype : 'component',
+							itemId : 'status',
+							styleHtmlContent : true,
+							width : 540,
+							height : 120,
+							style : 'float:left;' + 'margin-left:30px;'
+									+ 'margin-top:10px;',
+							html : "<div class='slabeled_text'>"
+									+ "	<label>Status:</label>"
+									+ "	<img src='image/{image}'"
+									+ "		style='width: 14px; "
+									+ "		height: 14px; "
+									+ "		display: inline;' />" + "</div>"
+									+ "<div class='slabeled_text'>"
+									+ "	<label>Manufacture:</label>"
+									+ "	{manufacture}" + "</div>"
+									+ "<div class='slabeled_text'>"
+									+ "	<label>Model:</label>" + "	{model}"
+									+ "</div>" + "<div class='slabeled_text'>"
+									+ "	<label>Designed Capacity:</label>"
+									+ "	{designed_capacity}" + "</div>"
+									+ "<div class='slabeled_text'>"
+									+ "	<label>Designed Output:</label>"
+									+ "	{designed_output}" + "</div>"
+									+ "<div class='slabeled_text'>"
+									+ "	<label>Output Voltage:</label>"
+									+ "	{output_voltage}" + "</div>"
+						}, {
+							xtype : 'component',
+							itemId : 'desc',
+							width : 500,
+							style : 'float:left;',
+							margin : 10
+						} ]
 			},
 			{
 				xtype : 'panel',
@@ -211,6 +242,9 @@ Ext.define('GDC.node.PowerViewPanel', {
 			} ],
 	loadData : function(datas) {
 		this.getComponent('info').getComponent('desc').html = datas.desc;
+
+		GDC.common.HtmlRendererInst.updateHtml(this.getComponent('info')
+				.getComponent('status'), datas);
 		this.getComponent('performance').getComponent('power').store
 				.loadData([ [ datas.power ] ]);
 		this.getComponent('performance').getComponent('voltage').store

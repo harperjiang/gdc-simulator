@@ -12,6 +12,8 @@ Ext.define('GDC.AlertGrid.AlertModel', {
 	}, {
 		name : 'type'
 	}, {
+		name : 'nodeId'
+	}, {
 		name : 'description'
 	} ],
 	idProperty : 'id'
@@ -56,6 +58,11 @@ Ext.define('GDC.summary.AlertGrid', {
 		width : 75,
 		sortable : false,
 		dataIndex : 'type'
+	}, {
+		text : 'Node Id',
+		width : 75,
+		sortable : false,
+		dataIndex : 'nodeId'
 	}, {
 		text : 'Description',
 		flex : 1,

@@ -46,9 +46,14 @@ structureService.getDataCenters(function(dcs) {
 	GDC.structureStore.setRootNode(root);
 });
 
+function updateId(existed, dataid, newid) {
+	existed.id = newid;
+	existed.dataId = dataid;
+	Ext.ComponentManager.register(existed);
+}
+
 function displayNode(id) {
 	nodeService.getData(id, function(reply) {
-		debugger;
 		var data = JSON.parse(reply);
 		var newid = "tab" + data.id;
 		var mainTabPanel = Ext.getCmp('maintab');
@@ -72,7 +77,7 @@ function displayNode(id) {
 				alert('Unrecognized type:' + data.type);
 				break;
 			}
-			existed.updateId(newid);
+			updateId(existed, data.id, newid);
 			existed.title = data.name;
 			mainTabPanel.add(existed);
 		}

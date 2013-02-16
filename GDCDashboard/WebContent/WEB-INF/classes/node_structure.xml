@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data-centers xmlns="http://gdc.clarkson.edu/node_structure"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://gdc.clarkson.edu/node_structure node_structure.xsd ">
+	<data-center id="dc1" name="Data Center 1">
+		<battery id="dc1.bty1" name="APC UPS">
+			<machine id="dc1.bty1.mc1" name="Machine A" />
+			<machine id="dc1.bty1.mc2" name="Machine B" />
+		</battery>
+		<description>This is a description to the data center 1</description>
+	</data-center>
+	<data-center id="dc2" name="Data Center 2">
+		<battery id="dc2.bty1" name="CyberPower UPS">
+			<machine id="dc2.bty1.mc1" name="Machine V" />
+		</battery>
+		<description>This is a description to the data center 2</description>
+	</data-center>
+	<data-center id="dc3" name="Data Center 3">
+		<battery id="dc3.bty1" name="UniPower UPS">
+			<machine id="dc3.bty1.mc1" name="Machine D" />
+		</battery>
+		<description>This is a description to the data center 3</description>
+	</data-center>
+	<data-center id="dc4" name="Data Center 4">
+		<battery id="dc4.bty1" name="Other UPS">
+			<machine id="dc4.bty1.mc1" name="Machine U" />
+		</battery>
+		<description>This is a description to the data center 4</description>
+	</data-center>
+</data-centers>

@@ -9,18 +9,20 @@
 			<param name="beanName" value="structureService" />
 			<include method="getDataCenters" />
 		</create>
-		
+
 		<create creator="spring" javascript="nodeService">
 			<param name="beanName" value="nodeService" />
 			<include method="getData" />
 		</create>
 
 		<convert converter="bean"
-			match="edu.clarkson.gdc.dashboard.entity.DataCenter" />
-		<convert converter="bean" match="edu.clarkson.gdc.dashboard.entity.Battery" />
-		<convert converter="bean" match="edu.clarkson.gdc.dashboard.entity.Machine" />
+			match="edu.clarkson.gdc.dashboard.domain.entity.DataCenter" />
 		<convert converter="bean"
-			match="edu.clarkson.gdc.dashboard.entity.VirtualMachine" />
+			match="edu.clarkson.gdc.dashboard.domain.entity.Battery" />
+		<convert converter="bean"
+			match="edu.clarkson.gdc.dashboard.domain.entity.Machine" />
+		<convert converter="bean"
+			match="edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine" />
 
 		<!-- this is a bad idea for live, but can be useful in testing -->
 		<convert converter="exception" match="java.lang.Exception" />

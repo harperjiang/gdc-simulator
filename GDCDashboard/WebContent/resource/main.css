@@ -25,3 +25,26 @@ div {
 	width: 250px;
 	font-weight: bold;
 }
+
+.desc {
+	font-size: 12px;
+}
+
+.desc div {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.desc label {
+	font-weight: bold;
+	display: block;
+	float: left;
+	width: 100px;
+}
+
+.desc ul li {
+	display: block;
+	float: left;
+	margin-bottom: 5px;
+	margin-top: 5px;
+}

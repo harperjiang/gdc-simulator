@@ -1,9 +1,9 @@
 Ext
 		.define(
-				'GDC.node.DCViewPanel',
+				'GDC.node.PowerViewPanel',
 				{
 					extend : 'Ext.panel.Panel',
-					xtype : 'nodeDcpanel',
+					xtype : 'nodePowerPanel',
 					closable : true,
 					autoScroll : true,
 					layout : {
@@ -40,7 +40,7 @@ Ext
 									width : 100,
 									height : 100,
 									margin : 10,
-									src : 'image/data_center.jpg'
+									src : 'image/battery.jpg'
 								}, {
 									xtype : 'component',
 									itemId : 'description',
@@ -79,32 +79,9 @@ Ext
 											styleHtmlCls : 'desc',
 											width : 270,
 											padding : 10,
-											html : "<div>This is an evaluation of the data center.</div>"
-													+ "<ul>"
-													+ "<li>"
-													+ "<label>"
-													+ "Stability:"
-													+ "</label>"
-													+ "asdfasdfsdfasdfasdf"
-													+ "</li>"
-													+ "<li>"
-													+ "<label>"
-													+ "Efficiency:"
-													+ "</label>"
-													+ "asdfasdfsdfasdfasdf"
-													+ "</li>"
-													+ "<li>"
-													+ "<label>"
-													+ "Capacity:"
-													+ "</label>"
-													+ "asdfasdfsdfasdfasdf"
-													+ "</li>"
-													+ "<li>"
-													+ "<label>"
-													+ "Availability:"
-													+ "</label>"
-													+ "asdfasdfsdfasdfasdf"
-													+ "</li>" + "</ul>"
+											html : 'This is an evaluation of the UPS.'
+													+ '<ul><li><label>'
+													+ '</label></li>' + '</ul>'
 										} ]
 							}, {
 								itemId : 'performance',
@@ -119,27 +96,7 @@ Ext
 								} ],
 								items : [ {
 									xtype : 'gdcGaugeChart',
-									itemId : 'healthChart',
-									style : 'background:#fff',
-									store : Ext.create('Ext.data.ArrayStore', {
-										// reader configs
-										fields : [ {
-											name : 'data1',
-											type : 'float'
-										} ]
-									}),
-									axes : [ {
-										type : 'gauge',
-										position : 'gauge',
-										title : 'Health',
-										minimum : 0,
-										maximum : 100,
-										steps : 4,
-										margin : 7
-									} ]
-								}, {
-									xtype : 'gdcGaugeChart',
-									itemId : 'powerChart',
+									itemId : 'power',
 									style : 'background:#fff',
 									store : Ext.create('Ext.data.ArrayStore', {
 										// reader configs
@@ -155,11 +112,11 @@ Ext
 										maximum : 100,
 										steps : 4,
 										margin : 7,
-										title : 'Power\nGeneration'
+										title : 'Power\nPercentage'
 									} ]
 								}, {
 									xtype : 'gdcGaugeChart',
-									itemId : 'capacityChart',
+									itemId : 'voltage',
 									style : 'background:#fff',
 									store : Ext.create('Ext.data.ArrayStore', {
 										// reader configs
@@ -175,7 +132,27 @@ Ext
 										maximum : 100,
 										steps : 4,
 										margin : 7,
-										title : 'Capacity'
+										title : 'Output\nVoltage'
+									} ]
+								}, {
+									xtype : 'gdcGaugeChart',
+									itemId : 'temperature',
+									style : 'background:#fff',
+									store : Ext.create('Ext.data.ArrayStore', {
+										// reader configs
+										fields : [ {
+											name : 'data1',
+											type : 'float'
+										} ]
+									}),
+									axes : [ {
+										type : 'gauge',
+										position : 'gauge',
+										minimum : 0,
+										maximum : 100,
+										steps : 4,
+										margin : 7,
+										title : 'Temperature'
 									} ]
 								} ]
 							}, {
@@ -203,7 +180,7 @@ Ext
 										minimum : 0,
 										position : 'left',
 										fields : [ 'value' ],
-										title : 'Power(MW)',
+										title : 'Percentage(%)',
 										minorTickSteps : 1,
 										grid : {
 											odd : {
@@ -244,15 +221,14 @@ Ext
 					loadData : function(datas) {
 						this.getComponent('information').getComponent(
 								'description').html = datas.description;
-						this.getComponent('performance').getComponent(
-								'healthChart').store
-								.loadData([ [ datas.health ] ]);
-						this.getComponent('performance').getComponent(
-								'capacityChart').store
-								.loadData([ [ datas.capacity ] ]);
-						this.getComponent('performance').getComponent(
-								'powerChart').store
+						this.getComponent('performance').getComponent('power').store
 								.loadData([ [ datas.power ] ]);
+						this.getComponent('performance')
+								.getComponent('voltage').store
+								.loadData([ [ datas.voltage ] ]);
+						this.getComponent('performance').getComponent(
+								'temperature').store
+								.loadData([ [ datas.temperature ] ]);
 
 						var data = [ {
 							time : '12:00',
@@ -287,13 +263,13 @@ Ext
 								'powerHistory').store.loadData(data);
 
 						var data2 = [ {
-							name : 'Stablity',
+							name : 'Capacity',
 							value : 1
 						}, {
-							name : 'Efficiency',
+							name : 'Ampere',
 							value : 2
 						}, {
-							name : 'Capacity',
+							name : 'Life',
 							value : 3
 						}, {
 							name : 'Availability',
@@ -301,7 +277,7 @@ Ext
 						} ];
 						this.getComponent('evaluation').getComponent('eval').store
 								.loadData(data2);
-						this.getComponent('banner').html = "Data Center: "
+						this.getComponent('banner').html = "Battery: "
 								+ datas.name;
 					}
 				});

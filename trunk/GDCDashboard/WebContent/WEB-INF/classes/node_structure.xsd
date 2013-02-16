@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://gdc.clarkson.edu/node_structure"
+	xmlns:tns="http://gdc.clarkson.edu/node_structure" elementFormDefault="qualified">
+
+	<complexType name="dcType">
+		<sequence>
+			<sequence maxOccurs="unbounded" minOccurs="0">
+				<element name="battery" type="tns:batteryType"></element>
+			</sequence>
+			<sequence maxOccurs="1" minOccurs="0">
+				<element name="description" type="string"></element>
+			</sequence>
+		</sequence>
+		<attribute name="id" type="string"></attribute>
+		<attribute name="name" type="string"></attribute>
+	</complexType>
+
+	<complexType name="batteryType">
+		<sequence maxOccurs="unbounded" minOccurs="0">
+			<element name="machine" type="tns:machineType"></element>
+		</sequence>
+		<attribute name="id" type="string"></attribute>
+		<attribute name="name" type="string"></attribute>
+	</complexType>
+
+	<complexType name="machineType">
+		<attribute name="id" type="string"></attribute>
+		<attribute name="name" type="string"></attribute>
+	</complexType>
+
+	<complexType name="dcsType">
+		<sequence maxOccurs="unbounded" minOccurs="1">
+			<element name="data-center" type="tns:dcType"></element>
+		</sequence>
+	</complexType>
+
+	<element name="data-centers" type="tns:dcsType"></element>
+</schema>

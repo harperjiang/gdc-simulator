@@ -5,17 +5,22 @@ Ext.Loader.setConfig({
 	}
 });
 Ext.require([ 'Ext.data.TreeStore' ]);
+Ext.require('Ext.ux.CheckColumn');
 Ext.require([ 'Ext.chart.*', 'Ext.chart.axis.Gauge', 'Ext.chart.series.*',
 		'Ext.Window' ]);
 Ext.require([ 'Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.state.*' ]);
 
 Ext.require([ 'GDC.MainViewPort', 'GDC.StructurePanel' ]);
 
-Ext.require([ 'GDC.common.GaugeChart' ]);
+Ext.require([ 'GDC.common.GaugeChart', 'GDC.common.EvalRadarChart',
+		'GDC.common.LineChart' ]);
 
 Ext.require([ 'GDC.summary.AlertGrid', 'GDC.summary.SummaryPanel' ]);
 
-Ext.require([ 'GDC.node.DCViewPanel', 'GDC.node.MachineViewPanel' ]);
+Ext.require('GDC.node.VMGrid');
+
+Ext.require([ 'GDC.node.DCViewPanel', 'GDC.node.PowerViewPanel',
+		'GDC.node.MachineViewPanel' ]);
 
 Ext.application({
 	name : 'Kooobao Ecom System',

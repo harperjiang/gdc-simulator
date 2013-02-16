@@ -6,6 +6,8 @@ Ext.define("GDC.common.GaugeChart", {
 		easing : 'bounceOut',
 		duration : 500
 	},
+	width : 210,
+	height : 120,
 	insetPadding : 25,
 	flex : 1,
 	axes : [ {
@@ -21,7 +23,7 @@ Ext.define("GDC.common.GaugeChart", {
 		type : 'gauge',
 		field : 'data1',
 		donut : 60,
-		colorList : [ '#0f0', '#fbf80b', '#fd8c12', '#f65007', '#f81409' ],
+		colorList : [ '#00ff00', '#fbf80b', '#fd8c12', '#f65007', '#f81409' ],
 		renderer : function(sprite, storeItem, attr, i, store) {
 			var data = storeItem.raw[0];
 			return Ext.apply(attr, {

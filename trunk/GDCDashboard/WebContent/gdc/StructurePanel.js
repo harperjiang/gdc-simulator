@@ -47,26 +47,33 @@ structureService.getDataCenters(function(dcs) {
 });
 
 function displayNode(id) {
-	nodeService.getData(id, function(data) {
-		data = {
-			id : '313',
-			title : 'Machine View',
-			cpu : 40,
-			memory : 30,
-			battery : 80
-		};
+	nodeService.getData(id, function(reply) {
 		debugger;
+		var data = JSON.parse(reply);
 		var newid = "tab" + data.id;
 		var mainTabPanel = Ext.getCmp('maintab');
 		var existed = Ext.getCmp(newid);
-		if (undefined === existed) {
+		if (existed != null && existed.items.length == 0) {
+			existed.destroy();
+			existed = undefined;
+		}
+		if (undefined === existed || null == existed) {
 			switch (data.type) {
 			case 'dc':
-			default:
 				existed = Ext.create('GDC.node.DCViewPanel');
+				break;
+			case 'battery':
+				existed = Ext.create('GDC.node.PowerViewPanel');
+				break;
+			case 'machine':
+				existed = Ext.create('GDC.node.MachineViewPanel');
+				break;
+			default:
+				alert('Unrecognized type:' + data.type);
+				break;
 			}
 			existed.updateId(newid);
-			existed.title = data.title;
+			existed.title = data.name;
 			mainTabPanel.add(existed);
 		}
 		// Refresh Data

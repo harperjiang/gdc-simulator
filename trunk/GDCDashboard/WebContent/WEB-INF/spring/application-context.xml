@@ -3,8 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+	<bean id="nodeDao" class="edu.clarkson.gdc.dashboard.domain.dao.XMLNodeDao" />
+
 	<bean id="structureService"
-		class="edu.clarkson.gdc.dashboard.service.DefaultStructureService" />
-	<bean id="nodeService"
-		class="edu.clarkson.gdc.dashboard.service.DefaultNodeService" />
+		class="edu.clarkson.gdc.dashboard.service.DefaultStructureService">
+		<property name="nodeDao" ref="nodeDao" />
+	</bean>
+	<bean id="nodeService" class="edu.clarkson.gdc.dashboard.service.DefaultNodeService">
+		<property name="nodeDao" ref="nodeDao" />
+	</bean>
 </beans>

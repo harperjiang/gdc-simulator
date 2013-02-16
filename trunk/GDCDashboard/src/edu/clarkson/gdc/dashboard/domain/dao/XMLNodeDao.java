@@ -22,8 +22,6 @@ import edu.clarkson.gdc.dashboard.domain.entity.Node;
 
 public class XMLNodeDao implements NodeDao {
 
-	private boolean init = false;
-
 	private Map<String, Node> nodes;
 
 	public XMLNodeDao() {
@@ -50,6 +48,16 @@ public class XMLNodeDao implements NodeDao {
 				dc.setName(dcElem.getAttribute("name"));
 				dc.setDescription(dcElem.getElementsByTagName("description")
 						.item(0).getTextContent());
+				Element attrs = (Element) dcElem.getElementsByTagName(
+						"attributes").item(0);
+				if (attrs != null && attrs.getParentNode() == dcElem) {
+					NodeList attrList = attrs.getElementsByTagName("attribute");
+					for (int ii = 0; ii < attrList.getLength(); ii++) {
+						Element attr = (Element) attrList.item(ii);
+						dc.getAttributes().put(attr.getAttribute("key"),
+								attr.getAttribute("value"));
+					}
+				}
 				nodes.put(dc.getId(), dc);
 
 				NodeList batteryList = dcElem.getElementsByTagName("battery");
@@ -59,6 +67,19 @@ public class XMLNodeDao implements NodeDao {
 					battery.setId(batteryElem.getAttribute("id"));
 					battery.setName(batteryElem.getAttribute("name"));
 					dc.getBatteries().add(battery);
+
+					Element battrs = (Element) batteryElem
+							.getElementsByTagName("attributes").item(0);
+					if (battrs != null && battrs.getParentNode() == batteryElem) {
+						NodeList attrList = battrs
+								.getElementsByTagName("attribute");
+						for (int ii = 0; ii < attrList.getLength(); ii++) {
+							Element attr = (Element) attrList.item(ii);
+							battery.getAttributes().put(
+									attr.getAttribute("key"),
+									attr.getAttribute("value"));
+						}
+					}
 					nodes.put(battery.getId(), battery);
 
 					NodeList machineList = batteryElem
@@ -69,6 +90,19 @@ public class XMLNodeDao implements NodeDao {
 						machine.setId(machineElem.getAttribute("id"));
 						machine.setName(machineElem.getAttribute("name"));
 						battery.getMachines().add(machine);
+						Element mattrs = (Element) machineElem
+								.getElementsByTagName("attributes").item(0);
+						if (mattrs != null
+								&& mattrs.getParentNode() == machineElem) {
+							NodeList attrList = mattrs
+									.getElementsByTagName("attribute");
+							for (int ii = 0; ii < attrList.getLength(); ii++) {
+								Element attr = (Element) attrList.item(ii);
+								battery.getAttributes().put(
+										attr.getAttribute("key"),
+										attr.getAttribute("value"));
+							}
+						}
 						nodes.put(machine.getId(), machine);
 					}
 				}

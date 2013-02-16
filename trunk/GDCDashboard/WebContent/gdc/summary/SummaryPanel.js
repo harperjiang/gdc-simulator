@@ -127,6 +127,8 @@ Ext.define('GDC.summary.SummaryPanel', {
 			}, ],
 	listeners : {
 		afterrender : function(val, eopt) {
+			// TODO Load Data
+			
 			Ext.get("summary.gdcCount").setHTML("4");
 			Ext.get("summary.gdcRunning").setHTML("2");
 			Ext.get("summary.gpUtil").setHTML("30" + "%");

@@ -25,7 +25,9 @@ Ext.define('GDC.node.VMGrid', {
 	tbar : [ {
 		text : 'Migrate VM',
 		handler : function() {
-			
+			debugger;
+			var gridPanel = this.up('gdcVmGrid');
+//			gridPanel.get
 		}
 	}, {
 		text : 'Create New VM',

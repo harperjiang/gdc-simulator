@@ -4,6 +4,9 @@
 
 	<complexType name="dcType">
 		<sequence>
+			<sequence maxOccurs="1" minOccurs="0">
+				<element name="attributes" type="tns:attrsType"></element>
+			</sequence>
 			<sequence maxOccurs="unbounded" minOccurs="0">
 				<element name="battery" type="tns:batteryType"></element>
 			</sequence>
@@ -16,14 +19,30 @@
 	</complexType>
 
 	<complexType name="batteryType">
-		<sequence maxOccurs="unbounded" minOccurs="0">
-			<element name="machine" type="tns:machineType"></element>
+		<sequence>
+			<sequence maxOccurs="1" minOccurs="0">
+				<element name="attributes" type="tns:attrsType"></element>
+			</sequence>
+			<sequence maxOccurs="unbounded" minOccurs="0">
+				<element name="machine" type="tns:machineType"></element>
+			</sequence>
+			<sequence maxOccurs="1" minOccurs="0">
+				<element name="description" type="string"></element>
+			</sequence>
 		</sequence>
 		<attribute name="id" type="string"></attribute>
 		<attribute name="name" type="string"></attribute>
 	</complexType>
 
 	<complexType name="machineType">
+		<sequence>
+			<sequence maxOccurs="1" minOccurs="0">
+				<element name="description" type="string"></element>
+			</sequence>
+			<sequence maxOccurs="1" minOccurs="0">
+				<element name="attributes" type="tns:attrsType"></element>
+			</sequence>
+		</sequence>
 		<attribute name="id" type="string"></attribute>
 		<attribute name="name" type="string"></attribute>
 	</complexType>
@@ -35,4 +54,15 @@
 	</complexType>
 
 	<element name="data-centers" type="tns:dcsType"></element>
+
+	<complexType name="attrType">
+		<attribute name="key" type="string"></attribute>
+		<attribute name="value" type="string"></attribute>
+	</complexType>
+
+	<complexType name="attrsType">
+		<sequence maxOccurs="unbounded" minOccurs="1">
+			<element name="attribute" type="tns:attrType"></element>
+		</sequence>
+	</complexType>
 </schema>

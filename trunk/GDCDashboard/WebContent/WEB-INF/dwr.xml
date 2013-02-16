@@ -15,6 +15,12 @@
 			<include method="getData" />
 		</create>
 
+		<create creator="spring" javascript="vmService">
+			<param name="beanName" value="vmService" />
+			<include method="create" />
+			<include method="migrate" />
+		</create>
+
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.DataCenter" />
 		<convert converter="bean"

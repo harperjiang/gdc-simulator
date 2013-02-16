@@ -3,6 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://gdc.clarkson.edu/node_structure node_structure.xsd ">
 	<data-center id="dc1" name="Data Center 1">
+		<attributes>
+			<attribute key="power_source" value="Wind &amp; Solar" />
+			<attribute key="designed_capacity" value="200mW" />
+			<attribute key="peak_capacity" value="850mW" />
+		</attributes>
 		<battery id="dc1.bty1" name="APC UPS">
 			<machine id="dc1.bty1.mc1" name="Machine A" />
 			<machine id="dc1.bty1.mc2" name="Machine B" />

@@ -1,8 +1,9 @@
 function updateHtml(component, data) {
 	debugger;
 	var html = component.html;
-	if(html == undefined)
-		return;
+	if (html == undefined) {
+		html = Ext.get(component.id).dom.innerHTML;
+	}
 	for ( var i in data) {
 		html = html.replace('{' + i + '}', data[i]);
 	}
@@ -53,19 +54,24 @@ Ext.define('GDC.node.DCViewPanel', {
 						{
 							xtype : 'component',
 							itemId : 'status',
-							width : 500,
+							styleHtmlContent : true,
+							width : 540,
 							height : 120,
-							style : 'float:left;margin-left:30px;',
-							html : "<div class='labeled_text'>" + "<label>"
-									+ "Status:" + "</label>" + "{status}"
-									+ "</div>" + "<div class='labeled_text'>"
-									+ "<label>" + "Power Source:" + "</label>"
+							style : 'float:left;' + 'margin-left:30px;'
+									+ 'margin-top:10px;',
+							html : "<div class='slabeled_text'>"
+									+ "	<label>Status:</label>"
+									+ "<img src='image/{image}'"
+									+ "	style='width: 14 px; "
+									+ "height: 14px; " + "display: inline;' />"
+									+ "</div>" + "<div class='slabeled_text'>"
+									+ "	<label>Power Source:</label>"
 									+ "{power_source}" + "</div>"
-									+ "<div class='labeled_text'>" + "<label>"
-									+ "Designed Capacity:" + "</label>"
+									+ "<div class='slabeled_text'>"
+									+ "	<label>Designed Capacity:</label>"
 									+ "{designed_capacity}" + "</div>"
-									+ "<div class='labeled_text'>" + "<label>"
-									+ "Peak Capacity:" + "</label>"
+									+ "<div class='slabeled_text'>"
+									+ "	<label>Peak Capacity:</label>"
 									+ "{peak_capacity}" + "</div>"
 						}, {
 							xtype : 'component',
@@ -80,7 +86,7 @@ Ext.define('GDC.node.DCViewPanel', {
 				itemId : 'evaluation',
 				title : 'Evaluation',
 				collapsible : true,
-				height : 450,
+				height : 550,
 				width : 320,
 				rowspan : 3,
 				bodyStyle : 'padding:10px',
@@ -108,8 +114,8 @@ Ext.define('GDC.node.DCViewPanel', {
 									+ "of the data center.</div>" + "<ul>"
 									+ "<li>" + "<label>" + "Stability:"
 									+ "</label>"
-									+ "The minimal power generation that "
-									+ "can be guaranteed by the station"
+									+ "<div>The minimal power generation that "
+									+ "can be guaranteed by the station</div>"
 									+ "</li>" + "<li>" + "<label>"
 									+ "Efficiency:" + "</label>"
 									+ "The green power used vs."
@@ -258,8 +264,8 @@ Ext.define('GDC.node.DCViewPanel', {
 	loadData : function(datas) {
 		debugger;
 		this.getComponent('info').getComponent('desc').html = datas.desc;
-
-		updateHtml(this.getComponent('info').getComponent('status'), datas);
+		GDC.common.HtmlRendererInst.updateHtml(this.getComponent('info')
+				.getComponent('status'), datas);
 		this.getComponent('performance').getComponent('healthChart').store
 				.loadData([ [ datas.health ] ]);
 		this.getComponent('performance').getComponent('capacityChart').store

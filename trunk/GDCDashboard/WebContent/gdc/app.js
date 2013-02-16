@@ -11,7 +11,7 @@ Ext.require([ 'Ext.chart.*', 'Ext.chart.axis.Gauge', 'Ext.chart.series.*',
 Ext.require([ 'Ext.grid.*', 'Ext.data.*', 'Ext.util.*', 'Ext.state.*' ]);
 
 Ext.require([ 'GDC.MainViewPort', 'GDC.StructurePanel' ]);
-
+Ext.require('GDC.common.HtmlRenderer');
 Ext.require([ 'GDC.common.GaugeChart', 'GDC.common.EvalRadarChart',
 		'GDC.common.LineChart' ]);
 

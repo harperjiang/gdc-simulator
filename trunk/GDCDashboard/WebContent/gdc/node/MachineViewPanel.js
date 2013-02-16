@@ -37,6 +37,36 @@ Ext.define('GDC.node.MachineViewPanel', {
 			src : 'image/server.png'
 		}, {
 			xtype : 'component',
+			itemId : 'status',
+			styleHtmlContent : true,
+			width : 540,
+			height : 120,
+			style : 'float:left;' + 'margin-left:30px;' + 'margin-top:10px;',
+			html : "<div class='slabeled_text'>"
+			+"	<label>Status:</label>"
+			+"	<img src='image/{image}'"
+			+"		style='width: 14px; "
+			+"		height: 14px; "
+			+"		display: inline;' />"
+			+"</div>"
+			+"<div class='slabeled_text'>"
+			+"	<label>Manufacture:</label>"
+			+"	{manufacture}"
+			+"</div>"
+			+"<div class='slabeled_text'>"
+			+"	<label>Architecture:</label>"
+			+"	{arch}"
+			+"</div>"
+			+"<div class='slabeled_text'>"
+			+"	<label>CPU:</label>"
+			+"	{cpu}"
+			+"</div>"
+			+"<div class='slabeled_text'>"
+			+"	<label>Memory:</label>"
+			+"	{memory}"
+			+"</div>"
+		}, {
+			xtype : 'component',
 			itemId : 'desc',
 			width : 500,
 			style : 'float:left;',
@@ -104,16 +134,19 @@ Ext.define('GDC.node.MachineViewPanel', {
 		height : 240
 	} ],
 	loadData : function(datas) {
-
-		this.getComponent('info').getComponent('desc').html = datas.desc;
 		this.getComponent('performance').getComponent('cpu').store
 				.loadData([ [ datas.power ] ]);
 		this.getComponent('performance').getComponent('memory').store
 				.loadData([ [ datas.voltage ] ]);
+		GDC.common.HtmlRendererInst.updateHtml(this.getComponent('info')
+				.getComponent('status'), datas);
+		this.getComponent('info').getComponent('desc').html = datas.desc;
+		
 		var myData = [ [ false, 'WT-001', 'Severe',
 							'Data Center', 'Data Center is Down' ] ];
 					myData.push([ false, 'ZZ-123', 'Warning', 'VM',
 							'VM will be migrated' ]);
+					
 		this.getComponent('vmGrid').store.loadData(myData);
 		this.getComponent('banner').html = "Machine: " + datas.name;
 		this.getComponent('techspec').html = datas.techSpec;

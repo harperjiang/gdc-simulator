@@ -13,14 +13,36 @@ public class JpaHistoryDao extends JpaDaoSupport implements HistoryDao {
 	@Override
 	public List<NodeHistory> getHistories(Node node, String dataType,
 			Date from, Date to) {
-		// TODO Auto-generated method stub
-		return null;
+		return getJpaTemplate()
+				.getEntityManager()
+				.createQuery(
+						"select h from NodeHistory h where h.nodeId = :nodeId "
+								+ "and h.dataType = :dataType "
+								+ "and h.time between :start and :end order by h.time desc",
+						NodeHistory.class).setParameter("nodeId", node.getId())
+				.setParameter("dataType", dataType).setParameter("start", from)
+				.setParameter("end", to).getResultList();
 	}
 
 	@Override
 	public NodeHistory getLatest(Node node, String dataType) {
-		// TODO Auto-generated method stub
-		return null;
+		List<NodeHistory> result = getHistories(node, dataType, 1);
+		if (result.size() == 0)
+			return null;
+		return result.get(0);
+	}
+
+	@Override
+	public List<NodeHistory> getHistories(Node node, String dataType, int count) {
+		return getJpaTemplate()
+				.getEntityManager()
+				.createQuery(
+						"select h from NodeHistory h where h.nodeId = :nodeId "
+								+ "and h.dataType = :dataType "
+								+ "and h.time between :start and :end order by h.time desc",
+						NodeHistory.class).setParameter("nodeId", node.getId())
+				.setParameter("dataType", dataType).setMaxResults(count)
+				.getResultList();
 	}
 
 }

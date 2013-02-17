@@ -10,6 +10,12 @@
 	<bean id="alertDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaAlertDao">
 		<property name="entityManager" ref="entityManager" />
 	</bean>
+	<bean id="historyDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaHistoryDao">
+		<property name="entityManager" ref="entityManager" />
+	</bean>
+	<bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaStatusDao">
+		<property name="entityManager" ref="entityManager" />
+	</bean>
 
 	<bean id="structureService"
 		class="edu.clarkson.gdc.dashboard.service.DefaultStructureService">
@@ -18,6 +24,8 @@
 	</bean>
 	<bean id="nodeService" class="edu.clarkson.gdc.dashboard.service.DefaultNodeService">
 		<property name="nodeDao" ref="nodeDao" />
+		<property name="historyDao" ref="historyDao" />
+		<property name="statusDao" ref="statusDao" />
 	</bean>
 	<bean id="vmService" class="edu.clarkson.gdc.dashboard.service.DefaultVMService">
 

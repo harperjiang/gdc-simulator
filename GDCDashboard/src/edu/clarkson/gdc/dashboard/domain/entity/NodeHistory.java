@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class NodeHistory {
 
-	private Node node;
+	private String nodeId;
 
 	private Date time;
 
@@ -13,12 +13,12 @@ public class NodeHistory {
 
 	private BigDecimal data;
 
-	public Node getNode() {
-		return node;
+	public String getNodeId() {
+		return nodeId;
 	}
 
-	public void setNode(Node node) {
-		this.node = node;
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
 	}
 
 	public Date getTime() {

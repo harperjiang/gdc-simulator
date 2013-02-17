@@ -19,21 +19,13 @@ Ext.define('GDC.AlertGrid.AlertModel', {
 	idProperty : 'id'
 });
 
-var myData = [ [ 'WT-001', 'Severe', '9/1 12:00am', 'Data Center',
-		'Data Center is Down' ] ];
-myData
-		.push([ 'ZZ-123', 'Warning', '9/1 12:00am', 'VM', 'VM will be migrated' ]);
-
-GDC.AlertGrid.store = Ext.create('Ext.data.ArrayStore', {
-	model : 'GDC.AlertGrid.AlertModel',
-	data : myData
-});
-
 Ext.define('GDC.summary.AlertGrid', {
 	extend : 'Ext.grid.Panel',
 	title : 'Alert',
 	xtype : 'alertGrid',
-	store : GDC.AlertGrid.store,
+	store : Ext.create('Ext.data.ArrayStore', {
+		model : 'GDC.AlertGrid.AlertModel'
+	}),
 	collapsible : true,
 	multiSelect : true,
 	stateId : 'stateGrid',
@@ -72,7 +64,5 @@ Ext.define('GDC.summary.AlertGrid', {
 	viewConfig : {
 		stripeRows : true,
 		enableTextSelection : true
-	},
-	loadData : function(data) {
 	}
 });

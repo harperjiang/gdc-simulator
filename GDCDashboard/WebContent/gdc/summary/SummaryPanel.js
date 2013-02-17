@@ -106,7 +106,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 								position : 'gauge',
 								title : 'System\nCapacity',
 								minimum : 0,
-								maximum : 60,
+								maximum : 100,
 								steps : 4,
 								margin : 7
 							} ]
@@ -122,20 +122,40 @@ Ext.define('GDC.summary.SummaryPanel', {
 				html : 'This is a bunch of introduction text to the system'
 			}, {
 				xtype : 'alertGrid',
+				id : 'summary.alertGrid',
 				width : 550,
 				height : 150
 			}, ],
 	listeners : {
 		afterrender : function(val, eopt) {
 			// TODO Load Data
-			
-			Ext.get("summary.gdcCount").setHTML("4");
-			Ext.get("summary.gdcRunning").setHTML("2");
-			Ext.get("summary.gpUtil").setHTML("30" + "%");
-			Ext.get("summary.mtbm").setHTML("250" + "min");
+			structureService.getSystemSummary(function(summary) {
+				Ext.get("summary.gdcCount").setHTML(summary.dcCount);
+				Ext.get("summary.gdcRunning").setHTML(summary.dcRunning);
+				Ext.get("summary.gpUtil").setHTML(summary.utilization + "%");
+				Ext.get("summary.mtbm").setHTML(summary.mtbm + "min");
+				Ext.getCmp('summary.usageChart').store
+						.loadData([ [ summary.usage ] ]);
+				Ext.getCmp('summary.capacityChart').store
+						.loadData([ [ summary.capacity ] ]);
+			});
 
-			Ext.getCmp('summary.usageChart').store.loadData([ [ 19 ] ]);
-			Ext.getCmp('summary.capacityChart').store.loadData([ [ 40 ] ]);
+			structureService.getAlerts(function(alerts) {
+				var datas = new Array();
+				for ( var i = 0; i < alerts.length; i++) {
+					var alert = alerts[i];
+					var data = {
+						id : alert.id,
+						level : alert.level,
+						date : alert.time,
+						type : alert.nodeType,
+						nodeId : alert.nodeId,
+						description : alert.description
+					};
+					datas.push(data);
+				}
+				Ext.getCmp('summary.alertGrid').store.loadData(datas);
+			});
 		}
 	}
 });

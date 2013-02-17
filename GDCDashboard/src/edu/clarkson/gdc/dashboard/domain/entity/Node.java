@@ -3,7 +3,7 @@ package edu.clarkson.gdc.dashboard.domain.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Node {
+public abstract class Node {
 
 	private String id;
 
@@ -13,6 +13,8 @@ public class Node {
 
 	private Map<String, String> attributes;
 
+	public abstract String getType();
+	
 	public Node() {
 		super();
 		attributes = new HashMap<String, String>();

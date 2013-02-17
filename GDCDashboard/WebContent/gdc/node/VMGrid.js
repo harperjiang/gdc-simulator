@@ -27,12 +27,16 @@ Ext.define('GDC.node.VMGrid', {
 		handler : function() {
 			debugger;
 			var gridPanel = this.up('gdcVmGrid');
-//			gridPanel.get
+			// gridPanel.get
 		}
 	}, {
 		text : 'Create New VM',
 		handler : function() {
 
+		}
+	}, {
+		text : 'Refresh',
+		handler : function() {
 		}
 	} ],
 	collapsible : true,

@@ -4,18 +4,18 @@ import java.math.BigDecimal;
 
 public class NodeStatus {
 
-	private Node node;
+	private String nodeId;
 
 	private String dataType;
 
 	private BigDecimal value;
 
-	public Node getNode() {
-		return node;
+	public String getNodeId() {
+		return nodeId;
 	}
 
-	public void setNode(Node node) {
-		this.node = node;
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
 	}
 
 	public String getDataType() {

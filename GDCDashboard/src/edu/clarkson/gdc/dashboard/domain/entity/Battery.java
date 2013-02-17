@@ -14,4 +14,8 @@ public class Battery extends Node {
 	public List<Machine> getMachines() {
 		return machines;
 	}
+
+	public String getType() {
+		return "Battery";
+	}
 }

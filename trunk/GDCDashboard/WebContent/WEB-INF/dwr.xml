@@ -8,6 +8,8 @@
 		<create creator="spring" javascript="structureService">
 			<param name="beanName" value="structureService" />
 			<include method="getDataCenters" />
+			<include method="getAlerts" />
+			<include method="getSystemSummary" />
 		</create>
 
 		<create creator="spring" javascript="nodeService">
@@ -21,6 +23,10 @@
 			<include method="migrate" />
 		</create>
 
+		<convert converter="bean"
+			match="edu.clarkson.gdc.dashboard.domain.entity.Summary" />
+		<convert converter="bean"
+			match="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.DataCenter" />
 		<convert converter="bean"

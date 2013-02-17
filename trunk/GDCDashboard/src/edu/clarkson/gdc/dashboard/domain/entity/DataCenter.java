@@ -15,4 +15,7 @@ public class DataCenter extends Node {
 		return batteries;
 	}
 
+	public String getType() {
+		return "Data Center";
+	}
 }

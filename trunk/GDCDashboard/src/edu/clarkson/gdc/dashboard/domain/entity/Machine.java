@@ -15,4 +15,8 @@ public class Machine extends Node {
 	public List<VirtualMachine> getVms() {
 		return vms;
 	}
+
+	public String getType() {
+		return "Machine";
+	}
 }

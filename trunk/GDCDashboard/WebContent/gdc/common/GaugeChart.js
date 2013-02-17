@@ -25,9 +25,10 @@ Ext.define("GDC.common.GaugeChart", {
 		donut : 60,
 		colorList : [ '#00ff00', '#fbf80b', '#fd8c12', '#f65007', '#f81409' ],
 		renderer : function(sprite, storeItem, attr, i, store) {
+			debugger;
 			var data = storeItem.raw[0];
 			return Ext.apply(attr, {
-				fill : i === 0 ? this.colorList[data / 20] : '#ddd'
+				fill : i === 0 ? this.colorList[Math.floor(data / 20)] : '#ddd'
 			});
 		}
 	} ]

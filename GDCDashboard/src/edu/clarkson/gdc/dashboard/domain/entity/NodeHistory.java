@@ -1,6 +1,5 @@
 package edu.clarkson.gdc.dashboard.domain.entity;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -34,7 +33,7 @@ public class NodeHistory {
 	private String dataType;
 
 	@Column(name = "data")
-	private BigDecimal data;
+	private String value;
 
 	public long getId() {
 		return id;
@@ -68,12 +67,12 @@ public class NodeHistory {
 		this.dataType = dataType;
 	}
 
-	public BigDecimal getData() {
-		return data;
+	public String getValue() {
+		return value;
 	}
 
-	public void setData(BigDecimal data) {
-		this.data = data;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 }

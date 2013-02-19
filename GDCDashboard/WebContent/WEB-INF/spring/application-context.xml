@@ -13,9 +13,9 @@
 	<bean id="historyDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaHistoryDao">
 		<property name="entityManager" ref="entityManager" />
 	</bean>
-	<bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaStatusDao">
-		<property name="entityManager" ref="entityManager" />
-	</bean>
+	<!-- bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaStatusDao"> 
+		<property name="entityManager" ref="entityManager" /> </bean -->
+	<bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.DummyStatusDao" />
 
 	<bean id="structureService"
 		class="edu.clarkson.gdc.dashboard.service.DefaultStructureService">

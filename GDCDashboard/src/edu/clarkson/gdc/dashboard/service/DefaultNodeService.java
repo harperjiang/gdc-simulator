@@ -48,7 +48,10 @@ public class DefaultNodeService implements NodeService {
 			Map<String, NodeStatus> status = statusDao.getStatus(node);
 			if (null != status && !status.isEmpty())
 				for (Entry<String, NodeStatus> se : status.entrySet()) {
-					data.put(se.getKey(), se.getValue().getValue());
+					data.put(
+							se.getKey(),
+							se.getValue().getType()
+									.convert(se.getValue().getValue()));
 				}
 			// History
 			for (HistoryType type : HistoryType.values()) {

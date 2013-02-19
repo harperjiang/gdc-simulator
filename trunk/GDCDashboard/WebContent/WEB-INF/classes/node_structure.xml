@@ -9,7 +9,21 @@
 			<attribute key="peak_capacity" value="850mW" />
 		</attributes>
 		<battery id="dc1.bty1" name="APC UPS">
-			<machine id="dc1.bty1.mc1" name="Machine A" />
+			<attributes>
+				<attribute key="manufacture" value="APC" />
+				<attribute key="model" value="DL-650" />
+				<attribute key="designed_capacity" value="250kWh" />
+				<attribute key="designed_output" value="110Amp" />
+				<attribute key="output_voltage" value="110V" />
+			</attributes>
+			<machine id="dc1.bty1.mc1" name="Machine A">
+				<attributes>
+					<attribute key="manufacture" value="Sun" />
+					<attribute key="arch" value="Solaris X64" />
+					<attribute key="cpu" value="Spark-II" />
+					<attribute key="memory" value="20G" />
+				</attributes>
+			</machine>
 			<machine id="dc1.bty1.mc2" name="Machine B" />
 		</battery>
 		<description>This is a description to the data center 1</description>

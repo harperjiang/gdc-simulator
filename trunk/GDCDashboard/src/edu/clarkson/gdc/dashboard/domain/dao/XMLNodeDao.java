@@ -98,7 +98,7 @@ public class XMLNodeDao implements NodeDao {
 									.getElementsByTagName("attribute");
 							for (int ii = 0; ii < attrList.getLength(); ii++) {
 								Element attr = (Element) attrList.item(ii);
-								battery.getAttributes().put(
+								machine.getAttributes().put(
 										attr.getAttribute("key"),
 										attr.getAttribute("value"));
 							}

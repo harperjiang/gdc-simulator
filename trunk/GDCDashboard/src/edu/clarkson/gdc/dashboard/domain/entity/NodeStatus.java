@@ -71,4 +71,7 @@ public class NodeStatus {
 		this.value = value;
 	}
 
+	public StatusType getType() {
+		return StatusType.valueOf(getDataType());
+	}
 }

@@ -6,7 +6,10 @@ import edu.clarkson.gdc.common.Converter;
 public enum StatusType {
 
 	COMMON_RUNNING("status", new BooleanConverter()), DC_HEALTH("health", null), DC_CAPACITY(
-			"capacity", null), DC_POWER("power", null);
+			"capacity", null), DC_POWER("power", null), POWER_POWER("power",
+			null), POWER_VOLTAGE("voltage", null), POWER_TEMPERATURE(
+			"temperature", null), MACHINE_CPU("cpu", null), MACHINE_MEMORY(
+			"memory", null);
 
 	private String key;
 
@@ -23,7 +26,7 @@ public enum StatusType {
 
 	public Object convert(String val) {
 		if (null == converter)
-			return null;
+			return val;
 		return this.converter.convert(val);
 	}
 }

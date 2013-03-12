@@ -21,6 +21,14 @@ public class SuddenDeathTimeModel implements ProcessTimeModel {
 		this.scale = scale;
 	}
 
+	public BigDecimal getPower() {
+		return power;
+	}
+
+	public BigDecimal getScale() {
+		return scale;
+	}
+
 	@Override
 	public long latency(Component component, Map<Pipe, List<DataMessage>> msgs) {
 		// TODO Not done yet

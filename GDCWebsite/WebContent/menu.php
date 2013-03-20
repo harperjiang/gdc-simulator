@@ -22,7 +22,7 @@
 		<a class="menu_item" href="future.php">Larger Scale</a> 
 		<a class="menu_item" href="future.php">New Technologies</a> 
 	<a class="menu_main" href="about.php">About us</a> 
-		<a class="menu_item" href="about.php#part1">Mechanical members</a> 
+		<a class="menu_item" href="about.php#part1">Engineering members</a> 
 		<a class="menu_item" href="about.php#part2">CS members</a> 
 		<a class="menu_item" href="about.php#part3">Business members</a> 
 	<a class="menu_main" href="partner.php">Partnership</a>

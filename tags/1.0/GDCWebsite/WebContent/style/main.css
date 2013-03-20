@@ -1,0 +1,179 @@
+div.clearer {
+	clear: left;
+	line-height: 0;
+	height: 0;
+}
+
+.titlebar {
+	width: 1200px;
+}
+
+.menubar {
+	float: left;
+	background-color: #f3f3f3;
+	width: 200px;
+	padding: 10px;
+	margin-top: 20px;
+	font-family: "Open Sans", "lucida grande", "Segoe UI", arial, verdana,
+		"lucida sans unicode", tahoma, sans-serif;
+}
+
+.content {
+	float: left;
+	color: black;
+	margin-top: 20px;
+	padding: 10px;
+	padding-left: 40px;
+	width: 800px;
+	height: auto;
+	min-height: 800px;
+	overflow: auto;
+	padding: 10px;
+}
+
+a.menu_main {
+	display: block;
+	font-weight: bold;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+a.menu_main :hover :visited {
+	font-color: #00dddd;
+}
+
+a.menu_item {
+	display: block;
+	font-size: 12px;
+	text-decoration: none;
+	margin-left: 10px;
+}
+
+a.menu_subitem {
+	display: block;
+	text-decoration: none;
+	margin-left: 20px;
+}
+
+.title {
+	font-family: Calibri, Sans-Serif;
+	font-size: 28px;
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.subtitle {
+	font-family: Calibri, Sans-Serif;
+	font-size: 20px;
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.subtitle2 {
+	font-family: Calibri, Sans-Serif;
+	font-size: 18px;
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.text {
+	font-family: Calibri, Sans-Serif;
+	font-size: 14px;
+	font-weight: normal;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.person {
+	font-family: Sans-Serif;
+}
+
+.prof_table {
+	margin-top: 10px;
+	border-spacing: 10px;
+	width: 650px;
+}
+
+.person_table {
+	margin-top: 30px;
+	border-spacing: 10px;
+	width: 500px;
+}
+
+.person_name {
+	font-family: Sans-Serif;
+	font-weight: bold;
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+.person_title {
+	font-weight: bold;
+	font-size: 12px;
+	margin-bottom: 5px;
+}
+
+.person_intro {
+	font-size: 12px;
+}
+
+.spectable {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-collapse: collapse;
+	border: 0px none black;
+	width: 400px;
+}
+
+.spectable td {
+	border-top: 0px none black;
+	border-bottom: 0px none black;
+	font-size: 14px;
+}
+
+.tabletitle {
+	
+}
+
+.resource_file {
+	overflow: auto;
+}
+
+.resource_file img {
+	float: left;
+	width: 40px;
+	height: 40px;
+}
+
+.resource_file .linkholder {
+	float: left;
+	margin-left: 15px;
+	margin-top: 10px;
+}
+
+.resource_file a {
+	font-size: 12px;
+	font-family: "Open Sans", "lucida grande", "Segoe UI", arial, verdana,
+		"lucida sans unicode", tahoma, sans-serif;
+	text-decoration: none;
+}
+
+.resource_file a:link {
+	color: black;
+}
+
+.resource_file a:active {
+	color: black;
+}
+
+.resource_file a:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+.resource_file a:visited {
+	color: black;
+}

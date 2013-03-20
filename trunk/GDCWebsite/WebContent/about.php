@@ -9,9 +9,9 @@
 	<?php include 'header.php';?>
 	<?php include 'menu.php'; ?>
 	<div id="content" class="content">
-		<div id="part1" class="subtitle">Mechanical members</div>
+		<div id="part1" class="subtitle">Engineering members</div>
 		<div class="text">
-			The Mechanical group is led by Prof Pier Marzocca with his group of
+			The Engineering group is led by Prof Pier Marzocca with his group of
 			Mechanical students including 1 Ph.D. .
 			<table class="prof_table">
 				<tr>

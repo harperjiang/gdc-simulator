@@ -69,26 +69,28 @@ public class ConsistentHashing {
 			holder.position = null;
 			hole++;
 		}
+		index.remove(node);
 		if (positions.size() / hole < compressTrigger)
 			// Compress, removing hole
 			compress();
 	}
 
 	public Set<String> get(String key, int count) {
+		Set<String> result = new HashSet<String>();
 		if (count > index.size() * base)
-			throw new IllegalArgumentException("Cannot satisfy");
+			return result;
 		BigDecimal hash = hash(key);
 		int position = locate(positions, new Position(hash, key), 0,
 				positions.size());
-		Set<String> result = new HashSet<String>();
 		int index = position;
 		int counter = 0;
 		while (result.size() < count) {
+			index %= positions.size();
 			if (positions.get(index).position != null) {
 				result.add(positions.get(index).position.id);
 				counter++;
 			}
-			index = (index + 1) % positions.size();
+			index++;
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug(MessageFormat.format(

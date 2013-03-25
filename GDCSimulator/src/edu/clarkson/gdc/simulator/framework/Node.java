@@ -24,7 +24,7 @@ import edu.clarkson.gdc.simulator.framework.utils.EventListenerDelegate;
  * @since Simulator 1.0
  * @version 1.0
  */
-public abstract class Node extends Component implements NodeStateListener {
+public abstract class Node extends Component {
 
 	private NodeStateMachine stateMachine;
 
@@ -43,7 +43,7 @@ public abstract class Node extends Component implements NodeStateListener {
 
 		listenerDelegate = new EventListenerDelegate();
 
-		stateMachine = new NodeStateMachine();
+		stateMachine = new NodeStateMachine(this);
 	}
 
 	protected Map<Pipe, List<DataMessage>> collectInput() {
@@ -157,8 +157,8 @@ public abstract class Node extends Component implements NodeStateListener {
 				// all pending message
 				timeoutResult = buffer.poll();
 				NodeException e = (getState() == NodeState.EXCEPTION) ? stateMachine
-						.getException()
-						: new NodeStateException(this, getState());
+						.getException() : new NodeStateException(this,
+						getState());
 				for (Entry<Pipe, List<DataMessage>> entry : timeoutResult
 						.getMessages().entrySet()) {
 					for (DataMessage event : entry.getValue()) {
@@ -166,8 +166,8 @@ public abstract class Node extends Component implements NodeStateListener {
 							entry.getKey().put(this, event);
 						} else if (event instanceof ResponseMessage) {
 							ResponseMessage rm = (ResponseMessage) event;
-							FailMessage exm = new NodeFailMessage(rm
-									.getRequest(), e);
+							FailMessage exm = new NodeFailMessage(
+									rm.getRequest(), e);
 							entry.getKey().put(this, exm);
 						} else {
 							// In exception state node cannot send
@@ -232,11 +232,6 @@ public abstract class Node extends Component implements NodeStateListener {
 		for (NodeStateListener listener : listenerDelegate
 				.getListeners(NodeStateListener.class))
 			listener.stateChanged(event);
-	}
-
-	@Override
-	public void stateChanged(NodeStateEvent event) {
-		fireStateChange(new NodeStateEvent(this, event.getFrom(), event.getTo()));
 	}
 
 	public <EL extends EventListener> void addListener(Class<EL> clazz,

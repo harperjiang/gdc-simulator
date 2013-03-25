@@ -5,7 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import org.junit.Test;
@@ -84,6 +87,7 @@ public class ConsistentHashingTest {
 
 		assertEquals(3 * hashing.getBase(), hashing.getPositions().size());
 		assertEquals(0, hashing.hole);
+		assertEquals(3, hashing.getIndex().size());
 
 		hashing = new ConsistentHashing();
 		for (int i = 0; i < 26; i++) {
@@ -91,6 +95,7 @@ public class ConsistentHashingTest {
 		}
 
 		hashing.remove("a0");
+		assertEquals(25, hashing.getIndex().size());
 		assertEquals(26 * hashing.getBase(), hashing.getPositions().size());
 		assertEquals(10, hashing.hole);
 	}
@@ -132,6 +137,29 @@ public class ConsistentHashingTest {
 
 		assertEquals(25 * hashing.getBase(), hashing.getPositions().size());
 		assertEquals(0, hashing.hole);
+	}
+
+	@Test
+	public void testDistribution() {
+		ConsistentHashing hashing = new ConsistentHashing();
+		Map<String, Integer> counter = new HashMap<String, Integer>();
+		for (int i = 0; i < 10; i++) {
+			counter.put("" + i, 0);
+			hashing.add("" + i);
+		}
+		Random random = new Random(System.currentTimeMillis());
+		for (int i = 0; i < 1000000; i++) {
+			int wordLength = 5 + random.nextInt(8);
+			StringBuilder wordBuffer = new StringBuilder();
+			for (int j = 0; j < wordLength; j++) {
+				wordBuffer.append((char) ('a' + random.nextInt(26)));
+			}
+			Set<String> res = hashing.get(wordBuffer.toString(),1);
+			String key = res.iterator().next();
+			counter.put(key,counter.get(key)+1);
+		}
+		
+		return;
 	}
 
 }

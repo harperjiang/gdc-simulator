@@ -14,6 +14,13 @@ public enum NodeState {
 
 		private EventListenerDelegate listenerDelegate = new EventListenerDelegate();
 
+		private Node source;
+
+		public NodeStateMachine(Node source) {
+			super();
+			this.source = source;
+		}
+
 		public NodeState getState() {
 			return currentState;
 		}
@@ -22,7 +29,7 @@ public enum NodeState {
 			NodeState oldState = getState();
 			this.currentState = newState;
 			if (oldState != currentState) {
-
+				fireStateChanged(oldState, currentState);
 			}
 		}
 
@@ -64,11 +71,8 @@ public enum NodeState {
 		}
 
 		protected void fireStateChanged(NodeState from, NodeState to) {
-			NodeStateEvent event = new NodeStateEvent(null, from, to);
-			for (NodeStateListener listener : listenerDelegate
-					.getListeners(NodeStateListener.class)) {
-				listener.stateChanged(event);
-			}
+			NodeStateEvent event = new NodeStateEvent(source, from, to);
+			source.fireStateChange(event);
 		}
 
 		public <EL extends EventListener> void addListener(Class<EL> clazz,

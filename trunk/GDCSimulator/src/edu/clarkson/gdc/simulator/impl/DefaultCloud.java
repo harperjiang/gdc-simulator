@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.Cloud;
+import edu.clarkson.gdc.simulator.DataBlockDistribution;
 import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.Component;
 import edu.clarkson.gdc.simulator.framework.Environment;
@@ -18,7 +19,7 @@ import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.utils.EventListenerProxy;
 import edu.clarkson.gdc.simulator.impl.cdloader.XMLFileCloudLoader;
 import edu.clarkson.gdc.simulator.impl.client.RequestIndexClient;
-import edu.clarkson.gdc.simulator.impl.datadist.UniformDistribution;
+import edu.clarkson.gdc.simulator.impl.datadist.ConsistentHashingDistribution;
 
 /**
  * 
@@ -31,6 +32,9 @@ public class DefaultCloud extends Environment implements Cloud {
 
 	public DefaultCloud() {
 		super();
+		
+		setLoader(new XMLFileCloudLoader());
+		
 		// Init Attributes
 		dataCenters = new ArrayList<DataCenter>();
 		dataCenterIndex = new HashMap<String, DataCenter>();
@@ -40,9 +44,10 @@ public class DefaultCloud extends Environment implements Cloud {
 
 		// Create Index Service
 		DefaultIndexService dis = new DefaultIndexService();
+		dis.setId("IndexService");
 		setIndexService(dis);
-		setDataBlockDistribution(new UniformDistribution());
-		setLoader(new XMLFileCloudLoader());
+		setDataBlockDistribution(new ConsistentHashingDistribution());
+		
 
 		// Create Probes
 		NodeMessageListener messageProbe = proxy
@@ -127,7 +132,7 @@ public class DefaultCloud extends Environment implements Cloud {
 
 	private DefaultIndexService indexService;
 
-	private UniformDistribution dataBlockDistribution;
+	private DataBlockDistribution dataBlockDistribution;
 
 	private CloudDataLoader loader;
 
@@ -140,12 +145,12 @@ public class DefaultCloud extends Environment implements Cloud {
 		add(indexService);
 	}
 
-	public UniformDistribution getDataBlockDistribution() {
+	public DataBlockDistribution getDataBlockDistribution() {
 		return dataBlockDistribution;
 	}
 
 	public void setDataBlockDistribution(
-			UniformDistribution dataBlockDistribution) {
+			DataBlockDistribution dataBlockDistribution) {
 		this.dataBlockDistribution = dataBlockDistribution;
 	}
 

@@ -108,16 +108,16 @@ public abstract class Node extends Component {
 				break;
 			case FREE: {
 				Map<Pipe, List<DataMessage>> events = collectInput();
-				// Calculate Latency
+				// Calculate Additional Latency
 				long latency = getLatency(events);
 				// Process Event
 				List<ProcessResult> results = process(events);
 				if (!CollectionUtils.isEmpty(results)) {
 					for (ProcessResult result : results) {
-						if (null != result && null != result.getMessages()
+						if (null != result.getMessages()
 								&& !result.getMessages().isEmpty()) {
 							result.setTimestamp(getClock().getCounter(),
-									latency);
+									latency + result.getTimestamp());
 							for (List<DataMessage> eventList : result
 									.getMessages().values())
 								for (DataMessage event : eventList) {

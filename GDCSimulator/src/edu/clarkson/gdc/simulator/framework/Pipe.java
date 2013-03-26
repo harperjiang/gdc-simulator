@@ -65,7 +65,7 @@ public class Pipe extends Component {
 			if (buffer.isEmpty())
 				break;
 			DataMessage event = buffer.peek();
-			if (event.getTimestamp() < getClock().getCounter())
+			if (event.getTimestamp() <= getClock().getCounter())
 				output.add(buffer.poll());
 			else {
 				break;

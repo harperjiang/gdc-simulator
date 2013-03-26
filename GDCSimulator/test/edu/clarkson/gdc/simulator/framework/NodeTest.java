@@ -58,8 +58,6 @@ public class NodeTest {
 		env.getClock().tick();
 		assertEquals(NodeState.FREE, node2.getState());
 		env.getClock().tick();
-		assertEquals(NodeState.FREE, node2.getState());
-		env.getClock().tick();
 		assertEquals(NodeState.BUSY, node2.getState());
 		env.getClock().tick();
 		assertEquals(NodeState.BUSY, node2.getState());
@@ -73,6 +71,8 @@ public class NodeTest {
 		assertEquals(NodeState.BUSY, node2.getState());
 		env.getClock().tick();
 		assertEquals(NodeState.BUSY, node2.getState());
+		env.getClock().tick();
+		assertEquals(NodeState.FREE, node2.getState());
 		env.getClock().tick();
 		assertEquals(NodeState.FREE, node2.getState());
 	}
@@ -94,14 +94,14 @@ public class NodeTest {
 				return null;
 			}
 		});
-
+		
 		assertEquals(NodeState.FREE, node1.getState());
 		assertEquals(NodeState.FREE, node2.getState());
 
 		env.getClock().tick();
 		assertEquals(NodeState.FREE, node2.getState());
 		env.getClock().tick();
-		assertEquals(NodeState.FREE, node2.getState());
+		assertEquals(NodeState.BUSY, node2.getState());
 		env.getClock().tick();
 		assertEquals(NodeState.BUSY, node2.getState());
 		env.getClock().tick();
@@ -111,11 +111,9 @@ public class NodeTest {
 		env.getClock().tick();
 		assertEquals(NodeState.EXCEPTION, node2.getState());
 		env.getClock().tick();
-		assertEquals(NodeState.FREE, node2.getState());
+		assertEquals(NodeState.BUSY, node2.getState());
 		env.getClock().tick();
 		assertEquals(NodeState.EXCEPTION, node2.getState());
-		env.getClock().tick();
-		assertEquals(NodeState.FREE, node2.getState());
 		env.getClock().tick();
 		assertEquals(NodeState.FREE, node2.getState());
 		env.getClock().tick();
@@ -123,8 +121,8 @@ public class NodeTest {
 
 		Map<Long, List<DataMessage>> feedback = node1.getFeedback();
 		assertEquals(2,feedback.size());
-		assertEquals(2,feedback.get(Long.valueOf(6l)).size());
-		assertEquals(1,feedback.get(Long.valueOf(10l)).size());
+		assertEquals(2,feedback.get(Long.valueOf(5l)).size());
+		assertEquals(1,feedback.get(Long.valueOf(9l)).size());
 	}
 
 	@Test

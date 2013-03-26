@@ -2,6 +2,7 @@ package edu.clarkson.gdc.simulator.impl;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,12 +10,13 @@ import java.util.Map.Entry;
 import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.ExceptionStrategy;
+import edu.clarkson.gdc.simulator.common.Pair;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
-import edu.clarkson.gdc.simulator.framework.NodeException;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyRequest;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
+import edu.clarkson.gdc.simulator.storage.Storage;
 
 /**
  * Revision History:
@@ -57,6 +59,62 @@ import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
  */
 public class DefaultDataCenter extends Node implements DataCenter {
 
+	public DefaultDataCenter() {
+	}
+
+	@Override
+	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> events) {
+		Map<Long, ProcessResult> timeToResult = new HashMap<Long, ProcessResult>();
+
+		// Read Request
+		for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
+			Pipe pipe = entry.getKey();
+			if (pipe.getDestination().equals(this)) {
+				for (DataMessage message : entry.getValue()) {
+					// Read Key Request
+					if (message instanceof ReadKeyRequest) {
+						ReadKeyRequest request = (ReadKeyRequest) message;
+						ReadKeyResponse resp = new ReadKeyResponse(
+								(ReadKeyRequest) message);
+						Pair<Long, Data> read = read(request.getKey());
+						if (!timeToResult.containsKey(read.getA())) {
+							ProcessResult result = new ProcessResult();
+							result.setTimestamp(read.getA());
+							timeToResult.put(read.getA(), result);
+						}
+						ProcessResult pr = timeToResult.get(read.getA());
+						resp.setLoad(read.getB());
+						pr.add(pipe, resp);
+					}
+
+					// {Add Other Request here}
+				}
+			}
+		}
+
+		List<ProcessResult> results = new ArrayList<ProcessResult>();
+		results.addAll(timeToResult.values());
+		return results;
+	}
+
+	public Pair<Long, Data> read(final String key) {
+		return storage.read(key);
+	}
+
+	public long write(Data data) {
+		return storage.write(data);
+	}
+
+	private Storage storage;
+
+	public Storage getStorage() {
+		return storage;
+	}
+
+	public void setStorage(Storage storage) {
+		this.storage = storage;
+	}
+
 	private ExceptionStrategy exceptionStrategy;
 
 	public ExceptionStrategy getExceptionStrategy() {
@@ -77,57 +135,4 @@ public class DefaultDataCenter extends Node implements DataCenter {
 		this.location = location;
 	}
 
-	@Override
-	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> events) {
-		ProcessResult success = new ProcessResult();
-		ProcessResult failed = new ProcessResult();
-
-		List<ProcessResult> results = new ArrayList<ProcessResult>();
-		results.add(success);
-		results.add(failed);
-
-		// Read Request
-		for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
-			Pipe pipe = entry.getKey();
-			if (pipe.getDestination().equals(this)) {
-				for (DataMessage message : entry.getValue()) {
-					// Read Key Request
-					if (message instanceof ReadKeyRequest) {
-						ReadKeyRequest request = (ReadKeyRequest) message;
-						ReadKeyResponse resp = new ReadKeyResponse(
-								(ReadKeyRequest) message);
-						resp.setLoad(read(request.getKey()));
-						success.add(pipe, resp);
-					}
-
-					// {Add Other Request here}
-				}
-			}
-		}
-		return results;
-	}
-
-	@Override
-	public Data read(final String key) {
-		return new DefaultData(key);
-	}
-
-	@Override
-	public void write(Data data) {
-		// TODO Not Implemented
-	}
-
-	static final class DefaultData implements Data {
-
-		private String key;
-
-		public DefaultData(String key) {
-			this.key = key;
-		}
-
-		public String getKey() {
-			return key;
-		}
-
-	}
 }

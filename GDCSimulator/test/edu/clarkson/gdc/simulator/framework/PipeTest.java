@@ -19,7 +19,11 @@ public class PipeTest {
 		DataMessage event = new DataMessage();
 		Environment env = new Environment();
 		Node src = new TestNode();
-		Node dest = new TestNode();
+		Node dest = new TestNode() {
+			public void process() {
+				// DO nothing
+			}
+		};
 		Pipe pipe = new Pipe(src, dest);
 		env.add(src);
 		env.add(dest);

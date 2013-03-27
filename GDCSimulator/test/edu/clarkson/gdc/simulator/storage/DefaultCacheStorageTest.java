@@ -1,7 +1,7 @@
 package edu.clarkson.gdc.simulator.storage;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -65,10 +65,15 @@ public class DefaultCacheStorageTest {
 
 	@Test
 	public void testRead() {
+		// Read a non existing data should not return null
+		Pair<Long,Data> result = cache.read("aka");
+		assertNotNull(result);
+		assertEquals(new Long(555),result.getA());
+		
 		cache.setWritePolicy(WritePolicy.WRITE_THROUGH);
 		for (int i = 0; i < 26; i++)
 			cache.write(new DefaultData("" + i));
-		Pair<Long, Data> result = cache.read("1");
+		result = cache.read("1");
 		assertEquals(new Long(555), result.getA());
 		result = cache.read("1");
 		assertEquals(new Long(5), result.getA());

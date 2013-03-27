@@ -20,6 +20,8 @@ import edu.clarkson.gdc.simulator.framework.utils.EventListenerProxy;
 import edu.clarkson.gdc.simulator.impl.cdloader.XMLFileCloudLoader;
 import edu.clarkson.gdc.simulator.impl.client.RequestIndexClient;
 import edu.clarkson.gdc.simulator.impl.datadist.ConsistentHashingDistribution;
+import edu.clarkson.gdc.simulator.storage.DefaultCacheStorage;
+import edu.clarkson.gdc.simulator.storage.WritePolicy;
 
 /**
  * 
@@ -30,6 +32,8 @@ import edu.clarkson.gdc.simulator.impl.datadist.ConsistentHashingDistribution;
  */
 public class DefaultCloud extends Environment implements Cloud {
 
+	private DefaultCacheStorage nas;
+	
 	public DefaultCloud() {
 		super();
 		
@@ -48,7 +52,12 @@ public class DefaultCloud extends Environment implements Cloud {
 		setIndexService(dis);
 		setDataBlockDistribution(new ConsistentHashingDistribution());
 		
-
+		// Create NAS storage
+		nas = new DefaultCacheStorage();
+		nas.setReadTime(100);
+		nas.setWriteTime(200);
+		
+		
 		// Create Probes
 		NodeMessageListener messageProbe = proxy
 				.getProbe(NodeMessageListener.class);
@@ -62,6 +71,16 @@ public class DefaultCloud extends Environment implements Cloud {
 			add(dc);
 			dc.addListener(NodeMessageListener.class, messageProbe);
 			dc.addListener(NodeStateListener.class, stateProbe);
+			// Create Storage for data center
+			DefaultCacheStorage dcstorage = new DefaultCacheStorage();
+			dcstorage.setInnerStorage(nas);
+			dcstorage.setSize(1000);
+			dcstorage.setWritePolicy(WritePolicy.WRITE_BACK);
+			dcstorage.setWriteTime(5);
+			dcstorage.setReadTime(5);
+			dcstorage.setDirtyThreshold(100);
+			dc.setStorage(dcstorage);
+			
 			dataCenters.add(dc);
 			dataCenterIndex.put(dc.getId(), dc);
 		}

@@ -67,4 +67,8 @@ public class DataMessage {
 		this.load = load;
 	}
 
+	public Component getOrigin() {
+		return paths.get(0).getRef();
+	}
+
 }

@@ -111,8 +111,22 @@ public class RequestIndexClient extends DefaultClient {
 				for (DataMessage resp : dcResponse)
 					if (resp instanceof NodeFailMessage) {
 						fireFailure((NodeFailMessage) resp);
+						if (logger.isDebugEnabled()) {
+							logger.debug(MessageFormat.format(
+									"{0} at tick {1} received ReadKey fail",
+									getId(), getClock().getCounter()));
+						}
 					} else {
 						fireSuccess((ReadKeyResponse) resp);
+						ReadKeyRequest req = (ReadKeyRequest) ((ReadKeyResponse) resp)
+								.getRequest();
+						if (logger.isDebugEnabled()) {
+							logger.debug(MessageFormat
+									.format("{0} at tick {1} received ReadKey success for key {2} from DC {3}",
+											getId(), getClock().getCounter(),
+											req.getKey(), resp.getOrigin()
+													.getId()));
+						}
 					}
 			}
 		}

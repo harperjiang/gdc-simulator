@@ -47,6 +47,8 @@ public class AvailabilityReport {
 
 	private List<PeriodStatus> status;
 
+	private BigDecimal averageResponseTime;
+
 	public long getTotalTime() {
 		return totalTime;
 	}
@@ -84,6 +86,14 @@ public class AvailabilityReport {
 
 	public void setStatus(List<PeriodStatus> status) {
 		this.status = status;
+	}
+
+	public BigDecimal getAverageResponseTime() {
+		return averageResponseTime;
+	}
+
+	public void setAverageResponseTime(BigDecimal averageResponseTime) {
+		this.averageResponseTime = averageResponseTime;
 	}
 
 }

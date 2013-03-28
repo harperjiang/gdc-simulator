@@ -14,9 +14,9 @@ import edu.clarkson.gdc.simulator.common.Pair;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.framework.storage.Storage;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyRequest;
 import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
-import edu.clarkson.gdc.simulator.storage.Storage;
 
 /**
  * Revision History:

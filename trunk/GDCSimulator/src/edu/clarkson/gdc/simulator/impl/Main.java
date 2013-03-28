@@ -31,6 +31,7 @@ public class Main {
 		System.out.println(listener.getReport().getRequestCount());
 		System.out.println(listener.getReport().getFailedCount());
 		System.out.println(listener.getReport().getAvailability());
+		System.out.println(listener.getReport().getAverageResponseTime());
 		System.out.println(watch.getTime());
 	}
 }

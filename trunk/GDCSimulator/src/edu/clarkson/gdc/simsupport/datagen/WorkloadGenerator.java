@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.datagen;
+package edu.clarkson.gdc.simsupport.datagen;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;

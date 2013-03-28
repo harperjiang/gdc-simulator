@@ -16,12 +16,12 @@ import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.NodeStateListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
+import edu.clarkson.gdc.simulator.framework.storage.WritePolicy;
 import edu.clarkson.gdc.simulator.framework.utils.EventListenerProxy;
 import edu.clarkson.gdc.simulator.impl.cdloader.XMLFileCloudLoader;
 import edu.clarkson.gdc.simulator.impl.client.RequestIndexClient;
 import edu.clarkson.gdc.simulator.impl.datadist.ConsistentHashingDistribution;
-import edu.clarkson.gdc.simulator.storage.DefaultCacheStorage;
-import edu.clarkson.gdc.simulator.storage.WritePolicy;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.storage;
+package edu.clarkson.gdc.simulator.framework.storage;
 
 import java.util.Collection;
 

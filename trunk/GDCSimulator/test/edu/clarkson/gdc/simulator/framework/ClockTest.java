@@ -19,7 +19,7 @@ public class ClockTest {
 			}
 
 			@Override
-			public void process() {
+			public void work() {
 				atomInt.incrementAndGet();
 			}
 

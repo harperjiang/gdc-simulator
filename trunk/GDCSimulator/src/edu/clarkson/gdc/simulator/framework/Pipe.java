@@ -96,7 +96,7 @@ public class Pipe extends Component {
 	}
 
 	@Override
-	public void process() {
+	public void work() {
 	}
 
 	public Node getOpponent(Node me) {

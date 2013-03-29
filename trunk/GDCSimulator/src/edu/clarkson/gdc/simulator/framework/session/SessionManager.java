@@ -13,9 +13,11 @@ public class SessionManager {
 	}
 
 	public Session createSession(String uuid) {
+		if (sessions.containsKey(uuid))
+			return sessions.get(uuid);
 		Session session = new Session();
-		session.setUuid(uuid);
-		sessions.put(session.getUuid(), session);
+		session.setId(uuid);
+		sessions.put(session.getId(), session);
 		return session;
 	}
 
@@ -24,6 +26,6 @@ public class SessionManager {
 	}
 
 	public void discardSession(Session session) {
-		sessions.remove(session.getUuid());
+		sessions.remove(session.getId());
 	}
 }

@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.storage;
+package edu.clarkson.gdc.simulator.framework.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.common.Pair;
+import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
+import edu.clarkson.gdc.simulator.framework.storage.WritePolicy;
 import edu.clarkson.gdc.simulator.impl.DefaultData;
 
 public class DefaultCacheStorageTest {

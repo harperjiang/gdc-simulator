@@ -10,6 +10,12 @@ import java.util.Stack;
  */
 public class DataMessage {
 
+	private Stack<PathNode> paths;
+
+	private Object load;
+
+	private String sessionId;
+
 	public static class PathNode {
 
 		private long timestamp;
@@ -46,10 +52,6 @@ public class DataMessage {
 		return paths.peek().getTimestamp();
 	}
 
-	private Stack<PathNode> paths;
-
-	private Object load;
-
 	public DataMessage() {
 		super();
 		this.paths = new Stack<PathNode>();
@@ -69,6 +71,14 @@ public class DataMessage {
 
 	public Component getOrigin() {
 		return paths.get(0).getRef();
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 
 }

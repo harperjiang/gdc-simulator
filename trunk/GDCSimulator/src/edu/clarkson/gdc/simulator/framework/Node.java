@@ -16,13 +16,18 @@ import org.apache.commons.lang.Validate;
 import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
 import edu.clarkson.gdc.simulator.framework.NodeState.NodeStateMachine;
+import edu.clarkson.gdc.simulator.framework.session.SessionManager;
 import edu.clarkson.gdc.simulator.framework.utils.EventListenerDelegate;
 
 /**
  * 
+ * 
+ * 
  * @author Hao Jiang
  * @since Simulator 1.0
  * @version 1.0
+ * @see Session
+ * @see SessionManager
  */
 public abstract class Node extends Component {
 
@@ -57,7 +62,7 @@ public abstract class Node extends Component {
 	}
 
 	@Override
-	public void process() {
+	public void work() {
 		try {
 			// Update State Machine Info
 			stateMachine.tick();
@@ -110,6 +115,8 @@ public abstract class Node extends Component {
 				Map<Pipe, List<DataMessage>> events = collectInput();
 				// Calculate Additional Latency
 				long latency = getLatency(events);
+				// callback
+				beforeProcess(events);
 				// Process Event
 				List<ProcessResult> results = process(events);
 				if (!CollectionUtils.isEmpty(results)) {
@@ -128,8 +135,11 @@ public abstract class Node extends Component {
 							buffer.offer(result);
 						}
 					}
-					stateMachine.busy(latency);
 				}
+				// callback
+				afterProcess(events, results);
+
+				stateMachine.busy(latency);
 			}
 				break;
 			default:
@@ -191,11 +201,32 @@ public abstract class Node extends Component {
 		}
 	}
 
+	/**
+	 * Must be implemented by subclasses, implement the actual logic
+	 * 
+	 * @param events
+	 * @return
+	 */
 	protected abstract List<ProcessResult> process(
 			Map<Pipe, List<DataMessage>> events);
 
 	public NodeState getState() {
 		return stateMachine.getState();
+	}
+
+	/**
+	 * Callback
+	 */
+	protected void beforeProcess(Map<Pipe, List<DataMessage>> events) {
+
+	}
+
+	/**
+	 * Callback
+	 */
+	protected void afterProcess(Map<Pipe, List<DataMessage>> events,
+			List<ProcessResult> result) {
+
 	}
 
 	public void addPipe(Pipe pipe) {

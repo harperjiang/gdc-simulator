@@ -16,7 +16,7 @@ public interface Stepper {
 	/**
 	 * 
 	 */
-	public void process();
+	public void work();
 
 	/**
 	 * 

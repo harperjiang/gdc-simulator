@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Session {
 
-	private String uuid;
+	private String id;
 
 	private Map<String, Object> context;
 
@@ -16,20 +16,20 @@ public class Session {
 		context = new HashMap<String, Object>();
 	}
 
-	public String getUuid() {
-		return uuid;
+	public String getId() {
+		return id;
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public Map<String, Object> getContext() {
-		return context;
+	public void put(String key, Object value) {
+		context.put(key, value);
 	}
 
-	public void setContext(Map<String, Object> context) {
-		this.context = context;
+	public <T> T get(String key) {
+		return (T) context.get(key);
 	}
 
 	public long getTimeToLive() {

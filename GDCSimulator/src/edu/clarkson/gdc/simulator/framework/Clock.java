@@ -78,7 +78,7 @@ public class Clock {
 		 */
 
 		for (Stepper stepper : steppers) {
-			stepper.process();
+			stepper.work();
 		}
 		for (Stepper stepper : steppers) {
 			stepper.send();
@@ -86,7 +86,7 @@ public class Clock {
 		stepForward();
 	}
 
-	private ExecutorService threadPool = Executors.newFixedThreadPool(100,
+	protected ExecutorService threadPool = Executors.newFixedThreadPool(100,
 			new ThreadFactory() {
 
 				int count = 0;
@@ -132,7 +132,7 @@ public class Clock {
 		@Override
 		public Object call() throws Exception {
 			try {
-				stepper.process();
+				stepper.work();
 			} catch (RuntimeException e) {
 				LoggerFactory.getLogger(getClass()).error(
 						"Error while executing process in thread pool", e);

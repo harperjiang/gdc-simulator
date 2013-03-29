@@ -17,4 +17,9 @@ public abstract class ResponseMessage extends DataMessage {
 	public ResponseMessage(DataMessage request) {
 		this.request = request;
 	}
+
+	public void setRequest(DataMessage request) {
+		this.request = request;
+	}
+
 }

@@ -81,4 +81,11 @@ public class DataMessage {
 		this.sessionId = sessionId;
 	}
 
+	public long getSendTime() {
+		return paths.get(0).getTimestamp();
+	}
+	
+	public long getReceiveTime() {
+		return paths.peek().getTimestamp();
+	}
 }

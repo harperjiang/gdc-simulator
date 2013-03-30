@@ -74,7 +74,6 @@ public class RequestIndexClient extends DefaultClient {
 		if (pipe.equals(indexServicePipe)) {
 
 			if (message instanceof LocateDCFail) {
-				fireFailure((LocateDCFail) message);
 				if (logger.isDebugEnabled()) {
 					logger.debug(MessageFormat.format(
 							"{0} at tick {1} received LocateDC Failure",
@@ -82,8 +81,6 @@ public class RequestIndexClient extends DefaultClient {
 				}
 			} else {
 				LocateDCResponse ldcr = (LocateDCResponse) message;
-
-				fireSuccess(ldcr);
 				String dcId = ldcr.getDataCenterId();
 				Node dataCenter = (Node) ((Cloud) getEnvironment())
 						.getDataCenter(dcId);
@@ -100,14 +97,12 @@ public class RequestIndexClient extends DefaultClient {
 		// Collect Response from DataCenter
 		if (pipe.getOpponent(this) instanceof DataCenter) {
 			if (message instanceof NodeFailMessage) {
-				fireFailure((NodeFailMessage) message);
 				if (logger.isDebugEnabled()) {
 					logger.debug(MessageFormat.format(
 							"{0} at tick {1} received ReadKey fail", getId(),
 							getClock().getCounter()));
 				}
 			} else {
-				fireSuccess((ReadKeyResponse) message);
 				ReadKeyRequest req = (ReadKeyRequest) ((ReadKeyResponse) message)
 						.getRequest();
 				if (logger.isDebugEnabled()) {

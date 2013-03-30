@@ -11,7 +11,7 @@ import java.util.EventListener;
 
 public interface NodeMessageListener extends EventListener {
 
-	public void successReceived(NodeResponseEvent event);
-	
-	public void failureReceived(NodeResponseEvent event);
+	public void messageReceived(NodeMessageEvent event);
+
+	public void messageSent(NodeMessageEvent event);
 }

@@ -60,6 +60,7 @@ public abstract class Node extends Component {
 				events.put(inputPipe, input);
 				for (DataMessage message : input) {
 					message.access(new PathNode(this, getClock().getCounter()));
+					fireMessageReceived(message);
 				}
 			}
 		}
@@ -191,11 +192,13 @@ public abstract class Node extends Component {
 					for (DataMessage event : entry.getValue()) {
 						if (event instanceof NodeFailMessage) {
 							entry.getKey().put(this, event);
+							fireMessageSent(event);
 						} else if (event instanceof ResponseMessage) {
 							ResponseMessage rm = (ResponseMessage) event;
 							FailMessage exm = new NodeFailMessage(
 									rm.getRequest(), e);
 							entry.getKey().put(this, exm);
+							fireMessageSent(exm);
 						} else {
 							// In exception state node cannot send
 							// message, intercept all request message
@@ -208,8 +211,10 @@ public abstract class Node extends Component {
 					// Distribute
 					for (Entry<Pipe, List<DataMessage>> entry : timeoutResult
 							.getMessages().entrySet()) {
-						for (DataMessage event : entry.getValue())
+						for (DataMessage event : entry.getValue()) {
 							entry.getKey().put(this, event);
+							fireMessageSent(event);
+						}
 					}
 				} else {
 					break;
@@ -284,18 +289,18 @@ public abstract class Node extends Component {
 		return pipes;
 	}
 
-	protected void fireSuccess(ResponseMessage response) {
-		NodeResponseEvent event = new NodeResponseEvent(this, response);
+	protected void fireMessageSent(DataMessage message) {
+		NodeMessageEvent event = new NodeMessageEvent(this, message);
 		for (NodeMessageListener listener : listenerDelegate
 				.getListeners(NodeMessageListener.class))
-			listener.successReceived(event);
+			listener.messageSent(event);
 	}
 
-	protected void fireFailure(FailMessage fail) {
-		NodeResponseEvent event = new NodeResponseEvent(this, fail);
+	protected void fireMessageReceived(DataMessage message) {
+		NodeMessageEvent event = new NodeMessageEvent(this, message);
 		for (NodeMessageListener listener : listenerDelegate
 				.getListeners(NodeMessageListener.class))
-			listener.failureReceived(event);
+			listener.messageReceived(event);
 	}
 
 	protected void fireStateChange(NodeStateEvent event) {

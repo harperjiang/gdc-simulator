@@ -1,10 +1,12 @@
 package edu.clarkson.gdc.simulator.impl.stat;
 
 import edu.clarkson.gdc.simulator.Client;
+import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
-import edu.clarkson.gdc.simulator.framework.NodeResponseEvent;
+import edu.clarkson.gdc.simulator.framework.ResponseMessage;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCFail;
 import edu.clarkson.gdc.simulator.impl.message.LocateDCResponse;
+import edu.clarkson.gdc.simulator.impl.message.ReadKeyResponse;
 import edu.clarkson.gdc.simulator.stat.AvailabilityReport;
 
 /**
@@ -24,18 +26,26 @@ public class StatisticListener implements NodeMessageListener {
 	}
 
 	@Override
-	public void successReceived(NodeResponseEvent event) {
-		if (event.getSource() instanceof Client
-				&& event.getMessage() instanceof LocateDCResponse)
-			report.setRequestCount(report.getRequestCount() + 1);
+	public void messageSent(NodeMessageEvent event) {
 	}
 
 	@Override
-	public void failureReceived(NodeResponseEvent event) {
+	public void messageReceived(NodeMessageEvent event) {
 		if (event.getSource() instanceof Client
 				&& event.getMessage() instanceof LocateDCFail) {
 			report.setRequestCount(report.getRequestCount() + 1);
 			report.setFailedCount(report.getFailedCount() + 1);
+		}
+		if (event.getSource() instanceof Client
+				&& event.getMessage() instanceof LocateDCResponse)
+			report.setRequestCount(report.getRequestCount() + 1);
+		if (event.getSource() instanceof Client
+				&& event.getMessage() instanceof ReadKeyResponse) {
+			ResponseMessage response = (ResponseMessage) event.getMessage();
+			report.setReadKeyCount(report.getReadKeyCount() + 1);
+			report.setReadKeyTime(report.getReadKeyTime()
+					+ response.getReceiveTime()
+					- response.getRequest().getSendTime());
 		}
 	}
 

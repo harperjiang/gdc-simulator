@@ -47,7 +47,9 @@ public class AvailabilityReport {
 
 	private List<PeriodStatus> status;
 
-	private BigDecimal averageResponseTime;
+	private long readKeyCount;
+
+	private long readKeyTime;
 
 	public long getTotalTime() {
 		return totalTime;
@@ -88,12 +90,24 @@ public class AvailabilityReport {
 		this.status = status;
 	}
 
+	public long getReadKeyCount() {
+		return readKeyCount;
+	}
+
+	public void setReadKeyCount(long readKeyCount) {
+		this.readKeyCount = readKeyCount;
+	}
+
+	public long getReadKeyTime() {
+		return readKeyTime;
+	}
+
+	public void setReadKeyTime(long readKeyTime) {
+		this.readKeyTime = readKeyTime;
+	}
+
 	public BigDecimal getAverageResponseTime() {
-		return averageResponseTime;
+		return new BigDecimal(readKeyTime).divide(new BigDecimal(readKeyCount),
+				2, BigDecimal.ROUND_HALF_UP);
 	}
-
-	public void setAverageResponseTime(BigDecimal averageResponseTime) {
-		this.averageResponseTime = averageResponseTime;
-	}
-
 }

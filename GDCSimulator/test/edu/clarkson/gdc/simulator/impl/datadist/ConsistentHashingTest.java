@@ -139,7 +139,7 @@ public class ConsistentHashingTest {
 		assertEquals(0, hashing.hole);
 	}
 
-	@Test
+	
 	public void testDistribution() {
 		ConsistentHashing hashing = new ConsistentHashing();
 		Map<String, Integer> counter = new HashMap<String, Integer>();

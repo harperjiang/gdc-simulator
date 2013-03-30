@@ -44,8 +44,10 @@ public enum NodeState {
 		private long counter;
 
 		public void busy(long period) {
-			counter = period;
-			setState(BUSY);
+			if (period > 0) {
+				counter = period;
+				setState(BUSY);
+			}
 		}
 
 		private NodeException exception;

@@ -20,7 +20,7 @@ public class PipeTest {
 		Environment env = new Environment();
 		Node src = new TestNode();
 		Node dest = new TestNode() {
-			public void process() {
+			public void work() {
 				// DO nothing
 			}
 		};

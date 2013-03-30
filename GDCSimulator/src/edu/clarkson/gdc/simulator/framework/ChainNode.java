@@ -64,6 +64,7 @@ public abstract class ChainNode extends Node {
 						if (null != session) {
 							DataMessage request = session.get(MESSAGE);
 							((ResponseMessage) message).setRequest(request);
+							message.setSessionId(session.getId());
 							sessionManager.discardSession(session);
 						}
 					}

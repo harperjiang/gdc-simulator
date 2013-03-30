@@ -56,8 +56,12 @@ public abstract class Node extends Component {
 		Map<Pipe, List<DataMessage>> events = new HashMap<Pipe, List<DataMessage>>();
 		for (Pipe inputPipe : pipes.values()) {
 			List<DataMessage> input = inputPipe.get(this);
-			if (!input.isEmpty())
+			if (!input.isEmpty()) {
 				events.put(inputPipe, input);
+				for (DataMessage message : input) {
+					message.access(new PathNode(this, getClock().getCounter()));
+				}
+			}
 		}
 		return events;
 	}

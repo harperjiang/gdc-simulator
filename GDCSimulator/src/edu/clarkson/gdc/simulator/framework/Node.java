@@ -16,6 +16,7 @@ import org.apache.commons.lang.Validate;
 import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
 import edu.clarkson.gdc.simulator.framework.NodeState.NodeStateMachine;
+import edu.clarkson.gdc.simulator.framework.session.Session;
 import edu.clarkson.gdc.simulator.framework.session.SessionManager;
 import edu.clarkson.gdc.simulator.framework.utils.EventListenerDelegate;
 
@@ -115,10 +116,22 @@ public abstract class Node extends Component {
 				Map<Pipe, List<DataMessage>> events = collectInput();
 				// Calculate Additional Latency
 				long latency = getLatency(events);
+
 				// callback
 				beforeProcess(events);
 				// Process Event
-				List<ProcessResult> results = process(events);
+				MessageRecorder recorder = new MessageRecorder();
+				// Generate new message
+				processNew(recorder);
+				for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
+					for (DataMessage message : entry.getValue()) {
+						processEach(entry.getKey(), message, recorder);
+					}
+				}
+				// Generate summary
+				processSummary(recorder);
+				List<ProcessResult> results = recorder.summarize();
+
 				if (!CollectionUtils.isEmpty(results)) {
 					for (ProcessResult result : results) {
 						if (null != result.getMessages()
@@ -202,13 +215,35 @@ public abstract class Node extends Component {
 	}
 
 	/**
-	 * Must be implemented by subclasses, implement the actual logic
+	 * Should be override by subclasses, implement the actual logic
 	 * 
-	 * @param events
+	 * @param source
+	 * @param message
+	 * @param recorder
 	 * @return
 	 */
-	protected abstract List<ProcessResult> process(
-			Map<Pipe, List<DataMessage>> events);
+	protected void processEach(Pipe source, DataMessage message,
+			MessageRecorder recorder) {
+
+	}
+
+	/**
+	 * Should be override by subclasses, implement the actual logic
+	 * 
+	 * @param recorder
+	 */
+	protected void processNew(MessageRecorder recorder) {
+
+	}
+
+	/**
+	 * Should be override by subclasses, implement the actual logic
+	 * 
+	 * @param recorder
+	 */
+	protected void processSummary(MessageRecorder recorder) {
+
+	}
 
 	public NodeState getState() {
 		return stateMachine.getState();
@@ -353,5 +388,41 @@ public abstract class Node extends Component {
 			return Long.valueOf(this.getTimestamp())
 					.compareTo(o.getTimestamp());
 		}
+	}
+
+	public final class MessageRecorder {
+
+		protected Map<Long, Map<Pipe, List<DataMessage>>> storage;
+
+		public MessageRecorder() {
+			storage = new HashMap<Long, Map<Pipe, List<DataMessage>>>();
+		}
+
+		public void record(Long time, Pipe pipe, DataMessage message) {
+			if (!storage.containsKey(time)) {
+				storage.put(time, new HashMap<Pipe, List<DataMessage>>());
+			}
+			if (!storage.get(time).containsKey(pipe)) {
+				storage.get(time).put(pipe, new ArrayList<DataMessage>());
+			}
+			storage.get(time).get(pipe).add(message);
+		}
+
+		public List<ProcessResult> summarize() {
+			List<ProcessResult> results = new ArrayList<ProcessResult>();
+			for (Entry<Long, Map<Pipe, List<DataMessage>>> entry : storage
+					.entrySet()) {
+				ProcessResult pr = new ProcessResult();
+				results.add(pr);
+				pr.setTimestamp(entry.getKey());
+				for (Entry<Pipe, List<DataMessage>> innerEntry : entry
+						.getValue().entrySet()) {
+					for (DataMessage message : innerEntry.getValue())
+						pr.add(innerEntry.getKey(), message);
+				}
+			}
+			return results;
+		}
+
 	}
 }

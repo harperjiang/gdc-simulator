@@ -2,10 +2,7 @@ package edu.clarkson.gdc.simulator.impl;
 
 import java.awt.geom.Point2D;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -69,37 +66,26 @@ public class DefaultIndexService extends Node implements IndexService {
 	}
 
 	@Override
-	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> events) {
-		ProcessResult success = new ProcessResult();
-		ProcessResult failed = new ProcessResult();
-		List<ProcessResult> results = new ArrayList<ProcessResult>();
-		results.add(success);
-		results.add(failed);
+	protected void processEach(Pipe pipe, DataMessage message,
+			MessageRecorder recorder) {
 
-		for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
-			Pipe pipe = entry.getKey();
-			for (DataMessage message : entry.getValue()) {
-				if (message instanceof LocateDCRequest) {
-					LocateDCRequest ldcr = (LocateDCRequest) message;
-					String key = ldcr.getKey();
-					if (logger.isDebugEnabled()) {
-						logger.debug(MessageFormat
-								.format("{0} at tick {1} received request to locate key {2}",
-										getId(), getClock().getCounter(), key));
-					}
-					Point2D location = ldcr.getClientLoc();
-					String dcid = locate(key, location);
-					if (null == dcid) {
-						LocateDCFail fail = new LocateDCFail(ldcr);
-						failed.add(pipe, fail);
-					} else {
-						LocateDCResponse response = new LocateDCResponse(ldcr,
-								dcid);
-						success.add(pipe, response);
-					}
-				}
+		if (message instanceof LocateDCRequest) {
+			LocateDCRequest ldcr = (LocateDCRequest) message;
+			String key = ldcr.getKey();
+			if (logger.isDebugEnabled()) {
+				logger.debug(MessageFormat.format(
+						"{0} at tick {1} received request to locate key {2}",
+						getId(), getClock().getCounter(), key));
+			}
+			Point2D location = ldcr.getClientLoc();
+			String dcid = locate(key, location);
+			if (null == dcid) {
+				LocateDCFail fail = new LocateDCFail(ldcr);
+				recorder.record(0l, pipe, fail);
+			} else {
+				LocateDCResponse response = new LocateDCResponse(ldcr, dcid);
+				recorder.record(0l, pipe, response);
 			}
 		}
-		return results;
 	}
 }

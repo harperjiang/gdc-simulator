@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Test;
@@ -19,80 +18,42 @@ public class ChainNodeTest {
 
 		private SessionManager sm = new SessionManager();
 
-		protected List<ProcessResult> process(
-				Map<Pipe, List<DataMessage>> events) {
-			List<ProcessResult> result = super.process(events);
-			if (null == result) {
-				result = new ArrayList<ProcessResult>();
-			}
-			// Emit message
-
-			ProcessResult pr = new ProcessResult();
-			// send out immediately
-			pr.setTimestamp(getClock().getCounter());
-
+		protected void processNew(MessageRecorder recorder) {
 			DataMessage msg = new DataMessage();
 			msg.setSessionId(sm.createSession().getId());
 			msg.setLoad("Msg from Source");
 			for (Pipe pipe : getPipes().values()) {
-				pr.add(pipe, msg);
+				recorder.record(0l, pipe, msg);
 			}
-
-			result.add(pr);
-
-			return result;
-		};
+		}
 	};
 
 	private ChainNode middle = new ChainNode() {
-		protected List<ProcessResult> process(
-				Map<Pipe, List<DataMessage>> events) {
-
-			List<ProcessResult> result = new ArrayList<ProcessResult>();
-			ProcessResult pr = new ProcessResult();
-			result.add(pr);
-
-			// Generate a new message for every coming one, and send to dest
-			for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
-				if (entry.getKey().getOpponent(this).equals(source)) {
-					for (DataMessage msg : entry.getValue()) {
-						DataMessage newmsg = new DataMessage();
-						newmsg.setSessionId(msg.getSessionId());
-						pr.add(getPipe(destination), newmsg);
-					}
-				}
-				if (entry.getKey().getOpponent(this).equals(destination)) {
-					for (DataMessage rm : entry.getValue()) {
-						ResponseMessage resp = new ResponseMessage(null) {
-						};
-						resp.setSessionId(rm.getSessionId());
-						pr.add(getPipe(source), resp);
-					}
-				}
+		protected void processEach(Pipe pipe, DataMessage message,
+				MessageRecorder recorder) {
+			if (pipe.getOpponent(this).equals(source)) {
+				DataMessage newmsg = new DataMessage();
+				newmsg.setSessionId(message.getSessionId());
+				recorder.record(0l, getPipe(destination), newmsg);
 			}
-
-			return result;
+			if (pipe.getOpponent(this).equals(destination)) {
+				ResponseMessage resp = new ResponseMessage(null) {
+				};
+				resp.setSessionId(message.getSessionId());
+				recorder.record(0l, getPipe(source), resp);
+			}
 		}
 	};
 
 	private Node destination = new Node() {
 		@Override
-		protected List<ProcessResult> process(
-				Map<Pipe, List<DataMessage>> events) {
-			List<ProcessResult> result = new ArrayList<ProcessResult>();
-			ProcessResult pr = new ProcessResult();
-			result.add(pr);
+		protected void processEach(Pipe pipe, DataMessage message,
+				MessageRecorder recorder) {
 
-			for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
-				for (DataMessage dm : entry.getValue()) {
-					ResponseMessage rm = new ResponseMessage(dm) {
-					};
-					rm.setSessionId(dm.getSessionId());
-					pr.add(entry.getKey(), rm);
-				}
-			}
-
-			return result;
+			ResponseMessage rm = new ResponseMessage(message) {
+			};
+			rm.setSessionId(message.getSessionId());
+			recorder.record(0l, pipe, rm);
 		}
 	};
 

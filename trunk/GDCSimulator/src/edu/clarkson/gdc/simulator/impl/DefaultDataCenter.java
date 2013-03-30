@@ -1,11 +1,6 @@
 package edu.clarkson.gdc.simulator.impl;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.DataCenter;
@@ -63,38 +58,22 @@ public class DefaultDataCenter extends Node implements DataCenter {
 	}
 
 	@Override
-	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> events) {
-		Map<Long, ProcessResult> timeToResult = new HashMap<Long, ProcessResult>();
+	protected void processEach(Pipe pipe, DataMessage message,
+			MessageRecorder recorder) {
 
 		// Read Request
-		for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
-			Pipe pipe = entry.getKey();
-			if (pipe.getDestination().equals(this)) {
-				for (DataMessage message : entry.getValue()) {
-					// Read Key Request
-					if (message instanceof ReadKeyRequest) {
-						ReadKeyRequest request = (ReadKeyRequest) message;
-						ReadKeyResponse resp = new ReadKeyResponse(
-								(ReadKeyRequest) message);
-						Pair<Long, Data> read = read(request.getKey());
-						if (!timeToResult.containsKey(read.getA())) {
-							ProcessResult result = new ProcessResult();
-							result.setTimestamp(read.getA());
-							timeToResult.put(read.getA(), result);
-						}
-						ProcessResult pr = timeToResult.get(read.getA());
-						resp.setLoad(read.getB());
-						pr.add(pipe, resp);
-					}
-
-					// {Add Other Request here}
-				}
+		if (pipe.getDestination().equals(this)) {
+			// Read Key Request
+			if (message instanceof ReadKeyRequest) {
+				ReadKeyRequest request = (ReadKeyRequest) message;
+				ReadKeyResponse resp = new ReadKeyResponse(
+						(ReadKeyRequest) message);
+				Pair<Long, Data> read = read(request.getKey());
+				resp.setLoad(read.getB());
+				recorder.record(read.getA(), pipe, resp);
 			}
+			// {Add Other Request here}
 		}
-
-		List<ProcessResult> results = new ArrayList<ProcessResult>();
-		results.addAll(timeToResult.values());
-		return results;
 	}
 
 	public Pair<Long, Data> read(final String key) {

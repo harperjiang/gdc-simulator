@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class TestNode extends Node {
 
@@ -16,28 +15,19 @@ public class TestNode extends Node {
 	}
 
 	@Override
-	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> events) {
-		if (events == null || events.isEmpty())
-			return null;
+	protected void processEach(Pipe source, DataMessage message,
+			MessageRecorder recorder) {
 
-		for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
-			if (!entry.getValue().isEmpty()
-					&& entry.getValue().get(0) instanceof ResponseMessage) {
-				feedback.put(getClock().getCounter(), entry.getValue());
+		if (message instanceof ResponseMessage) {
+			if (!feedback.containsKey(getClock().getCounter())) {
+				feedback.put(getClock().getCounter(),
+						new ArrayList<DataMessage>());
 			}
+			feedback.get(getClock().getCounter()).add(message);
+		} else {
+			recorder.record(0l, source, new ResponseMessage(message) {
+			});
 		}
-		List<ProcessResult> results = new ArrayList<ProcessResult>();
-
-		ProcessResult result = new ProcessResult();
-
-		for (Entry<Pipe, List<DataMessage>> event : events.entrySet()) {
-			for (DataMessage dm : event.getValue())
-				result.add(event.getKey(), new ResponseMessage(dm) {
-				});
-		}
-		results.add(result);
-		return results;
-
 	}
 
 	public Map<Long, List<DataMessage>> getFeedback() {

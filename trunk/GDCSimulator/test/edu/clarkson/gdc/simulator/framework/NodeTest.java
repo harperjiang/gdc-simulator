@@ -94,7 +94,7 @@ public class NodeTest {
 				return null;
 			}
 		});
-		
+
 		assertEquals(NodeState.FREE, node1.getState());
 		assertEquals(NodeState.FREE, node2.getState());
 
@@ -120,19 +120,14 @@ public class NodeTest {
 		assertEquals(NodeState.FREE, node2.getState());
 
 		Map<Long, List<DataMessage>> feedback = node1.getFeedback();
-		assertEquals(2,feedback.size());
-		assertEquals(2,feedback.get(Long.valueOf(5l)).size());
-		assertEquals(1,feedback.get(Long.valueOf(9l)).size());
+		assertEquals(2, feedback.size());
+		assertEquals(2, feedback.get(Long.valueOf(5l)).size());
+		assertEquals(1, feedback.get(Long.valueOf(9l)).size());
 	}
 
 	@Test
 	public void testSend() {
 		Node node = new Node() {
-			@Override
-			protected List<ProcessResult> process(
-					Map<Pipe, List<DataMessage>> events) {
-				return null;
-			}
 		};
 
 		Pipe pipe = new Pipe(node, new TestNode());

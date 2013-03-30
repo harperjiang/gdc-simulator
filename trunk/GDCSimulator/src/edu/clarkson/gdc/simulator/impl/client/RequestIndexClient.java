@@ -2,12 +2,8 @@ package edu.clarkson.gdc.simulator.impl.client;
 
 import java.awt.geom.Point2D;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,14 +42,14 @@ public class RequestIndexClient extends DefaultClient {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Override
-	protected List<ProcessResult> process(Map<Pipe, List<DataMessage>> messages) {
-		ProcessResult result = new ProcessResult();
+	private Pipe indexServicePipe;
 
-		List<ProcessResult> results = new ArrayList<ProcessResult>();
-
-		Node indexService = (Node) ((Cloud) getEnvironment()).getIndexService();
-		Pipe indexServicePipe = getPipe(indexService);
+	protected void processNew(MessageRecorder recorder) {
+		if (null == indexServicePipe) {
+			Node indexService = (Node) ((Cloud) getEnvironment())
+					.getIndexService();
+			indexServicePipe = getPipe(indexService);
+		}
 		// Send Query to Index Service
 		List<String> keys = getProvider()
 				.fetchReadLoad(getClock().getCounter());
@@ -64,76 +60,65 @@ public class RequestIndexClient extends DefaultClient {
 		}
 		for (String key : keys) {
 			LocateDCRequest locateDc = new LocateDCRequest(key, getLocation());
-			result.add(indexServicePipe, locateDc);
+			recorder.record(0l, indexServicePipe, locateDc);
 		}
+	}
+
+	@Override
+	protected void processEach(Pipe pipe, DataMessage message,
+			MessageRecorder recorder) {
+
 		// Process Income Messages
-		for (Entry<Pipe, List<DataMessage>> entry : messages.entrySet()) {
-			Pipe pipe = entry.getKey();
 
-			// Get Response from Index Service, and send request to Data Center
-			if (pipe.equals(indexServicePipe)) {
-				List<DataMessage> indexServiceResp = entry.getValue();
-				if (!CollectionUtils.isEmpty(indexServiceResp)) {
-					for (DataMessage resp : indexServiceResp) {
-						if (resp instanceof LocateDCFail) {
-							fireFailure((LocateDCFail) resp);
-							if (logger.isDebugEnabled()) {
-								logger.debug(MessageFormat
-										.format("{0} at tick {1} received LocateDC Failure",
-												getId(), getClock()
-														.getCounter()));
-							}
-						} else {
-							LocateDCResponse ldcr = (LocateDCResponse) resp;
+		// Get Response from Index Service, and send request to Data Center
+		if (pipe.equals(indexServicePipe)) {
 
-							fireSuccess(ldcr);
-							String dcId = ldcr.getDataCenterId();
-							Node dataCenter = (Node) ((Cloud) getEnvironment())
-									.getDataCenter(dcId);
-							LocateDCRequest request = (LocateDCRequest) ldcr
-									.getRequest();
-							ReadKeyRequest rkmsg = new ReadKeyRequest(
-									request.getKey());
-							result.add(getPipe(dataCenter), rkmsg);
-							if (logger.isDebugEnabled()) {
-								logger.debug(MessageFormat
-										.format("{0} at tick {1} received LocateDC Success, goto DC {2}",
-												getId(), getClock()
-														.getCounter(), dcId));
-							}
-						}
-					}
+			if (message instanceof LocateDCFail) {
+				fireFailure((LocateDCFail) message);
+				if (logger.isDebugEnabled()) {
+					logger.debug(MessageFormat.format(
+							"{0} at tick {1} received LocateDC Failure",
+							getId(), getClock().getCounter()));
+				}
+			} else {
+				LocateDCResponse ldcr = (LocateDCResponse) message;
+
+				fireSuccess(ldcr);
+				String dcId = ldcr.getDataCenterId();
+				Node dataCenter = (Node) ((Cloud) getEnvironment())
+						.getDataCenter(dcId);
+				LocateDCRequest request = (LocateDCRequest) ldcr.getRequest();
+				ReadKeyRequest rkmsg = new ReadKeyRequest(request.getKey());
+				recorder.record(0l, getPipe(dataCenter), rkmsg);
+				if (logger.isDebugEnabled()) {
+					logger.debug(MessageFormat
+							.format("{0} at tick {1} received LocateDC Success, goto DC {2}",
+									getId(), getClock().getCounter(), dcId));
 				}
 			}
-			// Collect Response from DataCenter
-			if (pipe.getOpponent(this) instanceof DataCenter) {
-				List<DataMessage> dcResponse = entry.getValue();
-				for (DataMessage resp : dcResponse)
-					if (resp instanceof NodeFailMessage) {
-						fireFailure((NodeFailMessage) resp);
-						if (logger.isDebugEnabled()) {
-							logger.debug(MessageFormat.format(
-									"{0} at tick {1} received ReadKey fail",
-									getId(), getClock().getCounter()));
-						}
-					} else {
-						fireSuccess((ReadKeyResponse) resp);
-						ReadKeyRequest req = (ReadKeyRequest) ((ReadKeyResponse) resp)
-								.getRequest();
-						if (logger.isDebugEnabled()) {
-							logger.debug(MessageFormat
-									.format("{0} at tick {1} received ReadKey success for key {2} from DC {3}",
-											getId(), getClock().getCounter(),
-											req.getKey(), resp.getOrigin()
-													.getId()));
-						}
-					}
-			}
 		}
+		// Collect Response from DataCenter
+		if (pipe.getOpponent(this) instanceof DataCenter) {
+			if (message instanceof NodeFailMessage) {
+				fireFailure((NodeFailMessage) message);
+				if (logger.isDebugEnabled()) {
+					logger.debug(MessageFormat.format(
+							"{0} at tick {1} received ReadKey fail", getId(),
+							getClock().getCounter()));
+				}
+			} else {
+				fireSuccess((ReadKeyResponse) message);
+				ReadKeyRequest req = (ReadKeyRequest) ((ReadKeyResponse) message)
+						.getRequest();
+				if (logger.isDebugEnabled()) {
+					logger.debug(MessageFormat
+							.format("{0} at tick {1} received ReadKey success for key {2} from DC {3}",
+									getId(), getClock().getCounter(),
+									req.getKey(), message.getOrigin().getId()));
+				}
+			}
 
-		results.add(result);
-
-		return results;
+		}
 	}
 
 	private WorkloadProvider provider;

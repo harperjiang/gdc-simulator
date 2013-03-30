@@ -15,7 +15,7 @@ public abstract class Component implements Stepper {
 
 	private Environment environment;
 
-	private ProcessTimeModel timeModel = new ConstantTimeModel(1);
+	private ProcessTimeModel timeModel;
 
 	private String id;
 
@@ -56,7 +56,7 @@ public abstract class Component implements Stepper {
 		if (null == msgs || msgs.isEmpty() == true)
 			return 0;
 		if (null == getTimeModel())
-			return 1;
+			return 0;
 		return getTimeModel().latency(this, msgs);
 	}
 

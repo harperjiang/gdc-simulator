@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.impl.datadist;
+package edu.clarkson.gdc.simulator.impl.simple.datadist;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -13,8 +13,9 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import edu.clarkson.gdc.simulator.impl.datadist.ConsistentHashing.Position;
-import edu.clarkson.gdc.simulator.impl.datadist.ConsistentHashing.PositionHolder;
+import edu.clarkson.gdc.simulator.impl.simple.datadist.ConsistentHashing;
+import edu.clarkson.gdc.simulator.impl.simple.datadist.ConsistentHashing.Position;
+import edu.clarkson.gdc.simulator.impl.simple.datadist.ConsistentHashing.PositionHolder;
 
 public class ConsistentHashingTest {
 

@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.clarkson.gdc.simulator.framework.Clock;
+import edu.clarkson.gdc.simulator.impl.simple.client.DefaultWorkloadProvider;
 
 public class DefaultWorkloadProviderTest {
 

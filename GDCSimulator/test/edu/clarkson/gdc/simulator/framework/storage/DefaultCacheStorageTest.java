@@ -10,7 +10,7 @@ import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.common.Pair;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 import edu.clarkson.gdc.simulator.framework.storage.WritePolicy;
-import edu.clarkson.gdc.simulator.impl.DefaultData;
+import edu.clarkson.gdc.simulator.impl.simple.DefaultData;
 
 public class DefaultCacheStorageTest {
 

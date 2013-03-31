@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.impl.client;
+package edu.clarkson.gdc.simulator.impl.simple.client;
 
 import static org.junit.Assert.assertEquals;
 

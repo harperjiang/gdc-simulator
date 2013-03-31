@@ -3,8 +3,6 @@ package edu.clarkson.gdc.simulator.framework;
 import java.util.List;
 import java.util.Map;
 
-import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
-
 /**
  * 
  * @author Hao Jiang

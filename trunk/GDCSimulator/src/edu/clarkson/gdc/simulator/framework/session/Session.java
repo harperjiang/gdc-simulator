@@ -28,6 +28,7 @@ public class Session {
 		context.put(key, value);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T get(String key) {
 		return (T) context.get(key);
 	}

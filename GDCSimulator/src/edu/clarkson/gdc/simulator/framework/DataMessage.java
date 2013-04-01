@@ -61,8 +61,9 @@ public class DataMessage {
 		this.paths.push(node);
 	}
 
-	public Object getLoad() {
-		return load;
+	@SuppressWarnings("unchecked")
+	public <T> T getLoad() {
+		return (T) load;
 	}
 
 	public void setLoad(Object load) {
@@ -84,7 +85,7 @@ public class DataMessage {
 	public long getSendTime() {
 		return paths.get(0).getTimestamp();
 	}
-	
+
 	public long getReceiveTime() {
 		return paths.peek().getTimestamp();
 	}

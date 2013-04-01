@@ -37,4 +37,10 @@ public class Environment {
 		component.setEnvironment(null);
 		getClock().unregister(component);
 	}
+
+	public void run(long stop) {
+		while (getClock().getCounter() < stop) {
+			getClock().tick();
+		}
+	}
 }

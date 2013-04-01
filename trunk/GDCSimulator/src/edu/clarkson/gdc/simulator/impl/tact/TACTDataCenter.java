@@ -45,6 +45,17 @@ public class TACTDataCenter extends AbstractDataCenter {
 	private List<Pair<Pipe, DataMessage>> buffer;
 
 	@Override
+	protected void processNew(MessageRecorder recorder) {
+		// Process pending requests
+		if (pulledResponse == 0 && buffer.size() != 0) {
+			for (Pair<Pipe, DataMessage> pair : buffer) {
+				processEach(pair.getA(), pair.getB(), recorder);
+			}
+			buffer.clear();
+		}
+	}
+
+	@Override
 	protected void processEach(Pipe source, DataMessage message,
 			MessageRecorder recorder) {
 		if (message instanceof ClientRead) {
@@ -86,7 +97,10 @@ public class TACTDataCenter extends AbstractDataCenter {
 
 			ServerPullResponse response = new ServerPullResponse(pull);
 			response.setServerNum(number);
-			response.setOperations(getCommitted(pull.getStartPoint()));
+			List<Operation> oprs = new ArrayList<Operation>();
+			oprs.addAll(getCommitted(pull.getStartPoint()));
+			oprs.addAll(getTentative(pull.getStartPoint()));
+			response.setOperations(oprs);
 			// TODO Decide the response time
 			recorder.record(0l, source, response);
 		}
@@ -186,11 +200,6 @@ public class TACTDataCenter extends AbstractDataCenter {
 		for (int i = 0; i < pulling.length; i++)
 			pulling[i] = true;
 		pulledResponse = pulling.length - 1;
-	}
-
-	@Override
-	protected void processNew(MessageRecorder recorder) {
-
 	}
 
 	protected List<Pipe> broadcastPipes() {

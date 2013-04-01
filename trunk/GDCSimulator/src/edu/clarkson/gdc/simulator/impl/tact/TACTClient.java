@@ -11,6 +11,9 @@ import edu.clarkson.gdc.simulator.impl.tact.message.ClientWrite;
 public class TACTClient extends Node implements Client {
 
 	private double readRatio = 0.5;
+
+	private long interval = 10;
+
 	private Random random = new Random(System.currentTimeMillis() * hashCode());
 
 	/**
@@ -18,6 +21,8 @@ public class TACTClient extends Node implements Client {
 	 */
 	@Override
 	protected void processNew(MessageRecorder recorder) {
+		if (0 != random.nextInt((int) interval))
+			return;
 		if (random.nextDouble() < readRatio)
 			recorder.record(0l, getServerPipe(), new ClientRead());
 		else
@@ -51,6 +56,14 @@ public class TACTClient extends Node implements Client {
 
 	public void setReadRatio(double readRatio) {
 		this.readRatio = readRatio;
+	}
+
+	public long getInterval() {
+		return interval;
+	}
+
+	public void setInterval(long interval) {
+		this.interval = interval;
 	}
 
 }

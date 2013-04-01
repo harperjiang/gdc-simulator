@@ -40,14 +40,12 @@ public class TACTDataCenter extends AbstractDataCenter {
 		buffer = new ArrayList<Pair<Pipe, DataMessage>>();
 	}
 
-	private int pulledResponse = 0;
-
 	private List<Pair<Pipe, DataMessage>> buffer;
 
 	@Override
 	protected void processNew(MessageRecorder recorder) {
 		// Process pending requests
-		if (pulledResponse == 0 && buffer.size() != 0) {
+		if (!isPulling() && buffer.size() != 0) {
 			for (Pair<Pipe, DataMessage> pair : buffer) {
 				processEach(pair.getA(), pair.getB(), recorder);
 			}
@@ -59,7 +57,7 @@ public class TACTDataCenter extends AbstractDataCenter {
 	protected void processEach(Pipe source, DataMessage message,
 			MessageRecorder recorder) {
 		if (message instanceof ClientRead) {
-			if (pulledResponse != 0) {
+			if (isPulling()) {
 				buffer.add(new Pair<Pipe, DataMessage>(source, message));
 			} else {
 				// Consume some time
@@ -71,7 +69,7 @@ public class TACTDataCenter extends AbstractDataCenter {
 			}
 		}
 		if (message instanceof ClientWrite) {
-			if (pulledResponse != 0) {
+			if (isPulling()) {
 				buffer.add(new Pair<Pipe, DataMessage>(source, message));
 			} else {
 				// Add to tentative list
@@ -105,8 +103,6 @@ public class TACTDataCenter extends AbstractDataCenter {
 			recorder.record(0l, source, response);
 		}
 		if (message instanceof ServerPullResponse) {
-			// Decrease the response count
-			pulledResponse--;
 			ServerPullResponse response = (ServerPullResponse) message;
 			pulling[response.getServerNum()] = false;
 			timeVector[response.getServerNum()] = response.getEndPoint();
@@ -138,17 +134,21 @@ public class TACTDataCenter extends AbstractDataCenter {
 
 		for (Pipe pipe : broadcastPipes()) {
 			TACTDataCenter oppo = (TACTDataCenter) pipe.getOpponent(this);
-			pushed[oppo.number] = Math.max(timeVector[oppo.number],
-					pushed[oppo.number]);
-			List<Operation> pushOprs = getTentative(pushed[oppo.number]);
+			List<Operation> pushOprs = new ArrayList<Operation>();
+			pushOprs.addAll(getCommitted(pushed[oppo.number]));
+			pushOprs.addAll(getTentative(pushed[oppo.number]));
+			long pushMax = 0;
+			for (Operation opr : pushOprs) {
+				pushMax = Math.max(pushMax, opr.getTimestamp().getTime());
+			}
 			if (pushOprs.size() >= threshold
 					|| getClock().getCounter() - timeVector[oppo.number] > getStaleness()) {
+				pushed[oppo.number] = pushMax;
 				// Push
 				ServerPush pushRequest = new ServerPush();
 				pushRequest.setOperations(pushOprs);
 				pushRequest.setServerNum(number);
-				// TODO Maybe we don't need to push to all the servers?
-				recorder.record(0l, pipe, pushRequest);
+				recorder.record(getPushReactionTime(), pipe, pushRequest);
 			}
 		}
 
@@ -159,7 +159,7 @@ public class TACTDataCenter extends AbstractDataCenter {
 				TACTDataCenter oppo = (TACTDataCenter) pipe.getOpponent(this);
 				pull.setServerNum(oppo.number);
 				pull.setStartPoint(timeVector[oppo.number]);
-				recorder.record(0l, pipe, pull);
+				recorder.record(getPullReactionTime(), pipe, pull);
 			}
 			setPulling();
 		}
@@ -199,7 +199,6 @@ public class TACTDataCenter extends AbstractDataCenter {
 	protected void setPulling() {
 		for (int i = 0; i < pulling.length; i++)
 			pulling[i] = true;
-		pulledResponse = pulling.length - 1;
 	}
 
 	protected List<Pipe> broadcastPipes() {
@@ -230,6 +229,10 @@ public class TACTDataCenter extends AbstractDataCenter {
 
 	private long staleness;
 
+	private long pushReactionTime;
+
+	private long pullReactionTime;
+
 	public int getNumError() {
 		return numError;
 	}
@@ -252,5 +255,21 @@ public class TACTDataCenter extends AbstractDataCenter {
 
 	public void setStaleness(long staleness) {
 		this.staleness = staleness;
+	}
+
+	public long getPushReactionTime() {
+		return pushReactionTime;
+	}
+
+	public void setPushReactionTime(long pushReactionTime) {
+		this.pushReactionTime = pushReactionTime;
+	}
+
+	public long getPullReactionTime() {
+		return pullReactionTime;
+	}
+
+	public void setPullReactionTime(long pullReactionTime) {
+		this.pullReactionTime = pullReactionTime;
 	}
 }

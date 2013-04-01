@@ -33,12 +33,12 @@ import edu.clarkson.gdc.simulator.impl.simple.datadist.ConsistentHashingDistribu
 public class DefaultCloud extends Environment implements Cloud {
 
 	private DefaultCacheStorage nas;
-	
+
 	public DefaultCloud() {
 		super();
-		
+
 		setLoader(new XMLFileCloudLoader());
-		
+
 		// Init Attributes
 		dataCenters = new ArrayList<DataCenter>();
 		dataCenterIndex = new HashMap<String, DataCenter>();
@@ -51,13 +51,12 @@ public class DefaultCloud extends Environment implements Cloud {
 		dis.setId("IndexService");
 		setIndexService(dis);
 		setDataBlockDistribution(new ConsistentHashingDistribution());
-		
+
 		// Create NAS storage
 		nas = new DefaultCacheStorage();
 		nas.setReadTime(100);
 		nas.setWriteTime(200);
-		
-		
+
 		// Create Probes
 		NodeMessageListener messageProbe = proxy
 				.getProbe(NodeMessageListener.class);
@@ -80,7 +79,7 @@ public class DefaultCloud extends Environment implements Cloud {
 			dcstorage.setReadTime(5);
 			dcstorage.setDirtyThreshold(100);
 			dc.setStorage(dcstorage);
-			
+
 			dataCenters.add(dc);
 			dataCenterIndex.put(dc.getId(), dc);
 		}
@@ -179,12 +178,6 @@ public class DefaultCloud extends Environment implements Cloud {
 
 	public void setLoader(CloudDataLoader loader) {
 		this.loader = loader;
-	}
-
-	public void run(long stop) {
-		while (getClock().getCounter() < stop) {
-			getClock().tick();
-		}
 	}
 
 	public <EL extends EventListener> void addListener(Class<EL> clazz,

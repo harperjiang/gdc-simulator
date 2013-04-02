@@ -1,16 +1,13 @@
 package edu.clarkson.gdc.simulator.framework;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.Random;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,32 +35,30 @@ public abstract class Node extends Component {
 
 	protected Map<Node, Pipe> pipes;
 
-	protected Queue<ProcessResult> buffer;
-
 	protected ExceptionStrategy exceptionStrategy;
 
 	protected EventListenerDelegate listenerDelegate;
 
+	protected List<ProcessResult> cpuBuffer;
+
+	protected List<ProcessResult> ioBuffer;
+
 	protected Logger logger;
 
-	private int power = 1;
+	protected int power = 1;
+
+	protected int capacity = -1;
 
 	public Node() {
 		super();
 		pipes = new HashMap<Node, Pipe>();
-		
-		buffer = new PriorityQueue<ProcessResult>();
-
 		listenerDelegate = new EventListenerDelegate();
-
 		stateMachine = new NodeStateMachine(this);
 
 		logger = LoggerFactory.getLogger(getClass());
-	}
 
-	public Node(int power) {
-		this();
-		this.power = power;
+		cpuBuffer = new ArrayList<ProcessResult>();
+		ioBuffer = new ArrayList<ProcessResult>();
 	}
 
 	protected Map<Pipe, List<DataMessage>> collectInput() {
@@ -115,27 +110,22 @@ public abstract class Node extends Component {
 			case EXCEPTION: {
 				Map<Pipe, List<DataMessage>> events = collectInput();
 				// Send a response indicating node has exception
-				ProcessResult result = new ProcessResult();
-				result.setException(true);
 				if (!events.isEmpty()) {
 					for (Entry<Pipe, List<DataMessage>> entry : events
 							.entrySet()) {
 						for (DataMessage msg : entry.getValue()) {
 							FailMessage fail = new NodeFailMessage(msg,
 									stateMachine.getException());
-							result.add(entry.getKey(), fail);
+							ProcessResult result = new ProcessResult(1l, 0l,
+									entry.getKey(), fail);
+							cpuBuffer.add(result);
 						}
 					}
-					result.setTimestamp(getClock().getCounter());
-					buffer.offer(result);
 				}
 			}
 				break;
 			case FREE: {
 				Map<Pipe, List<DataMessage>> events = collectInput();
-				// Calculate Additional Latency
-				long latency = getLatency(events);
-
 				// callback
 				beforeProcess(events);
 				// Process Event
@@ -150,28 +140,11 @@ public abstract class Node extends Component {
 				// Generate summary
 				processSummary(recorder);
 				List<ProcessResult> results = recorder.summarize();
-
-				if (!CollectionUtils.isEmpty(results)) {
-					for (ProcessResult result : results) {
-						if (null != result.getMessages()
-								&& !result.getMessages().isEmpty()) {
-							result.setTimestamp(getClock().getCounter(),
-									latency + result.getTimestamp());
-							for (List<DataMessage> eventList : result
-									.getMessages().values())
-								for (DataMessage event : eventList) {
-									event.access(new PathNode(this, result
-											.getTimestamp()));
-								}
-							// Put Events to send buffer
-							buffer.offer(result);
-						}
-					}
-				}
 				// callback
 				afterProcess(events, results);
 
-				stateMachine.busy(latency);
+				// Put Events to send buffer
+				cpuBuffer.addAll(results);
 			}
 				break;
 			default:
@@ -188,53 +161,33 @@ public abstract class Node extends Component {
 
 	@Override
 	public void send() {
-		while (true) {
-			// Get Event that is ready
-			ProcessResult timeoutResult = buffer.peek();
-			if (null == timeoutResult)
-				break;
-			if (NodeState.EXCEPTION == getState()
-					|| NodeState.DOWN == getState()) { // Exception case,
-				// immediate send out
-				// all pending message
-				timeoutResult = buffer.poll();
-				NodeException e = (getState() == NodeState.EXCEPTION) ? stateMachine
-						.getException() : new NodeStateException(this,
-						getState());
-				for (Entry<Pipe, List<DataMessage>> entry : timeoutResult
-						.getMessages().entrySet()) {
-					for (DataMessage event : entry.getValue()) {
-						if (event instanceof NodeFailMessage) {
-							entry.getKey().put(this, event);
-							fireMessageSent(event);
-						} else if (event instanceof ResponseMessage) {
-							ResponseMessage rm = (ResponseMessage) event;
-							FailMessage exm = new NodeFailMessage(
-									rm.getRequest(), e);
-							entry.getKey().put(this, exm);
-							fireMessageSent(exm);
-						} else {
-							// In exception state node cannot send
-							// message, intercept all request message
-						}
-					}
-				}
-			} else { // Normal case, wait till message is ready to be sent
-				if (timeoutResult.getTimestamp() <= getClock().getCounter()) {
-					timeoutResult = buffer.poll();
-					// Distribute
-					for (Entry<Pipe, List<DataMessage>> entry : timeoutResult
-							.getMessages().entrySet()) {
-						for (DataMessage event : entry.getValue()) {
-							entry.getKey().put(this, event);
-							fireMessageSent(event);
-						}
-					}
-				} else {
-					break;
-				}
+		// Decrease cpu count until power is used up
+		Random random = new Random(System.currentTimeMillis() * hashCode());
+		List<ProcessResult> toio = new ArrayList<ProcessResult>();
+		for (int i = 0; i < power; i++) {
+			int index = random.nextInt(cpuBuffer.size());
+			ProcessResult pr = cpuBuffer.get(index);
+			pr.cpuDecrease();
+			if (pr.cpuReady()) {
+				pr = cpuBuffer.remove(index);
+				toio.add(pr);
 			}
 		}
+		// Send IO ready message, decrease unready
+		for (int i = 0; i < ioBuffer.size(); i++) {
+			ProcessResult pr = ioBuffer.get(i);
+			if (pr.ready()) {
+				pr.getPipe().put(this, pr.getMessage());
+				ioBuffer.remove(i);
+				i--;
+			} else {
+				pr.ioDecrease();
+			}
+		}
+
+		// Exceed capacity, will not accept further message
+		if (capacity != -1 && cpuBuffer.size() > capacity)
+			stateMachine.busy(1);
 	}
 
 	/**
@@ -345,108 +298,78 @@ public abstract class Node extends Component {
 		this.exceptionStrategy = exceptionStrategy;
 	}
 
-	public static class ProcessResult implements Comparable<ProcessResult> {
+	public static class ProcessResult {
 
-		private long timestamp;
+		private long cpuTime;
 
-		private BigDecimal factor = BigDecimal.ONE;
+		private long ioTime;
 
-		private Map<Pipe, List<DataMessage>> messages;
+		private Pipe pipe;
 
-		private boolean exception;
+		private DataMessage message;
 
-		public ProcessResult() {
-			super();
-			messages = new HashMap<Pipe, List<DataMessage>>();
+		public ProcessResult(long cpu, long io, Pipe p, DataMessage m) {
+			this.cpuTime = cpu;
+			this.ioTime = io;
+			this.pipe = p;
+			this.message = m;
 		}
 
-		public ProcessResult(BigDecimal factor) {
-			this();
-			this.factor = factor;
+		public void cpuDecrease() {
+			cpuTime--;
 		}
 
-		public boolean isException() {
-			return exception;
+		public void ioDecrease() {
+			ioTime--;
 		}
 
-		public void setException(boolean exception) {
-			this.exception = exception;
+		public boolean cpuReady() {
+			return cpuTime == 0;
 		}
 
-		public long getTimestamp() {
-			return timestamp;
+		public boolean ready() {
+			return cpuTime == 0 && ioTime == 0;
 		}
 
-		public void setTimestamp(long timestamp) {
-			this.timestamp = timestamp;
+		public long getCpuTime() {
+			return cpuTime;
 		}
 
-		public void setTimestamp(long clock, long latency) {
-			setTimestamp(clock
-					+ new BigDecimal(latency).multiply(factor).longValue());
+		public long getIoTime() {
+			return ioTime;
 		}
 
-		public BigDecimal getFactor() {
-			return factor;
+		public Pipe getPipe() {
+			return pipe;
 		}
 
-		public void setFactor(BigDecimal factor) {
-			this.factor = factor;
+		public DataMessage getMessage() {
+			return message;
 		}
 
-		public Map<Pipe, List<DataMessage>> getMessages() {
-			return messages;
-		}
-
-		public void add(Pipe pipe, DataMessage msg) {
-			if (!messages.containsKey(pipe)) {
-				List<DataMessage> msgs = new ArrayList<DataMessage>();
-				messages.put(pipe, msgs);
-			}
-			messages.get(pipe).add(msg);
-		}
-
-		@Override
-		public int compareTo(ProcessResult o) {
-			return Long.valueOf(this.getTimestamp())
-					.compareTo(o.getTimestamp());
-		}
 	}
 
 	public final class MessageRecorder {
 
-		protected Map<Long, Map<Pipe, List<DataMessage>>> storage;
+		protected List<ProcessResult> storage;
 
 		protected Logger logger = LoggerFactory.getLogger(Node.this.getClass());
 
 		public MessageRecorder() {
-			storage = new HashMap<Long, Map<Pipe, List<DataMessage>>>();
+			storage = new ArrayList<ProcessResult>();
 		}
 
 		public void record(Long time, Pipe pipe, DataMessage message) {
-			if (!storage.containsKey(time)) {
-				storage.put(time, new HashMap<Pipe, List<DataMessage>>());
-			}
-			if (!storage.get(time).containsKey(pipe)) {
-				storage.get(time).put(pipe, new ArrayList<DataMessage>());
-			}
-			storage.get(time).get(pipe).add(message);
+			record(time, 0l, pipe, message);
+		}
+
+		public void record(Long cpuTime, Long ioTime, Pipe pipe,
+				DataMessage message) {
+			storage.add(new ProcessResult(cpuTime, ioTime, pipe, message));
 		}
 
 		public List<ProcessResult> summarize() {
-			List<ProcessResult> results = new ArrayList<ProcessResult>();
-			for (Entry<Long, Map<Pipe, List<DataMessage>>> entry : storage
-					.entrySet()) {
-				ProcessResult pr = new ProcessResult();
-				results.add(pr);
-				pr.setTimestamp(entry.getKey());
-				for (Entry<Pipe, List<DataMessage>> innerEntry : entry
-						.getValue().entrySet()) {
-					for (DataMessage message : innerEntry.getValue())
-						pr.add(innerEntry.getKey(), message);
-				}
-			}
-			return results;
+			return storage;
 		}
 
 	}

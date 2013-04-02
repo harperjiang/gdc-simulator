@@ -46,9 +46,12 @@ public abstract class Node extends Component {
 
 	protected Logger logger;
 
+	private int power = 1;
+
 	public Node() {
 		super();
 		pipes = new HashMap<Node, Pipe>();
+		
 		buffer = new PriorityQueue<ProcessResult>();
 
 		listenerDelegate = new EventListenerDelegate();
@@ -56,6 +59,11 @@ public abstract class Node extends Component {
 		stateMachine = new NodeStateMachine(this);
 
 		logger = LoggerFactory.getLogger(getClass());
+	}
+
+	public Node(int power) {
+		this();
+		this.power = power;
 	}
 
 	protected Map<Pipe, List<DataMessage>> collectInput() {

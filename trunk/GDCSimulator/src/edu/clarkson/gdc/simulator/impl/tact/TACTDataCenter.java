@@ -1,6 +1,8 @@
 package edu.clarkson.gdc.simulator.impl.tact;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.clarkson.gdc.simulator.Data;
@@ -69,6 +71,10 @@ public class TACTDataCenter extends AbstractDataCenter {
 				ResponseMessage response = new ClientResponse(message);
 				response.setLoad(read.getB());
 				recorder.record(read.getA(), source, response);
+				if (logger.isDebugEnabled()) {
+					logger.debug(MessageFormat.format("{1}:{0} received read",
+							this, getClock().getCounter()));
+				}
 			}
 		}
 		if (message instanceof ClientWrite) {
@@ -85,6 +91,10 @@ public class TACTDataCenter extends AbstractDataCenter {
 				Data data = message.getLoad();
 				long time = storage.write(data);
 				recorder.record(time, source, new ClientResponse(message));
+				if (logger.isDebugEnabled()) {
+					logger.debug(MessageFormat.format("{1}:{0} received write",
+							this, getClock().getCounter()));
+				}
 			}
 		}
 		if (message instanceof ServerPush) {
@@ -94,6 +104,11 @@ public class TACTDataCenter extends AbstractDataCenter {
 			// Add all the events to tentative list
 			for (Operation opr : push.getOperations())
 				tentative.add(opr);
+			if (logger.isDebugEnabled()) {
+				logger.debug(MessageFormat.format(
+						"{2}:{0} received server push from {1}", this,
+						source.getOpponent(this), getClock().getCounter()));
+			}
 		}
 		if (message instanceof ServerPull) {
 			ServerPull pull = (ServerPull) message;
@@ -106,6 +121,11 @@ public class TACTDataCenter extends AbstractDataCenter {
 			response.setOperations(oprs);
 			// TODO Decide the response time
 			recorder.record(0l, source, response);
+			if (logger.isDebugEnabled()) {
+				logger.debug(MessageFormat.format(
+						"{2}:{0} received server pull from {1}", this,
+						source.getOpponent(this), getClock().getCounter()));
+			}
 		}
 		if (message instanceof ServerPullResponse) {
 			ServerPullResponse response = (ServerPullResponse) message;
@@ -114,12 +134,23 @@ public class TACTDataCenter extends AbstractDataCenter {
 			// Write the information get from response to storage
 			for (Operation opr : response.getOperations())
 				tentative.add(opr);
+			if (logger.isDebugEnabled()) {
+				logger.debug(MessageFormat.format(
+						"{2}:{0} received server pull resp from {1}", this,
+						source.getOpponent(this), getClock().getCounter()));
+			}
 		}
 
 	}
 
 	@Override
 	protected void processSummary(MessageRecorder recorder) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(MessageFormat.format("{1}:{0} has time vector:{2}",
+					this, getClock().getCounter(), Arrays.toString(timeVector)));
+			logger.debug(MessageFormat.format("{1}:{0} has push vector:{2}",
+					this, getClock().getCounter(), Arrays.toString(pushed)));
+		}
 		// Do commit operations if possible
 		long minPos = Long.MAX_VALUE;
 		for (long time : timeVector) {
@@ -147,18 +178,28 @@ public class TACTDataCenter extends AbstractDataCenter {
 				pushMax = Math.max(pushMax, opr.getTimestamp().getTime());
 			}
 			if (pushOprs.size() >= threshold
-					|| getClock().getCounter() - timeVector[oppo.number] > getStaleness()) {
+					|| (pushOprs.size() > 0 && getClock().getCounter()
+							- timeVector[oppo.number] > getStaleness())) {
 				pushed[oppo.number] = pushMax;
 				// Push
 				ServerPush pushRequest = new ServerPush();
 				pushRequest.setOperations(pushOprs);
 				pushRequest.setServerNum(number);
 				recorder.record(getPushReactionTime(), pipe, pushRequest);
+				if (logger.isDebugEnabled()) {
+					logger.debug(MessageFormat.format("{2}:{0} push to {1}",
+							this, oppo, getClock().getCounter()));
+				}
 			}
 		}
 
 		// Check order error
 		if (tentative.getList().size() > getOrderError() && !isPulling()) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(MessageFormat.format(
+						"{1}:{0} has an order error of {2}", this, getClock()
+								.getCounter(), tentative.getList().size()));
+			}
 			for (Pipe pipe : broadcastPipes()) {
 				ServerPull pull = new ServerPull();
 				TACTDataCenter oppo = (TACTDataCenter) pipe.getOpponent(this);
@@ -167,6 +208,10 @@ public class TACTDataCenter extends AbstractDataCenter {
 				recorder.record(getPullReactionTime(), pipe, pull);
 			}
 			setPulling();
+			if (logger.isDebugEnabled()) {
+				logger.debug(MessageFormat.format("{1}:{0} pull from others",
+						this, getClock().getCounter()));
+			}
 		}
 	}
 

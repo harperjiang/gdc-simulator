@@ -13,7 +13,7 @@ import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.NodeFailMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.impl.simple.DefaultClient;
+import edu.clarkson.gdc.simulator.impl.AbstractClient;
 import edu.clarkson.gdc.simulator.impl.simple.WorkloadProvider;
 import edu.clarkson.gdc.simulator.impl.simple.message.LocateDCFail;
 import edu.clarkson.gdc.simulator.impl.simple.message.LocateDCRequest;
@@ -28,7 +28,7 @@ import edu.clarkson.gdc.simulator.impl.simple.message.ReadKeyResponse;
  * @version 1.0
  * 
  */
-public class RequestIndexClient extends DefaultClient {
+public class RequestIndexClient extends AbstractClient {
 
 	private Point2D location;
 

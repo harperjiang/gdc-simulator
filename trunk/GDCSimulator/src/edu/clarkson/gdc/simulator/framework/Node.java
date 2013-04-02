@@ -34,15 +34,15 @@ import edu.clarkson.gdc.simulator.framework.utils.EventListenerDelegate;
  */
 public abstract class Node extends Component {
 
-	private NodeStateMachine stateMachine;
+	protected NodeStateMachine stateMachine;
 
-	private Map<Node, Pipe> pipes;
+	protected Map<Node, Pipe> pipes;
 
 	protected Queue<ProcessResult> buffer;
 
-	private ExceptionStrategy exceptionStrategy;
+	protected ExceptionStrategy exceptionStrategy;
 
-	private EventListenerDelegate listenerDelegate;
+	protected EventListenerDelegate listenerDelegate;
 
 	protected Logger logger;
 

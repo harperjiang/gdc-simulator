@@ -22,6 +22,8 @@ public class ServerPullResponse extends ResponseMessage {
 	}
 
 	public long getEndPoint() {
+		if (null == operations || operations.size() == 0)
+			return 0;
 		return operations.get(operations.size() - 1).getTimestamp().getTime();
 	}
 

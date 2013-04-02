@@ -1,10 +1,12 @@
 package edu.clarkson.gdc.simulator.impl.tact;
 
+import java.text.MessageFormat;
 import java.util.Random;
 
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.impl.simple.DefaultData;
 import edu.clarkson.gdc.simulator.impl.tact.message.ClientRead;
 import edu.clarkson.gdc.simulator.impl.tact.message.ClientWrite;
 
@@ -23,10 +25,22 @@ public class TACTClient extends Node implements Client {
 	protected void processNew(MessageRecorder recorder) {
 		if (0 != random.nextInt((int) interval))
 			return;
-		if (random.nextDouble() < readRatio)
+		if (random.nextDouble() < readRatio) {
 			recorder.record(0l, getServerPipe(), new ClientRead());
-		else
-			recorder.record(0l, getServerPipe(), new ClientWrite());
+			if (logger.isDebugEnabled()) {
+				logger.debug(MessageFormat.format(
+						"Client send read to {0} at {1}", getServerPipe()
+								.getOpponent(this), getClock().getCounter()));
+			}
+		} else {
+			recorder.record(0l, getServerPipe(), new ClientWrite(
+					new DefaultData("key")));
+			if (logger.isDebugEnabled()) {
+				logger.debug(MessageFormat.format(
+						"Client send write to {0} at {1}", getServerPipe()
+								.getOpponent(this), getClock().getCounter()));
+			}
+		}
 	}
 
 	private Pipe serverPipe;

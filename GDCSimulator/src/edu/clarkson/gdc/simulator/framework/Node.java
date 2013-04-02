@@ -12,6 +12,8 @@ import java.util.Queue;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
@@ -42,6 +44,8 @@ public abstract class Node extends Component {
 
 	private EventListenerDelegate listenerDelegate;
 
+	protected Logger logger;
+
 	public Node() {
 		super();
 		pipes = new HashMap<Node, Pipe>();
@@ -50,6 +54,8 @@ public abstract class Node extends Component {
 		listenerDelegate = new EventListenerDelegate();
 
 		stateMachine = new NodeStateMachine(this);
+
+		logger = LoggerFactory.getLogger(getClass());
 	}
 
 	protected Map<Pipe, List<DataMessage>> collectInput() {
@@ -402,6 +408,8 @@ public abstract class Node extends Component {
 	public final class MessageRecorder {
 
 		protected Map<Long, Map<Pipe, List<DataMessage>>> storage;
+
+		protected Logger logger = LoggerFactory.getLogger(Node.this.getClass());
 
 		public MessageRecorder() {
 			storage = new HashMap<Long, Map<Pipe, List<DataMessage>>>();

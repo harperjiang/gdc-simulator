@@ -44,6 +44,8 @@ public enum NodeState {
 		private long counter;
 
 		public void busy(long period) {
+			if (getState() != NodeState.FREE)
+				return;
 			if (period > 0) {
 				counter = period;
 				setState(BUSY);

@@ -1,7 +1,6 @@
 package edu.clarkson.gdc.simulator.impl.simple;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import edu.clarkson.gdc.simulator.framework.NodeStateListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 import edu.clarkson.gdc.simulator.framework.storage.WritePolicy;
-import edu.clarkson.gdc.simulator.framework.utils.EventListenerProxy;
 import edu.clarkson.gdc.simulator.impl.simple.cdloader.XMLFileCloudLoader;
 import edu.clarkson.gdc.simulator.impl.simple.client.RequestIndexClient;
 import edu.clarkson.gdc.simulator.impl.simple.datadist.ConsistentHashingDistribution;
@@ -42,9 +40,6 @@ public class DefaultCloud extends Environment implements Cloud {
 		// Init Attributes
 		dataCenters = new ArrayList<DataCenter>();
 		dataCenterIndex = new HashMap<String, DataCenter>();
-
-		// Creating Event Proxy
-		proxy = new EventListenerProxy();
 
 		// Create Index Service
 		DefaultIndexService dis = new DefaultIndexService();
@@ -115,8 +110,6 @@ public class DefaultCloud extends Environment implements Cloud {
 		}
 	}
 
-	private EventListenerProxy proxy;
-
 	private List<DataCenter> dataCenters;
 
 	private Map<String, DataCenter> dataCenterIndex;
@@ -178,16 +171,6 @@ public class DefaultCloud extends Environment implements Cloud {
 
 	public void setLoader(CloudDataLoader loader) {
 		this.loader = loader;
-	}
-
-	public <EL extends EventListener> void addListener(Class<EL> clazz,
-			EL listener) {
-		proxy.addListener(clazz, listener);
-	}
-
-	public <EL extends EventListener> void removeListener(Class<EL> clazz,
-			EL listener) {
-		proxy.removeListener(clazz, listener);
 	}
 
 }

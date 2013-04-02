@@ -1,6 +1,10 @@
 package edu.clarkson.gdc.simulator.framework;
 
+import java.util.EventListener;
+
 import org.apache.commons.lang.Validate;
+
+import edu.clarkson.gdc.simulator.framework.utils.EventListenerProxy;
 
 /**
  * 
@@ -17,6 +21,9 @@ public class Environment {
 	public Environment() {
 		// Create a clock
 		clock = new Clock();
+		
+		// Create Proxy
+		proxy = new EventListenerProxy();
 	}
 
 	public Clock getClock() {
@@ -42,5 +49,21 @@ public class Environment {
 		while (getClock().getCounter() < stop) {
 			getClock().tick();
 		}
+	}
+
+	protected EventListenerProxy proxy;
+
+	public <EL extends EventListener> EL getProbe(Class<EL> clazz) {
+		return proxy.getProbe(clazz);
+	}
+
+	public <EL extends EventListener> void addListener(Class<EL> clazz,
+			EL listener) {
+		proxy.addListener(clazz, listener);
+	}
+
+	public <EL extends EventListener> void removeListener(Class<EL> clazz,
+			EL listener) {
+		proxy.removeListener(clazz, listener);
 	}
 }

@@ -29,7 +29,7 @@ public class TACTClient extends Node implements Client {
 			recorder.record(0l, getServerPipe(), new ClientRead());
 			if (logger.isDebugEnabled()) {
 				logger.debug(MessageFormat.format(
-						"Client send read to {0} at {1}", getServerPipe()
+						"{1}:Client send read to {0}", getServerPipe()
 								.getOpponent(this), getClock().getCounter()));
 			}
 		} else {
@@ -37,7 +37,7 @@ public class TACTClient extends Node implements Client {
 					new DefaultData("key")));
 			if (logger.isDebugEnabled()) {
 				logger.debug(MessageFormat.format(
-						"Client send write to {0} at {1}", getServerPipe()
+						"{1}:Client send write to {0}", getServerPipe()
 								.getOpponent(this), getClock().getCounter()));
 			}
 		}

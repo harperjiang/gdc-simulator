@@ -55,20 +55,18 @@ public abstract class ChainNode extends Node {
 	protected void afterProcess(Map<Pipe, List<DataMessage>> events,
 			List<ProcessResult> results) {
 		for (ProcessResult result : results) {
-			for (List<DataMessage> msgs : result.getMessages().values()) {
-				for (DataMessage message : msgs) {
-					if (message instanceof ResponseMessage
-							&& !StringUtils.isEmpty(message.getSessionId())) {
-						Session session = sessionManager.getSession(message
-								.getSessionId());
-						if (null != session) {
-							DataMessage request = session.get(MESSAGE);
-							((ResponseMessage) message).setRequest(request);
-							message.setSessionId(session.getId());
-							sessionManager.discardSession(session);
-						}
-					}
+			DataMessage message = result.getMessage();
+			if (message instanceof ResponseMessage
+					&& !StringUtils.isEmpty(message.getSessionId())) {
+				Session session = sessionManager.getSession(message
+						.getSessionId());
+				if (null != session) {
+					DataMessage request = session.get(MESSAGE);
+					((ResponseMessage) message).setRequest(request);
+					message.setSessionId(session.getId());
+					sessionManager.discardSession(session);
 				}
+
 			}
 		}
 	}

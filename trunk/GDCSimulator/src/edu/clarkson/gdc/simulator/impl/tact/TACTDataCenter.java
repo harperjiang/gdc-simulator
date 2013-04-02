@@ -31,6 +31,9 @@ public class TACTDataCenter extends AbstractDataCenter {
 		super();
 		this.number = number;
 		timeVector = new Long[total];
+		for (int i = 0; i < timeVector.length; i++)
+			timeVector[i] = 0l;
+
 		pulling = new boolean[total];
 		pushed = new long[total];
 
@@ -76,6 +79,8 @@ public class TACTDataCenter extends AbstractDataCenter {
 				Operation operation = new Operation(getClock().getCounter(),
 						number, message);
 				tentative.add(operation);
+
+				timeVector[number] = getClock().getCounter();
 				// Consume some time
 				Data data = message.getLoad();
 				long time = storage.write(data);
@@ -271,5 +276,9 @@ public class TACTDataCenter extends AbstractDataCenter {
 
 	public void setPullReactionTime(long pullReactionTime) {
 		this.pullReactionTime = pullReactionTime;
+	}
+
+	public String toString() {
+		return "TACTDataCenter " + number;
 	}
 }

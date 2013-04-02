@@ -30,7 +30,7 @@ public class SortingList<T extends Comparable<T>> {
 
 		for (int i = 0; i < content.size() - 1; i++) {
 			if (content.get(i).compareTo(object) <= 0
-					&& content.get(i).compareTo(object) > 0) {
+					&& content.get(i + 1).compareTo(object) > 0) {
 				content.add(i + 1, object);
 				return;
 			}

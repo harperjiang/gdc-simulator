@@ -1,5 +1,7 @@
 package edu.clarkson.gdc.simulator.impl.tact;
 
+import java.text.MessageFormat;
+
 public class Timestamp implements Comparable<Timestamp> {
 
 	private long time;
@@ -33,6 +35,10 @@ public class Timestamp implements Comparable<Timestamp> {
 
 	public void setServerNum(int serverNum) {
 		this.serverNum = serverNum;
+	}
+
+	public String toString() {
+		return MessageFormat.format("{0}:{1}", getTime(), getServerNum());
 	}
 
 }

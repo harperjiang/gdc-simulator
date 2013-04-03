@@ -4,9 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.junit.Test;
 
@@ -23,7 +21,7 @@ public class ChainNodeTest {
 			msg.setSessionId(sm.createSession().getId());
 			msg.setLoad("Msg from Source");
 			for (Pipe pipe : getPipes().values()) {
-				recorder.record(0l, pipe, msg);
+				recorder.record(pipe, msg);
 			}
 		}
 	};
@@ -34,13 +32,13 @@ public class ChainNodeTest {
 			if (pipe.getOpponent(this).equals(source)) {
 				DataMessage newmsg = new DataMessage();
 				newmsg.setSessionId(message.getSessionId());
-				recorder.record(0l, getPipe(destination), newmsg);
+				recorder.record(getPipe(destination), newmsg);
 			}
 			if (pipe.getOpponent(this).equals(destination)) {
 				ResponseMessage resp = new ResponseMessage(null) {
 				};
 				resp.setSessionId(message.getSessionId());
-				recorder.record(0l, getPipe(source), resp);
+				recorder.record(getPipe(source), resp);
 			}
 		}
 	};
@@ -53,7 +51,7 @@ public class ChainNodeTest {
 			ResponseMessage rm = new ResponseMessage(message) {
 			};
 			rm.setSessionId(message.getSessionId());
-			recorder.record(0l, pipe, rm);
+			recorder.record(pipe, rm);
 		}
 	};
 

@@ -1,5 +1,6 @@
 package edu.clarkson.gdc.simulator.framework;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
@@ -39,6 +40,10 @@ public abstract class Node extends Component {
 
 	protected EventListenerDelegate listenerDelegate;
 
+	protected List<ProcessResult> newBuffer;
+
+	protected List<ProcessResult> toioBuffer;
+
 	protected List<ProcessResult> cpuBuffer;
 
 	protected List<ProcessResult> ioBuffer;
@@ -57,8 +62,10 @@ public abstract class Node extends Component {
 
 		logger = LoggerFactory.getLogger(getClass());
 
+		newBuffer = new ArrayList<ProcessResult>();
 		cpuBuffer = new ArrayList<ProcessResult>();
 		ioBuffer = new ArrayList<ProcessResult>();
+		toioBuffer = new ArrayList<ProcessResult>();
 	}
 
 	protected Map<Pipe, List<DataMessage>> collectInput() {
@@ -118,10 +125,12 @@ public abstract class Node extends Component {
 									stateMachine.getException());
 							ProcessResult result = new ProcessResult(1l, 0l,
 									entry.getKey(), fail);
-							cpuBuffer.add(result);
+							newBuffer.add(result);
 						}
 					}
 				}
+				// TODO In exception status, messages that waiting for process
+				// should be emptied
 			}
 				break;
 			case FREE: {
@@ -144,7 +153,31 @@ public abstract class Node extends Component {
 				afterProcess(events, results);
 
 				// Put Events to send buffer
-				cpuBuffer.addAll(results);
+				newBuffer.addAll(results);
+
+				// Decrease cpu count until power is used up
+				if (!cpuBuffer.isEmpty()) {
+					Random random = new Random(System.currentTimeMillis()
+							* recorder.hashCode());
+					for (int i = 0; i < power; i++) {
+						int index = random.nextInt(cpuBuffer.size());
+						ProcessResult pr = cpuBuffer.get(index);
+						pr.cpuDecrease();
+						if (pr.cpuReady()) {
+							pr = cpuBuffer.remove(index);
+							if (pr.ready())
+								ioBuffer.add(pr);
+							else
+								toioBuffer.add(pr);
+						}
+					}
+				}
+				cpuBuffer.addAll(newBuffer);
+				newBuffer.clear();
+
+				// Exceed capacity, will not accept further message
+				if (capacity != -1 && cpuBuffer.size() > capacity)
+					stateMachine.busy(1);
 			}
 				break;
 			default:
@@ -161,22 +194,12 @@ public abstract class Node extends Component {
 
 	@Override
 	public void send() {
-		// Decrease cpu count until power is used up
-		Random random = new Random(System.currentTimeMillis() * hashCode());
-		List<ProcessResult> toio = new ArrayList<ProcessResult>();
-		for (int i = 0; i < power; i++) {
-			int index = random.nextInt(cpuBuffer.size());
-			ProcessResult pr = cpuBuffer.get(index);
-			pr.cpuDecrease();
-			if (pr.cpuReady()) {
-				pr = cpuBuffer.remove(index);
-				toio.add(pr);
-			}
-		}
 		// Send IO ready message, decrease unready
 		for (int i = 0; i < ioBuffer.size(); i++) {
 			ProcessResult pr = ioBuffer.get(i);
 			if (pr.ready()) {
+				pr.getMessage().access(
+						new PathNode(this, getClock().getCounter()));
 				pr.getPipe().put(this, pr.getMessage());
 				ioBuffer.remove(i);
 				i--;
@@ -184,10 +207,9 @@ public abstract class Node extends Component {
 				pr.ioDecrease();
 			}
 		}
-
-		// Exceed capacity, will not accept further message
-		if (capacity != -1 && cpuBuffer.size() > capacity)
-			stateMachine.busy(1);
+		// Add process result that finishes cpu phase to io buffer
+		ioBuffer.addAll(toioBuffer);
+		toioBuffer.clear();
 	}
 
 	/**
@@ -309,6 +331,7 @@ public abstract class Node extends Component {
 		private DataMessage message;
 
 		public ProcessResult(long cpu, long io, Pipe p, DataMessage m) {
+			Validate.isTrue(cpu > 0 && io >= 0 && cpu + io > 0);
 			this.cpuTime = cpu;
 			this.ioTime = io;
 			this.pipe = p;
@@ -347,6 +370,10 @@ public abstract class Node extends Component {
 			return message;
 		}
 
+		public String toString() {
+			return MessageFormat.format("[{0},{1},{2}]", cpuTime, ioTime,
+					message.toString());
+		}
 	}
 
 	public final class MessageRecorder {
@@ -357,6 +384,10 @@ public abstract class Node extends Component {
 
 		public MessageRecorder() {
 			storage = new ArrayList<ProcessResult>();
+		}
+
+		public void record(Pipe pipe, DataMessage message) {
+			record(1l, 0l, pipe, message);
 		}
 
 		public void record(Long time, Pipe pipe, DataMessage message) {

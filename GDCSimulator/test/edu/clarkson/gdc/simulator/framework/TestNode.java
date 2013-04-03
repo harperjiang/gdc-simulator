@@ -25,7 +25,7 @@ public class TestNode extends Node {
 			}
 			feedback.get(getClock().getCounter()).add(message);
 		} else {
-			recorder.record(0l, source, new ResponseMessage(message) {
+			recorder.record(2l, source, new ResponseMessage(message) {
 			});
 		}
 	}

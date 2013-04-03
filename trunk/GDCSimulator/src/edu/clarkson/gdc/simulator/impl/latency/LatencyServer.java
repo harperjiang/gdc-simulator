@@ -9,11 +9,11 @@ public class LatencyServer extends AbstractDataCenter {
 	protected void processEach(Pipe source, DataMessage message,
 			MessageRecorder recorder) {
 		if (message instanceof LatencyRead) {
-			recorder.record(100l, source, new LatencyResponse(message));
+			recorder.record(5l, 100l, source, new LatencyResponse(message));
 		}
 
 		if (message instanceof LatencyWrite) {
-			recorder.record(500l, source, new LatencyResponse(message));
+			recorder.record(5l, 500l, source, new LatencyResponse(message));
 		}
 
 	}

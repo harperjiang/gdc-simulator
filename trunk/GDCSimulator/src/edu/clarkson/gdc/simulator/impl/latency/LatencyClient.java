@@ -21,10 +21,10 @@ public class LatencyClient extends AbstractClient {
 		if (0 != random.nextInt((int) interval))
 			return;
 		if (random.nextDouble() < readRatio) {
-			recorder.record(0l, getServerPipe(), new LatencyRead());
+			recorder.record(getServerPipe(), new LatencyRead());
 		} else {
-			recorder.record(0l, getServerPipe(), new LatencyWrite(
-					new DefaultData("key")));
+			recorder.record(getServerPipe(), new LatencyWrite(new DefaultData(
+					"key")));
 		}
 	}
 

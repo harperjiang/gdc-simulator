@@ -15,11 +15,15 @@ public class LatencyMain {
 	 */
 	public static void main(String[] args) {
 
-		int clientCount = 5;
+		int clientCount = 22;
 
 		LatencyEnvironment env = new LatencyEnvironment();
 
-		LatencyServer server = new LatencyServer();
+		LatencyServer server = new LatencyServer() {
+			{
+				power = 10;
+			}
+		};
 		env.add(server);
 
 		for (int i = 0; i < clientCount; i++) {

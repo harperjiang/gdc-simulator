@@ -156,20 +156,21 @@ public abstract class Node extends Component {
 				newBuffer.addAll(results);
 
 				// Decrease cpu count until power is used up
-				if (!cpuBuffer.isEmpty()) {
-					Random random = new Random(System.currentTimeMillis()
-							* recorder.hashCode());
-					for (int i = 0; i < power; i++) {
-						int index = random.nextInt(cpuBuffer.size());
-						ProcessResult pr = cpuBuffer.get(index);
-						pr.cpuDecrease();
-						if (pr.cpuReady()) {
-							pr = cpuBuffer.remove(index);
-							if (pr.ready())
-								ioBuffer.add(pr);
-							else
-								toioBuffer.add(pr);
-						}
+				Random random = new Random(System.currentTimeMillis()
+						* recorder.hashCode());
+				for (int i = 0; i < power; i++) {
+					if (cpuBuffer.isEmpty()) {
+						break;
+					}
+					int index = random.nextInt(cpuBuffer.size());
+					ProcessResult pr = cpuBuffer.get(index);
+					pr.cpuDecrease();
+					if (pr.cpuReady()) {
+						pr = cpuBuffer.remove(index);
+						if (pr.ready())
+							ioBuffer.add(pr);
+						else
+							toioBuffer.add(pr);
 					}
 				}
 				cpuBuffer.addAll(newBuffer);

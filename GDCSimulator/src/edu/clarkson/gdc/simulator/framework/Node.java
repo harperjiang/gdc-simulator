@@ -54,6 +54,8 @@ public abstract class Node extends Component {
 
 	protected int capacity = -1;
 
+	protected int slowPart = 0;
+
 	public Node() {
 		super();
 		pipes = new HashMap<Node, Pipe>();
@@ -158,10 +160,21 @@ public abstract class Node extends Component {
 				// Decrease cpu count until power is used up
 				Random random = new Random(System.currentTimeMillis()
 						* recorder.hashCode());
-				for (int i = 0; i < power; i++) {
+				/*
+				 * With more requests to process, higher possibility to slow
+				 * down. This is simulated by adding a random delay
+				 */
+				int remainPower = power;
+				if (slowPart != 0) {
+					double limit = 2 * Math.atan(cpuBuffer.size()) / Math.PI;
+					if (random.nextDouble() < limit)
+						remainPower = Math.max(0, remainPower - slowPart);
+				}
+				for (int i = 0; i < remainPower; i++) {
 					if (cpuBuffer.isEmpty()) {
 						break;
 					}
+
 					int index = random.nextInt(cpuBuffer.size());
 					ProcessResult pr = cpuBuffer.get(index);
 					pr.cpuDecrease();

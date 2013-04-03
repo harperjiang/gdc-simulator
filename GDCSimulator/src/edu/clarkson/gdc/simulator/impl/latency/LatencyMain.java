@@ -14,19 +14,20 @@ public class LatencyMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		for (int clientCount = 1; clientCount < 25; clientCount++) {
+		for (int clientCount = 10; clientCount < 100; clientCount++) {
 
 			LatencyEnvironment env = new LatencyEnvironment();
 
 			LatencyServer server = new LatencyServer() {
 				{
-					power = 10;
+					power = 4;
+					slowPart = 0;
 				}
 			};
 			env.add(server);
 
 			for (int i = 0; i < clientCount; i++) {
-				LatencyClient client = new LatencyClient();
+				OneByOneClient client = new OneByOneClient();
 				new Pipe(client, server);
 				env.add(client);
 				client.addListener(NodeMessageListener.class,
@@ -62,7 +63,7 @@ public class LatencyMain {
 			env.run(86400l);
 
 			System.out.println(clientCount + "\t" + timeCount.get()
-					/ messageCount.get());
+					/ messageCount.get() + "\t" + messageCount.get());
 		}
 	}
 }

@@ -12,7 +12,7 @@ public class LatencyClient extends AbstractClient {
 
 	private double readRatio = 1;
 
-	private long interval = 10;
+	private long interval = 100;
 
 	private Random random = new Random(System.currentTimeMillis() * hashCode());
 

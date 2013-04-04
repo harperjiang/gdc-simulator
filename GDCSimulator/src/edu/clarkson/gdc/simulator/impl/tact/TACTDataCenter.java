@@ -119,8 +119,9 @@ public class TACTDataCenter extends AbstractDataCenter {
 			oprs.addAll(getCommitted(pull.getStartPoint()));
 			oprs.addAll(getTentative(pull.getStartPoint()));
 			response.setOperations(oprs);
+			response.setEndPoint(getClock().getCounter() - 1);
 			// TODO Decide the response time
-			recorder.record(0l, source, response);
+			recorder.record(source, response);
 			if (logger.isDebugEnabled()) {
 				logger.debug(MessageFormat.format(
 						"{2}:{0} received server pull from {1}", this,

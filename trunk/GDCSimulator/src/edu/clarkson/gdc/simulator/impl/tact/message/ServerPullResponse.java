@@ -13,6 +13,8 @@ public class ServerPullResponse extends ResponseMessage {
 
 	private int serverNum;
 
+	private long endPoint;
+
 	public int getServerNum() {
 		return serverNum;
 	}
@@ -22,9 +24,11 @@ public class ServerPullResponse extends ResponseMessage {
 	}
 
 	public long getEndPoint() {
-		if (null == operations || operations.size() == 0)
-			return 0;
-		return operations.get(operations.size() - 1).getTimestamp().getTime();
+		return endPoint;
+	}
+
+	public void setEndPoint(long endPoint) {
+		this.endPoint = endPoint;
 	}
 
 	private List<Operation> operations;

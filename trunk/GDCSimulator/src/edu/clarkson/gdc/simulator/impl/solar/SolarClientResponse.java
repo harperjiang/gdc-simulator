@@ -7,7 +7,6 @@ public class SolarClientResponse extends ResponseMessage {
 
 	public SolarClientResponse(DataMessage request) {
 		super(request);
-		// TODO Auto-generated constructor stub
 	}
 
 }

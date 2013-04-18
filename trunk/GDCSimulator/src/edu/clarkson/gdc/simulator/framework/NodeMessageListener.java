@@ -14,4 +14,6 @@ public interface NodeMessageListener extends EventListener {
 	public void messageReceived(NodeMessageEvent event);
 
 	public void messageSent(NodeMessageEvent event);
+	
+	public void messageTimeout(NodeMessageEvent event);
 }

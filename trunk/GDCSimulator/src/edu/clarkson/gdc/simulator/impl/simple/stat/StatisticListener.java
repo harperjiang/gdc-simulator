@@ -53,4 +53,10 @@ public class StatisticListener implements NodeMessageListener {
 		return report;
 	}
 
+	@Override
+	public void messageTimeout(NodeMessageEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

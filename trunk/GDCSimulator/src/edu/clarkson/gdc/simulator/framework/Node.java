@@ -116,23 +116,6 @@ public abstract class Node extends Component {
 					}
 				}
 			}
-			// Check both buffer for timeout message
-			// This has nothing to do with the state as the timeout
-			// actually should happen in client side
-			for (int i = 0; i < cpuBuffer.size(); i++) {
-				ProcessResult pr = cpuBuffer.get(i);
-				if (pr.isTimeout(getClock().getCounter())) {
-					cpuBuffer.remove(i--);
-					pr.getPipe().put(this, new TimeoutMessage(pr.getMessage()));
-				}
-			}
-			for (int i = 0; i < ioBuffer.size(); i++) {
-				ProcessResult pr = ioBuffer.get(i);
-				if (pr.isTimeout(getClock().getCounter())) {
-					ioBuffer.remove(i--);
-					pr.getPipe().put(this, new TimeoutMessage(pr.getMessage()));
-				}
-			}
 
 			// Process data according to state
 			switch (getState()) {
@@ -329,6 +312,13 @@ public abstract class Node extends Component {
 				.getListeners(NodeMessageListener.class))
 			listener.messageSent(event);
 	}
+	
+	protected void fireMessageTimeout() {
+		NodeMessageEvent event = new NodeMessageEvent(this, null);
+		for (NodeMessageListener listener : listenerDelegate
+				.getListeners(NodeMessageListener.class))
+			listener.messageTimeout(event);
+	}
 
 	protected void fireMessageReceived(DataMessage message) {
 		NodeMessageEvent event = new NodeMessageEvent(this, message);
@@ -370,10 +360,6 @@ public abstract class Node extends Component {
 		private long cpuTime;
 
 		private long ioTime;
-
-		private long timeout;
-
-		private long start;
 
 		private Pipe pipe;
 
@@ -419,26 +405,6 @@ public abstract class Node extends Component {
 			return message;
 		}
 
-		public long getTimeout() {
-			return timeout;
-		}
-
-		public void setTimeout(long timeout) {
-			this.timeout = timeout;
-		}
-
-		public long getStart() {
-			return start;
-		}
-
-		public void setStart(long start) {
-			this.start = start;
-		}
-
-		public boolean isTimeout(long current) {
-			return timeout > 0 && current - start >= timeout;
-		}
-
 		public String toString() {
 			return MessageFormat.format("[{0},{1},{2}]", cpuTime, ioTime,
 					message.toString());
@@ -467,10 +433,6 @@ public abstract class Node extends Component {
 				DataMessage message) {
 			ProcessResult result = new ProcessResult(cpuTime, ioTime, pipe,
 					message);
-			if (message.getTimeout() != -1) {
-				result.setTimeout(message.getTimeout());
-				result.setStart(getClock().getCounter());
-			}
 			storage.add(result);
 		}
 

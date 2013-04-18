@@ -19,35 +19,35 @@ public class ScenarioSolarEfficiency {
 	public static void main(String[] args) {
 		Environment solarenv = new Environment();
 
-//		SolarServer egypt = new SolarServer("egypt", new Point2D.Double(
-//				24.68695, 27.42188));
+		// SolarServer egypt = new SolarServer("egypt", new Point2D.Double(
+		// 24.68695, 27.42188));
 		SolarServer tibet = new SolarServer("tibet", new Point2D.Double(
 				38.75408, 82.88086));
-//		SolarServer oceania = new SolarServer("oceania", new Point2D.Double(
-//				-22.91792, 127.61719));
-//		SolarServer us = new SolarServer("us", new Point2D.Double(34.01624,
-//				-115.66406));
-//		SolarServer brazil = new SolarServer("brazil", new Point2D.Double(
-//				-5.26601, -39.90234));
+		SolarServer oceania = new SolarServer("oceania", new Point2D.Double(
+				-22.91792, 127.61719));
+		// SolarServer us = new SolarServer("us", new Point2D.Double(34.01624,
+		// -115.66406));
+		// SolarServer brazil = new SolarServer("brazil", new Point2D.Double(
+		// -5.26601, -39.90234));
 
-//		solarenv.add(egypt);
+		// solarenv.add(egypt);
 		solarenv.add(tibet);
-//		solarenv.add(oceania);
-//		solarenv.add(us);
-//		solarenv.add(brazil);
+		solarenv.add(oceania);
+		// solarenv.add(us);
+		// solarenv.add(brazil);
 
 		SolarClient client = new SolarClient();
-//		client.setLocation(new Point2D.Double(66.4, -45.5));// Green Land
+		// client.setLocation(new Point2D.Double(66.4, -45.5));// Green Land
 		client.setLocation(new Point2D.Double(55.4, -109.9));// Canada
 		solarenv.add(client);
 		client.addListener(NodeMessageListener.class,
 				solarenv.getProbe(NodeMessageListener.class));
 
-//		new DistancePipe(client, egypt);
+		// new DistancePipe(client, egypt);
 		new DistancePipe(client, tibet);
-//		new DistancePipe(client, oceania);
-//		new DistancePipe(client, us);
-//		new DistancePipe(client, brazil);
+		new DistancePipe(client, oceania);
+		// new DistancePipe(client, us);
+		// new DistancePipe(client, brazil);
 
 		final Averager success = new Averager();
 		final Averager failed = new Averager();
@@ -57,10 +57,7 @@ public class ScenarioSolarEfficiency {
 					@Override
 					public void messageReceived(NodeMessageEvent event) {
 						if (event.getSource() instanceof Client) {
-							if (event.getMessage() instanceof TimeoutMessage) {
-								failed.add(1l);
-								return;
-							}
+
 							SolarClientResponse resp = (SolarClientResponse) event
 									.getMessage();
 							long time = resp.getReceiveTime()
@@ -72,6 +69,12 @@ public class ScenarioSolarEfficiency {
 					@Override
 					public void messageSent(NodeMessageEvent event) {
 
+					}
+
+					@Override
+					public void messageTimeout(NodeMessageEvent event) {
+						failed.add(1l);
+						return;
 					}
 				});
 

@@ -71,5 +71,9 @@ public abstract class Component implements Stepper {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	protected void init() {
+		
+	}
 
 }

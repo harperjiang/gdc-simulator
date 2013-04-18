@@ -16,6 +16,8 @@ public class DataMessage {
 
 	private String sessionId;
 
+	private long timeout = -1;
+
 	public static class PathNode {
 
 		private long timestamp;
@@ -80,6 +82,14 @@ public class DataMessage {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+	}
+
+	public long getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(long timeout) {
+		this.timeout = timeout;
 	}
 
 	public long getSendTime() {

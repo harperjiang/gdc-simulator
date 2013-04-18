@@ -34,6 +34,8 @@ public abstract class Node extends Component {
 
 	protected NodeStateMachine stateMachine;
 
+	protected Pipe selfPipe;
+
 	protected Map<Node, Pipe> pipes;
 
 	protected ExceptionStrategy exceptionStrategy;
@@ -61,6 +63,8 @@ public abstract class Node extends Component {
 		pipes = new HashMap<Node, Pipe>();
 		listenerDelegate = new EventListenerDelegate();
 		stateMachine = new NodeStateMachine(this);
+
+		selfPipe = new SelfPipe(this);
 
 		logger = LoggerFactory.getLogger(getClass());
 
@@ -112,6 +116,25 @@ public abstract class Node extends Component {
 					}
 				}
 			}
+			// Check both buffer for timeout message
+			// This has nothing to do with the state as the timeout
+			// actually should happen in client side
+			for (int i = 0; i < cpuBuffer.size(); i++) {
+				ProcessResult pr = cpuBuffer.get(i);
+				if (pr.isTimeout(getClock().getCounter())) {
+					cpuBuffer.remove(i--);
+					pr.getPipe().put(this, new TimeoutMessage(pr.getMessage()));
+				}
+			}
+			for (int i = 0; i < ioBuffer.size(); i++) {
+				ProcessResult pr = ioBuffer.get(i);
+				if (pr.isTimeout(getClock().getCounter())) {
+					ioBuffer.remove(i--);
+					pr.getPipe().put(this, new TimeoutMessage(pr.getMessage()));
+				}
+			}
+
+			// Process data according to state
 			switch (getState()) {
 			case BUSY:
 				return;
@@ -164,7 +187,7 @@ public abstract class Node extends Component {
 				 * With more requests to process, higher possibility to slow
 				 * down. This is simulated by adding a random delay
 				 */
-				int remainPower = power;
+				int remainPower = getPower();
 				if (slowPart != 0) {
 					double limit = 2 * Math.atan(cpuBuffer.size()) / Math.PI;
 					if (random.nextDouble() < limit)
@@ -292,6 +315,14 @@ public abstract class Node extends Component {
 		return pipes;
 	}
 
+	public <T> T getLocation() {
+		return null;
+	}
+
+	protected int getPower() {
+		return power;
+	}
+
 	protected void fireMessageSent(DataMessage message) {
 		NodeMessageEvent event = new NodeMessageEvent(this, message);
 		for (NodeMessageListener listener : listenerDelegate
@@ -340,6 +371,10 @@ public abstract class Node extends Component {
 
 		private long ioTime;
 
+		private long timeout;
+
+		private long start;
+
 		private Pipe pipe;
 
 		private DataMessage message;
@@ -384,13 +419,33 @@ public abstract class Node extends Component {
 			return message;
 		}
 
+		public long getTimeout() {
+			return timeout;
+		}
+
+		public void setTimeout(long timeout) {
+			this.timeout = timeout;
+		}
+
+		public long getStart() {
+			return start;
+		}
+
+		public void setStart(long start) {
+			this.start = start;
+		}
+
+		public boolean isTimeout(long current) {
+			return timeout > 0 && current - start >= timeout;
+		}
+
 		public String toString() {
 			return MessageFormat.format("[{0},{1},{2}]", cpuTime, ioTime,
 					message.toString());
 		}
 	}
 
-	public final class MessageRecorder {
+	public class MessageRecorder {
 
 		protected List<ProcessResult> storage;
 
@@ -410,7 +465,13 @@ public abstract class Node extends Component {
 
 		public void record(Long cpuTime, Long ioTime, Pipe pipe,
 				DataMessage message) {
-			storage.add(new ProcessResult(cpuTime, ioTime, pipe, message));
+			ProcessResult result = new ProcessResult(cpuTime, ioTime, pipe,
+					message);
+			if (message.getTimeout() != -1) {
+				result.setTimeout(message.getTimeout());
+				result.setStart(getClock().getCounter());
+			}
+			storage.add(result);
 		}
 
 		public List<ProcessResult> summarize() {

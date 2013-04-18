@@ -4,7 +4,7 @@ public interface DataCenter {
 
 	public String getId();
 
-	public Object getLocation();
+	public <T> T getLocation();
 
 	public ExceptionStrategy getExceptionStrategy();
 }

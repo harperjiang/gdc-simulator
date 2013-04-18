@@ -21,9 +21,9 @@ public class HurryClient extends AbstractClient {
 		if (0 != random.nextInt((int) interval))
 			return;
 		if (random.nextDouble() < readRatio) {
-			recorder.record(getServerPipe(), new LatencyRead());
+			recorder.record(getServerPipe(), new ClientRead());
 		} else {
-			recorder.record(getServerPipe(), new LatencyWrite(new DefaultData(
+			recorder.record(getServerPipe(), new ClientWrite(new DefaultData(
 					"key")));
 		}
 	}

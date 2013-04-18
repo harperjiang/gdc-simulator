@@ -1,24 +1,21 @@
 package edu.clarkson.gdc.simulator.impl.latency;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.impl.Averager;
 
-public class LatencyMain {
+public class ScenarioSingleDCRead {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		for (int clientCount = 10; clientCount < 100; clientCount++) {
-
+		for (int clientCount = 1; clientCount < 20; clientCount++) {
 			LatencyEnvironment env = new LatencyEnvironment();
-
-			LatencyServer server = new LatencyServer() {
+			
+			IsolateServer server = new IsolateServer() {
 				{
 					power = 4;
 					slowPart = 0;
@@ -27,16 +24,16 @@ public class LatencyMain {
 			env.add(server);
 
 			for (int i = 0; i < clientCount; i++) {
-				OneByOneClient client = new OneByOneClient();
+				WaitClient client = new WaitClient();
 				new Pipe(client, server);
 				env.add(client);
 				client.addListener(NodeMessageListener.class,
 						env.getProbe(NodeMessageListener.class));
 			}
 
-			final AtomicInteger messageCount = new AtomicInteger(0);
-
-			final AtomicLong timeCount = new AtomicLong(0l);
+			final Averager all = new Averager();
+			final Averager read = new Averager();
+			final Averager write = new Averager();
 
 			env.addListener(NodeMessageListener.class,
 					new NodeMessageListener() {
@@ -44,13 +41,17 @@ public class LatencyMain {
 						@Override
 						public void messageReceived(NodeMessageEvent event) {
 							if (event.getSource() instanceof Client
-									&& event.getMessage() instanceof LatencyResponse) {
-								messageCount.incrementAndGet();
-
-								LatencyResponse resp = (LatencyResponse) event
+									&& event.getMessage() instanceof ClientResponse) {
+								ClientResponse resp = (ClientResponse) event
 										.getMessage();
-								timeCount.addAndGet(resp.getReceiveTime()
-										- resp.getRequest().getSendTime());
+								long time = resp.getReceiveTime()
+										- resp.getRequest().getSendTime();
+								all.add(time);
+								if (resp.getRequest() instanceof ClientRead) {
+									read.add(time);
+								} else {
+									write.add(time);
+								}
 							}
 						}
 
@@ -62,8 +63,8 @@ public class LatencyMain {
 
 			env.run(86400l);
 
-			System.out.println(clientCount + "\t" + timeCount.get()
-					/ messageCount.get() + "\t" + messageCount.get());
+			System.out.println(clientCount + "\t" + all.getAverage() + "\t"
+					+ read.getAverage() + "\t" + write.getAverage());
 		}
 	}
 }

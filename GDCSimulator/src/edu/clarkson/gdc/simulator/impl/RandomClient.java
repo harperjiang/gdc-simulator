@@ -24,15 +24,18 @@ public abstract class RandomClient extends AbstractClient {
 
 	protected long interval = 25;
 
+	protected long timeout = -1;
+
 	protected boolean waitResponse = false;
 
 	private Random random = new Random(System.currentTimeMillis() * hashCode());
 
 	private transient boolean waiting = false;
 
+	private transient long start;
+
 	@Override
 	protected void processNew(MessageRecorder recorder) {
-
 		if (!(waitResponse && waiting)) {
 			if (0 != random.nextInt((int) interval))
 				return;
@@ -42,6 +45,12 @@ public abstract class RandomClient extends AbstractClient {
 				genWrite(recorder);
 			}
 			waiting = true;
+			start = getClock().getCounter();
+		} else {
+			if (timeout != -1 && getClock().getCounter() - start > timeout) {
+				fireMessageTimeout();
+				waiting = false;
+			}
 		}
 	}
 

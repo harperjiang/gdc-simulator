@@ -84,6 +84,12 @@ public class ScenarioSingleDCWrite {
 						public void messageSent(NodeMessageEvent event) {
 
 						}
+
+						@Override
+						public void messageTimeout(NodeMessageEvent event) {
+							// TODO Auto-generated method stub
+
+						}
 					});
 
 			env.run(86400l);

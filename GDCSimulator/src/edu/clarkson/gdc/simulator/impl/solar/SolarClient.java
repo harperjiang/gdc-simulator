@@ -12,6 +12,7 @@ public class SolarClient extends RandomClient {
 
 	public SolarClient() {
 		waitResponse = true;
+		timeout = 2000;
 	}
 
 	private Holder[] boundary;
@@ -54,7 +55,7 @@ public class SolarClient extends RandomClient {
 	@Override
 	protected void genRead(MessageRecorder recorder) {
 		// Send to the most noon
-		int nextp = pointer + 1 % boundary.length;
+		int nextp = (pointer + 1) % boundary.length;
 		long current = getClock().getCounter() / TimeConstant.UNIT;
 		if (distance(current, boundary[pointer].noon) > distance(current,
 				boundary[nextp].noon))

@@ -14,7 +14,7 @@ public class SolarServerTest {
 	@Test
 	public void testGetPower() throws Exception {
 		Environment env = new Environment();
-		SolarServer ss = new SolarServer(new Point2D.Double(0, 0));
+		SolarServer ss = new SolarServer(null, new Point2D.Double(0, 0));
 		ss.basepower = 20;
 		env.add(ss);
 		FileOutputStream fos = new FileOutputStream("solarval");

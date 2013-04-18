@@ -1,8 +1,8 @@
 package edu.clarkson.gdc.simulator.impl;
 
+import java.util.Iterator;
 import java.util.Random;
 
-import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 
@@ -20,18 +20,19 @@ import edu.clarkson.gdc.simulator.framework.Pipe;
  */
 public abstract class RandomClient extends AbstractClient {
 
-	private double readRatio = 1;
+	protected double readRatio = 1;
 
-	private long interval = 25;
+	protected long interval = 25;
+
+	protected boolean waitResponse = false;
 
 	private Random random = new Random(System.currentTimeMillis() * hashCode());
-
-	private boolean waitResponse = false;
 
 	private transient boolean waiting = false;
 
 	@Override
 	protected void processNew(MessageRecorder recorder) {
+
 		if (!(waitResponse && waiting)) {
 			if (0 != random.nextInt((int) interval))
 				return;
@@ -71,14 +72,21 @@ public abstract class RandomClient extends AbstractClient {
 	protected Pipe getServerPipe() {
 		if (null != serverPipe)
 			return serverPipe;
-		if (getPipes().size() != 1)
+		if (getPipes().size() != 2)
 			throw new IllegalArgumentException(
 					"Client should have only one connection");
-		serverPipe = getPipes().values().iterator().next();
-		if (!(serverPipe.getOpponent(this) instanceof DataCenter)) {
-			throw new IllegalArgumentException(
-					"Client can only connect to DataCenter");
+		Iterator<Pipe> it = getPipes().values().iterator();
+		while (it.hasNext()) {
+			Pipe pipe = it.next();
+			if (pipe.getOpponent(this) != this) {
+				serverPipe = pipe;
+				break;
+			}
 		}
+		// if (!(serverPipe.getOpponent(this) instanceof DataCenter)) {
+		// throw new IllegalArgumentException(
+		// "Client can only connect to DataCenter");
+		// }
 		return serverPipe;
 	}
 

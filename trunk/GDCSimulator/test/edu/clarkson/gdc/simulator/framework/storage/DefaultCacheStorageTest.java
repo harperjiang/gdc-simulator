@@ -90,4 +90,8 @@ public class DefaultCacheStorageTest {
 		assertEquals(new Long(55), result.getA());
 	}
 
+	@Test
+	public void testPerformace() {
+		
+	}
 }

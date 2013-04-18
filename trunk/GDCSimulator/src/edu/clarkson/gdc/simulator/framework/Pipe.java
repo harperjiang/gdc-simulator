@@ -19,19 +19,19 @@ import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
  */
 public class Pipe extends Component {
 
-	private Queue<DataMessage> requestBuffer;
+	protected Queue<DataMessage> requestBuffer;
 
-	private Queue<DataMessage> responseBuffer;
+	protected Queue<DataMessage> responseBuffer;
 
-	private Node source;
+	protected Node source;
 
-	private Node destination;
+	protected Node destination;
 
 	public Pipe() {
 		super();
 		this.requestBuffer = new ConcurrentLinkedQueue<DataMessage>();
 		this.responseBuffer = new ConcurrentLinkedQueue<DataMessage>();
-		
+
 		setTimeModel(new ConstantTimeModel(1));
 	}
 
@@ -44,6 +44,11 @@ public class Pipe extends Component {
 		// Build Connections
 		this.source.addPipe(this);
 		this.destination.addPipe(this);
+	}
+
+	public Pipe(Node source, Node destination, int latency) {
+		this(source, destination);
+		setTimeModel(new ConstantTimeModel(latency));
 	}
 
 	@Override
@@ -103,7 +108,7 @@ public class Pipe extends Component {
 		Validate.notNull(me);
 		return getSource().equals(me) ? getDestination() : getSource();
 	}
-	
+
 	@Override
 	protected long getLatency(Map<Pipe, List<DataMessage>> msgs) {
 		if (null == getTimeModel())

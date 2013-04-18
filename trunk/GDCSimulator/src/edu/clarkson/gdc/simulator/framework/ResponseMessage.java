@@ -1,5 +1,7 @@
 package edu.clarkson.gdc.simulator.framework;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 
  * @author Hao Jiang
@@ -15,11 +17,15 @@ public abstract class ResponseMessage extends DataMessage {
 	}
 
 	public ResponseMessage(DataMessage request) {
-		this.request = request;
+		super();
+		setRequest(request);
 	}
 
 	public void setRequest(DataMessage request) {
 		this.request = request;
+		if (!StringUtils.isEmpty(request.getSessionId())) {
+			setSessionId(request.getSessionId());
+		}
 	}
 
 }

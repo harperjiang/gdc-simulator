@@ -7,8 +7,9 @@ public abstract class AbstractDataCenter extends Node implements DataCenter {
 
 	private Object location;
 
-	public Object getLocation() {
-		return location;
+	@SuppressWarnings("unchecked")
+	public <T> T getLocation() {
+		return (T) location;
 	}
 
 	public void setLocation(Object location) {

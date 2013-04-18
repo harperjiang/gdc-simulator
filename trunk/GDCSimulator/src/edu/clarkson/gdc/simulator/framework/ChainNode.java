@@ -2,6 +2,7 @@ package edu.clarkson.gdc.simulator.framework;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -25,6 +26,8 @@ public abstract class ChainNode extends Node {
 
 	private static final String MESSAGE = "MESSAGE";
 
+	private static final String PIPE = "PIPE";
+
 	private SessionManager sessionManager;
 
 	public ChainNode() {
@@ -36,7 +39,8 @@ public abstract class ChainNode extends Node {
 	 * Callback, check message with session ids, save to session
 	 */
 	protected void beforeProcess(Map<Pipe, List<DataMessage>> events) {
-		for (List<DataMessage> msgs : events.values()) {
+		for (Entry<Pipe, List<DataMessage>> entry : events.entrySet()) {
+			List<DataMessage> msgs = entry.getValue();
 			for (DataMessage message : msgs) {
 				if (message instanceof DataMessage
 						&& !(message instanceof ResponseMessage)
@@ -44,6 +48,7 @@ public abstract class ChainNode extends Node {
 					Session session = sessionManager.createSession(message
 							.getSessionId());
 					session.put(MESSAGE, message);
+					session.put(PIPE, entry.getKey());
 				}
 			}
 		}
@@ -61,14 +66,18 @@ public abstract class ChainNode extends Node {
 				Session session = sessionManager.getSession(message
 						.getSessionId());
 				if (null != session) {
-					DataMessage request = session.get(MESSAGE);
-					((ResponseMessage) message).setRequest(request);
-					message.setSessionId(session.getId());
+					if (((ResponseMessage) message).getRequest() == null) {
+						DataMessage request = session.get(MESSAGE);
+						((ResponseMessage) message).setRequest(request);
+						message.setSessionId(session.getId());
+					}
 					sessionManager.discardSession(session);
 				}
-
 			}
 		}
 	}
 
+	protected Pipe getPipe(String uuid) {
+		return sessionManager.getSession(uuid).get(PIPE);
+	}
 }

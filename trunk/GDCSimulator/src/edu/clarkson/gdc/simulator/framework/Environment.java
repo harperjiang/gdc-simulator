@@ -1,6 +1,8 @@
 package edu.clarkson.gdc.simulator.framework;
 
+import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import org.apache.commons.lang.Validate;
 
@@ -18,10 +20,14 @@ public class Environment {
 
 	private Clock clock;
 
+	private List<Component> components;
+
 	public Environment() {
 		// Create a clock
 		clock = new Clock();
-		
+
+		components = new ArrayList<Component>();
+
 		// Create Proxy
 		proxy = new EventListenerProxy();
 	}
@@ -36,16 +42,22 @@ public class Environment {
 		}
 		Validate.notNull(getClock());
 		component.setEnvironment(this);
+		components.add(component);
 		getClock().register(component);
 	}
 
 	public void remove(Component component) {
 		Validate.notNull(getClock());
 		component.setEnvironment(null);
+		components.remove(component);
 		getClock().unregister(component);
 	}
 
 	public void run(long stop) {
+		for (Component comp : components) {
+			comp.init();
+		}
+
 		while (getClock().getCounter() < stop) {
 			getClock().tick();
 		}

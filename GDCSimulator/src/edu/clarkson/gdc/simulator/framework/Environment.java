@@ -63,6 +63,16 @@ public class Environment {
 		}
 	}
 
+	public void run(long start, long stop) {
+		for (Component comp : components) {
+			comp.init();
+		}
+		getClock().setCounter(start);
+		while (getClock().getCounter() < stop) {
+			getClock().tick();
+		}
+	}
+
 	protected EventListenerProxy proxy;
 
 	public <EL extends EventListener> EL getProbe(Class<EL> clazz) {

@@ -2,7 +2,9 @@ package edu.clarkson.gdc.simulator.impl.solar;
 
 import java.awt.geom.Point2D;
 
+import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
+import edu.clarkson.gdc.simulator.framework.NodeException;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.impl.AbstractDataCenter;
 
@@ -26,15 +28,27 @@ public class SolarServer extends AbstractDataCenter {
 		setId(id);
 		setLocation(location);
 		basepower = 100;
+		setExceptionStrategy(new ExceptionStrategy() {
+			private NodeException exception = new NodeException();
+
+			@Override
+			public NodeException getException(long tick) {
+				if (0 == getPower()) {
+					return exception;
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
 	protected int getPower() {
 		Point2D.Double loc = getLocation();
-		double timediff = loc.y * 240 * 1000 / TimeConstant.UNIT;
-		double realtime = getClock().getCounter() + timediff;
-		double ratio = Math.cos((realtime / (28800 * 1000 / TimeConstant.UNIT))
-				* Math.PI - 3 * Math.PI / 2);
+		double timediff = loc.y * 240;
+		double realtime = (getClock().getCounter() / (1000 / TimeConstant.UNIT))
+				+ timediff;
+		double rad = Math.abs(43200 - realtime % 86400) / 14400;
+		double ratio = Math.cos(rad * Math.PI / 2);
 		int res = (int) (basepower * ratio);
 		return res >= 0 ? res : 0;
 	}

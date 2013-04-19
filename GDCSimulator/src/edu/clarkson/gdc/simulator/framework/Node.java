@@ -131,14 +131,28 @@ public abstract class Node extends Component {
 						for (DataMessage msg : entry.getValue()) {
 							FailMessage fail = new NodeFailMessage(msg,
 									stateMachine.getException());
-							ProcessResult result = new ProcessResult(1l, 0l,
-									entry.getKey(), fail);
-							newBuffer.add(result);
+							fail.access(new PathNode(this, getClock()
+									.getCounter()));
+							entry.getKey().put(this, fail);
 						}
 					}
 				}
-				// TODO In exception status, messages that waiting for process
-				// should be emptied
+				// In exception status, messages that waiting for process
+				// will be emptied, error returned
+				for (ProcessResult pr : cpuBuffer) {
+					FailMessage fail = new NodeFailMessage(pr.message,
+							stateMachine.getException());
+					fail.access(new PathNode(this, getClock().getCounter()));
+					pr.getPipe().put(this, fail);
+				}
+				for (ProcessResult pr : ioBuffer) {
+					FailMessage fail = new NodeFailMessage(pr.message,
+							stateMachine.getException());
+					fail.access(new PathNode(this, getClock().getCounter()));
+					pr.getPipe().put(this, fail);
+				}
+				cpuBuffer.clear();
+				ioBuffer.clear();
 			}
 				break;
 			case FREE: {
@@ -312,7 +326,7 @@ public abstract class Node extends Component {
 				.getListeners(NodeMessageListener.class))
 			listener.messageSent(event);
 	}
-	
+
 	protected void fireMessageTimeout() {
 		NodeMessageEvent event = new NodeMessageEvent(this, null);
 		for (NodeMessageListener listener : listenerDelegate

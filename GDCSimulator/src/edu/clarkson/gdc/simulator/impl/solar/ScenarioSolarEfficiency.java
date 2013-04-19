@@ -2,14 +2,16 @@ package edu.clarkson.gdc.simulator.impl.solar;
 
 import java.awt.geom.Point2D;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.Environment;
+import edu.clarkson.gdc.simulator.framework.FailMessage;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
-import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.framework.TimeoutMessage;
-import edu.clarkson.gdc.simulator.impl.Averager;
+import edu.clarkson.gdc.simulator.impl.SectionAverager;
+import edu.clarkson.gdc.simulator.impl.SectionAverager.Section;
 
 public class ScenarioSolarEfficiency {
 
@@ -17,24 +19,22 @@ public class ScenarioSolarEfficiency {
 	 * The unit in this environment is 10ms
 	 */
 	public static void main(String[] args) {
-		Environment solarenv = new Environment();
+		final Environment solarenv = new Environment();
 
-		// SolarServer egypt = new SolarServer("egypt", new Point2D.Double(
-		// 24.68695, 27.42188));
-		SolarServer tibet = new SolarServer("tibet", new Point2D.Double(
-				38.75408, 82.88086));
-		SolarServer oceania = new SolarServer("oceania", new Point2D.Double(
-				-22.91792, 127.61719));
-		// SolarServer us = new SolarServer("us", new Point2D.Double(34.01624,
-		// -115.66406));
-		// SolarServer brazil = new SolarServer("brazil", new Point2D.Double(
-		// -5.26601, -39.90234));
+		List<SolarServer> solarservers = new ArrayList<SolarServer>();
+		solarservers.add(new SolarServer("egypt", new Point2D.Double(24.68695,
+				27.42188)));
+		solarservers.add(new SolarServer("tibet", new Point2D.Double(38.75408,
+				82.88086)));
+		solarservers.add(new SolarServer("oceania", new Point2D.Double(
+				-22.91792, 127.61719)));
+		solarservers.add(new SolarServer("us", new Point2D.Double(34.01624,
+				-115.66406)));
+//		solarservers.add(new SolarServer("brazil", new Point2D.Double(-5.26601,
+//				-39.90234)));
 
-		// solarenv.add(egypt);
-		solarenv.add(tibet);
-		solarenv.add(oceania);
-		// solarenv.add(us);
-		// solarenv.add(brazil);
+		for (SolarServer ss : solarservers)
+			solarenv.add(ss);
 
 		SolarClient client = new SolarClient();
 		// client.setLocation(new Point2D.Double(66.4, -45.5));// Green Land
@@ -43,26 +43,32 @@ public class ScenarioSolarEfficiency {
 		client.addListener(NodeMessageListener.class,
 				solarenv.getProbe(NodeMessageListener.class));
 
-		// new DistancePipe(client, egypt);
-		new DistancePipe(client, tibet);
-		new DistancePipe(client, oceania);
-		// new DistancePipe(client, us);
-		// new DistancePipe(client, brazil);
+		for (SolarServer ss : solarservers)
+			new DistancePipe(client, ss);
 
-		final Averager success = new Averager();
-		final Averager failed = new Averager();
+		final SectionAverager success = new SectionAverager(360000l);
+		final SectionAverager failed = new SectionAverager(360000l);
 		solarenv.addListener(NodeMessageListener.class,
 				new NodeMessageListener() {
 
 					@Override
 					public void messageReceived(NodeMessageEvent event) {
 						if (event.getSource() instanceof Client) {
-
-							SolarClientResponse resp = (SolarClientResponse) event
-									.getMessage();
-							long time = resp.getReceiveTime()
-									- resp.getRequest().getSendTime();
-							success.add(time);
+							if (event.getMessage() instanceof FailMessage) {
+								System.out.println(MessageFormat.format(
+										"{0}:Failed received from {1}",
+										solarenv.getClock().getCounter(), event
+												.getMessage().getOrigin()
+												.getId()));
+								failed.add(solarenv.getClock().getCounter(), 1l);
+							} else {
+								SolarClientResponse resp = (SolarClientResponse) event
+										.getMessage();
+								long time = resp.getReceiveTime()
+										- resp.getRequest().getSendTime();
+								success.add(solarenv.getClock().getCounter(),
+										time);
+							}
 						}
 					}
 
@@ -73,16 +79,21 @@ public class ScenarioSolarEfficiency {
 
 					@Override
 					public void messageTimeout(NodeMessageEvent event) {
-						failed.add(1l);
+						failed.add(solarenv.getClock().getCounter(), 1l);
 						return;
 					}
 				});
 
 		solarenv.run(8640000);
 
-		System.out.println(MessageFormat.format(
-				"Success {0}, Average {1}, Failed {2}", success.getCount(),
-				success.getAverage(), failed.getCount()));
-	}
+		success.end(solarenv.getClock().getCounter());
+		failed.end(solarenv.getClock().getCounter());
 
+		for (int i = 0; i < success.getSections().size(); i++) {
+			Section sec = success.getSections().get(i);
+			Section f = failed.getSections().get(i);
+			System.out.println(MessageFormat.format("{0}\t{1}\t{2}\t{3}",
+					sec.start, sec.count, sec.average, f.count));
+		}
+	}
 }

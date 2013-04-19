@@ -27,4 +27,13 @@ public class SolarServerTest {
 		pw.close();
 	}
 
+	@Test
+	public void testGetPower2() throws Exception {
+		Environment env = new Environment();
+		SolarServer ss = new SolarServer(null, new Point2D.Double(-22.91792,
+				127.61719));
+		ss.basepower = 20;
+		env.add(ss);
+		env.run(8500000l, 8510000l);
+	}
 }

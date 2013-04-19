@@ -20,7 +20,13 @@ public class DistancePipe extends Pipe {
 		Point2D.Double point2 = dest.getLocation();
 
 		// Calculate distance
-		double c = 2 * (1 - Math.cos((point1.y - point2.y) * 2 * Math.PI / 360));
+		double rada = point1.x * Math.PI / 180;
+		double radb = point2.x * Math.PI / 180;
+
+		double cosa = Math.cos(rada);
+		double cosb = Math.cos(radb);
+		double c = Math.pow(cosa, 2) + Math.pow(cosb, 2) - 2 * cosa * cosb
+				* Math.cos((point1.y - point2.y) * Math.PI / 180);
 		double a = Math.sin(point1.x * 2 * Math.PI / 360);
 		double b = Math.sin(point2.x * 2 * Math.PI / 360);
 
@@ -32,8 +38,8 @@ public class DistancePipe extends Pipe {
 			return 5;
 		}
 		if (angle < 0.67) { // < 4000KM, within country
-			return 50;
+			return 20;
 		}
-		return (long) (300 + angle * 50);
+		return (long) (100 + angle * 50);
 	}
 }

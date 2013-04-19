@@ -59,6 +59,10 @@ public class Clock {
 			listener.stepForward(event);
 		}
 	}
+	
+	protected void setCounter(long counter) {
+		this.counter = counter;
+	}
 
 	public void tick() {
 		counter++;

@@ -12,8 +12,9 @@ import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.impl.Averager;
 import edu.clarkson.gdc.simulator.impl.SectionAverager;
+import edu.clarkson.gdc.simulator.impl.SectionAverager.Section;
 
-public class ScenarioSolarEfficiency {
+public class ScenarioSolarLatency {
 
 	/**
 	 * The unit in this environment is 10ms
@@ -36,7 +37,7 @@ public class ScenarioSolarEfficiency {
 		for (SolarServer ss : solarservers)
 			solarenv.add(ss);
 
-		SolarClient client = new SolarClient();
+		SolarClient2 client = new SolarClient2();
 //		client.setLocation(new Point2D.Double(64.14, -21.87));// Reykyavik, Iceland
 //		client.setLocation(new Point2D.Double(45.6, -73.7));// Montreal,Canada
 		client.setLocation(new Point2D.Double(39.93, 116.46));// Beijing, China
@@ -72,7 +73,6 @@ public class ScenarioSolarEfficiency {
 										time);
 								average.add(time);
 							}
-							
 						}
 					}
 
@@ -92,7 +92,6 @@ public class ScenarioSolarEfficiency {
 
 		success.end(solarenv.getClock().getCounter());
 		failed.end(solarenv.getClock().getCounter());
-
 		System.out.println(average.getAverage());
 //		for (int i = 0; i < success.getSections().size(); i++) {
 //			Section sec = success.getSections().get(i);

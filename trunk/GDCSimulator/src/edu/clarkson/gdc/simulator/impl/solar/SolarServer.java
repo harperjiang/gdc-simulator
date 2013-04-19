@@ -42,7 +42,7 @@ public class SolarServer extends AbstractDataCenter {
 	}
 
 	@Override
-	protected int getPower() {
+	public int getPower() {
 		Point2D.Double loc = getLocation();
 		double timediff = loc.y * 240;
 		double realtime = (getClock().getCounter() / (1000 / TimeConstant.UNIT))

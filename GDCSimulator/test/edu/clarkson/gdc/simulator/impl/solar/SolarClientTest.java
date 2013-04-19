@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class SolarClientTest extends SolarClient {
+public class SolarClientTest extends SolarClient2 {
 
 	@Test
 	public void testDistance() {

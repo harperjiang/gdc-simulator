@@ -12,9 +12,9 @@ public class ScenarioSingleDCRead {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		for (int clientCount = 1; clientCount < 20; clientCount++) {
+		for (int clientCount = 1; clientCount < 100; clientCount++) {
 			LatencyEnvironment env = new LatencyEnvironment();
-			
+
 			IsolateServer server = new IsolateServer() {
 				{
 					power = 4;
@@ -63,14 +63,15 @@ public class ScenarioSingleDCRead {
 						@Override
 						public void messageTimeout(NodeMessageEvent event) {
 							// TODO Auto-generated method stub
-							
+
 						}
 					});
 
 			env.run(86400l);
 
 			System.out.println(clientCount + "\t" + all.getAverage() + "\t"
-					+ read.getAverage() + "\t" + write.getAverage());
+					+ all.getCount() + "\t" + read.getAverage() + "\t"
+					+ write.getAverage());
 		}
 	}
 }

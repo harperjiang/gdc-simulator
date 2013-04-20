@@ -9,15 +9,16 @@ import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.impl.AbstractDataCenter;
 import edu.clarkson.gdc.simulator.impl.Averager;
+import edu.clarkson.gdc.simulator.impl.LoadBalancer;
 
-public class ScenarioSingleDCWrite {
+public class ScenarioDCWrite {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		for (int index = 1; index < 30; index++) {
-			int clientCount = 200;
+		for (int index = 1; index < 50; index++) {
+			int clientCount = 500;
 			int serverCount = index;
 
 			LatencyEnvironment env = new LatencyEnvironment();
@@ -47,7 +48,7 @@ public class ScenarioSingleDCWrite {
 			for (int i = 0; i < clientCount; i++) {
 				WaitClient client = new WaitClient() {
 					{
-						readRatio = 0.5f;
+						readRatio = 0.75f;
 					}
 				};
 				new Pipe(client, loadbalancer);

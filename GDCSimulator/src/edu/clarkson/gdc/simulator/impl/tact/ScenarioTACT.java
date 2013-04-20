@@ -5,7 +5,7 @@ import java.util.Random;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 
-public class TACTMain {
+public class ScenarioTACT {
 
 	/**
 	 * @param args

@@ -10,6 +10,7 @@ import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.FailMessage;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
+import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
 import edu.clarkson.gdc.simulator.impl.Averager;
 import edu.clarkson.gdc.simulator.impl.SectionAverager;
 import edu.clarkson.gdc.simulator.impl.SectionAverager.Section;
@@ -37,16 +38,22 @@ public class ScenarioSolarLatency {
 		for (SolarServer ss : solarservers)
 			solarenv.add(ss);
 
-		SolarClient2 client = new SolarClient2();
-//		client.setLocation(new Point2D.Double(64.14, -21.87));// Reykyavik, Iceland
-//		client.setLocation(new Point2D.Double(45.6, -73.7));// Montreal,Canada
-		client.setLocation(new Point2D.Double(39.93, 116.46));// Beijing, China
+		SolarClient client = new SolarClient();
+//		client.setLocation(new Point2D.Double(64.14, -21.87));
+		// Reykyavik, Iceland
+		 client.setLocation(new Point2D.Double(45.6, -73.7));//
+		// Montreal,Canada
+//		 client.setLocation(new Point2D.Double(39.93, 116.46));
+		// Beijing, China
 		solarenv.add(client);
 		client.addListener(NodeMessageListener.class,
 				solarenv.getProbe(NodeMessageListener.class));
 
-		for (SolarServer ss : solarservers)
-			new DistancePipe(client, ss);
+		for (SolarServer ss : solarservers) {
+			DistancePipe dp = new DistancePipe(client, ss);
+//			System.out.println(ss.getId() + "\t"
+//					+ ((ConstantTimeModel) dp.getTimeModel()).getLatency());
+		}
 
 		final SectionAverager success = new SectionAverager(36000l);
 		final Averager average = new Averager();
@@ -92,7 +99,7 @@ public class ScenarioSolarLatency {
 
 		success.end(solarenv.getClock().getCounter());
 		failed.end(solarenv.getClock().getCounter());
-		System.out.println(average.getAverage());
+		 System.out.println(average.getAverage());
 //		for (int i = 0; i < success.getSections().size(); i++) {
 //			Section sec = success.getSections().get(i);
 //			Section f = failed.getSections().get(i);

@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.impl.latency;
+package edu.clarkson.gdc.simulator.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import edu.clarkson.gdc.simulator.framework.ChainNode;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.impl.AbstractDataCenter;
+import edu.clarkson.gdc.simulator.framework.ResponseMessage;
 
 public class LoadBalancer extends ChainNode {
 
@@ -35,12 +35,11 @@ public class LoadBalancer extends ChainNode {
 	protected void processEach(Pipe source, DataMessage message,
 			MessageRecorder recorder) {
 		// Do not process message, just send it back and forth, as a proxy
-		if (message instanceof ClientRead || message instanceof ClientWrite) {
+		if (message instanceof ResponseMessage) {
+			recorder.record(getPipe(message.getSessionId()), message);
+		} else {
 			recorder.record(cycleBuffer.get(pointer++ % cycleBuffer.size()),
 					message);
-		}
-		if (message instanceof ClientResponse) {
-			recorder.record(getPipe(message.getSessionId()), message);
 		}
 	}
 }

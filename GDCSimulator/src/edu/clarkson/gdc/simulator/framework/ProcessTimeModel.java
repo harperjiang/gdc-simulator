@@ -19,5 +19,9 @@ public interface ProcessTimeModel {
 		public long latency(Component component, Map<Pipe,List<DataMessage>> msgs) {
 			return latency;
 		}
+		
+		public long getLatency() {
+			return latency;
+		}
 	}
 }

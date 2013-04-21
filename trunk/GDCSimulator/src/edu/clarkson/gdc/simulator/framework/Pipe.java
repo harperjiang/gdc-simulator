@@ -39,6 +39,8 @@ public class Pipe extends Component {
 		this();
 		Validate.notNull(source);
 		Validate.notNull(destination);
+		// Default Pipe doesn't allow source to be the same as destination
+		Validate.isTrue(source != destination);
 		this.source = source;
 		this.destination = destination;
 		// Build Connections

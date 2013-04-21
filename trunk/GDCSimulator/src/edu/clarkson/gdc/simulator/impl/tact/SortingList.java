@@ -17,24 +17,51 @@ public class SortingList<T extends Comparable<T>> {
 	}
 
 	public void add(T object) {
-		// TODO Change to binary insert
-
-		if (content.isEmpty()) {
+		int index = position(object);
+		if (index == content.size())
 			content.add(object);
-			return;
-		}
-		if (object.compareTo(content.get(0)) < 0) {
-			content.add(0, object);
-			return;
-		}
+		else
+			content.add(index, object);
+	}
 
-		for (int i = 0; i < content.size() - 1; i++) {
-			if (content.get(i).compareTo(object) <= 0
-					&& content.get(i + 1).compareTo(object) > 0) {
-				content.add(i + 1, object);
-				return;
-			}
+	public int size() {
+		return content.size();
+	}
+
+	public List<T> removebefore(T min) {
+		int position = position(min);
+		List<T> newcontent = content.subList(position, content.size());
+		List<T> toremove = content.subList(0, position);
+		content = new ArrayList<T>();
+		content.addAll(newcontent);
+		return toremove;
+	}
+
+	protected int position(T val) {
+		if (content.size() == 0)
+			return 0;
+		int compare0 = content.get(0).compareTo(val);
+		if (compare0 > 0) {
+			return 0;
 		}
-		content.add(object);
+		if (content.get(content.size() - 1).compareTo(val) <= 0)
+			return content.size();
+		return position(0, size() - 1, val);
+	}
+
+	protected int position(int start, int end, T val) {
+		if (start == end) {
+			return start + 1;
+		}
+		if (start == end - 1) {
+			return end;
+		}
+		int middle = (start + end) / 2;
+
+		int compare = content.get(middle).compareTo(val);
+		if (compare == 0)
+			return middle + 1;
+		return compare > 0 ? position(start, middle, val) : position(middle,
+				end, val);
 	}
 }

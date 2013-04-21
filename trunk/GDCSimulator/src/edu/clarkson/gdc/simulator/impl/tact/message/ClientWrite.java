@@ -9,4 +9,8 @@ public class ClientWrite extends DataMessage {
 		super();
 		this.setLoad(data);
 	}
+	
+	public Data getData() {
+		return getLoad();
+	}
 }

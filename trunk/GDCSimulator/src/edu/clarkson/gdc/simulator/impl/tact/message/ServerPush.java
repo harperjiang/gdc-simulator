@@ -2,10 +2,14 @@ package edu.clarkson.gdc.simulator.impl.tact.message;
 
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
+
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.impl.tact.Operation;
 
 public class ServerPush extends DataMessage {
+
+	private long endPoint;
 
 	private int serverNum;
 
@@ -17,13 +21,12 @@ public class ServerPush extends DataMessage {
 		this.serverNum = serverNum;
 	}
 
-	/**
-	 * The biggest operation time in this push
-	 * 
-	 * @return
-	 */
-	public Long getEndPoint() {
-		return operations.get(operations.size() - 1).getTimestamp().getTime();
+	public long getEndPoint() {
+		return endPoint;
+	}
+
+	public void setEndPoint(long endPoint) {
+		this.endPoint = endPoint;
 	}
 
 	private List<Operation> operations;
@@ -33,6 +36,7 @@ public class ServerPush extends DataMessage {
 	}
 
 	public void setOperations(List<Operation> operations) {
+		Validate.notEmpty(operations);
 		this.operations = operations;
 	}
 

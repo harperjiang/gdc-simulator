@@ -74,6 +74,10 @@ public abstract class Node extends Component {
 		toioBuffer = new ArrayList<ProcessResult>();
 	}
 
+	protected Pipe getSelfPipe() {
+		return selfPipe;
+	}
+	
 	protected Map<Pipe, List<DataMessage>> collectInput() {
 		Map<Pipe, List<DataMessage>> events = new HashMap<Pipe, List<DataMessage>>();
 		for (Pipe inputPipe : pipes.values()) {

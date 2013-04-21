@@ -1,9 +1,15 @@
 package edu.clarkson.gdc.simulator.impl.tact;
 
-import java.util.Random;
-
+import edu.clarkson.gdc.simulator.Client;
+import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
+import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
+import edu.clarkson.gdc.simulator.impl.Averager;
+import edu.clarkson.gdc.simulator.impl.LoadBalancer;
+import edu.clarkson.gdc.simulator.impl.tact.message.ClientRead;
+import edu.clarkson.gdc.simulator.impl.tact.message.ClientResponse;
 
 public class ScenarioTACT {
 
@@ -11,45 +17,89 @@ public class ScenarioTACT {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int dataCenterCount = 10;
-		int clientPerDc = 10;
-		int clientPerDcSd = 4;
+		for (int serverCount = 5; serverCount < 6; serverCount++) {
+			int clientCount = 100;
 
-		Random random = new Random(System.currentTimeMillis());
+			final TACTEnvironment env = new TACTEnvironment();
 
-		TACTEnvironment env = new TACTEnvironment();
-		TACTDataCenter[] tdcs = new TACTDataCenter[dataCenterCount];
+			LoadBalancer loadbalancer = new LoadBalancer();
+			env.add(loadbalancer);
 
-		DefaultCacheStorage storage = new DefaultCacheStorage();
-		storage.setReadTime(100l);
-		storage.setWriteTime(500l);
+			TACTDataCenter[] tdcs = new TACTDataCenter[serverCount];
 
-		for (int i = 0; i < dataCenterCount; i++) {
-			tdcs[i] = new TACTDataCenter(i, dataCenterCount);
-			tdcs[i].setNumError(20);
-			tdcs[i].setOrderError(5);
-			tdcs[i].setStaleness(1000l);
-			tdcs[i].setStorage(storage);
-			env.add(tdcs[i]);
-		}
+			DefaultCacheStorage storage = new DefaultCacheStorage();
+			storage.setReadTime(5l);
+			storage.setWriteTime(10l);
 
-		// Create pipes between data centers
-		for (int i = 0; i < dataCenterCount; i++) {
-			for (int j = i + 1; j < dataCenterCount; j++) {
-				new Pipe(tdcs[i], tdcs[j]);
+			for (int i = 0; i < serverCount; i++) {
+				tdcs[i] = new TACTDataCenter(i, serverCount) {
+					{
+						power = 4;
+						slowPart = 0;
+					}
+				};
+				tdcs[i].setNumError(1);
+				tdcs[i].setOrderError(1);
+				tdcs[i].setStaleness(1);
+				env.add(tdcs[i]);
+				new Pipe(tdcs[i], loadbalancer);
 			}
-		}
-		// Create clients and connections
-		for (int i = 0; i < dataCenterCount; i++) {
-			int clientCount = clientPerDc + random.nextInt(clientPerDcSd);
-			for (int j = 0; j < clientCount; j++) {
+
+			// Create pipes between data centers
+			for (int i = 0; i < serverCount; i++) {
+				for (int j = i + 1; j < serverCount; j++) {
+					Pipe serverNetwork = new Pipe(tdcs[i], tdcs[j]);
+					serverNetwork.setTimeModel(new ConstantTimeModel(10));
+				}
+			}
+			// Create clients and connections
+			for (int i = 0; i < clientCount; i++) {
 				TACTClient client = new TACTClient();
 				env.add(client);
-				new Pipe(client, tdcs[i]);
+				client.addListener(NodeMessageListener.class,
+						env.getProbe(NodeMessageListener.class));
+				new Pipe(client, loadbalancer);
 			}
+			final Averager all = new Averager();
+			final Averager read = new Averager();
+			final Averager write = new Averager();
+
+			env.addListener(NodeMessageListener.class,
+					new NodeMessageListener() {
+
+						@Override
+						public void messageReceived(NodeMessageEvent event) {
+							if (event.getSource() instanceof Client
+									&& event.getMessage() instanceof ClientResponse) {
+								ClientResponse resp = (ClientResponse) event
+										.getMessage();
+								long time = resp.getReceiveTime()
+										- resp.getRequest().getSendTime();
+								all.add(time);
+								if (resp.getRequest() instanceof ClientRead) {
+									read.add(time);
+								} else {
+									write.add(time);
+								}
+							}
+						}
+
+						@Override
+						public void messageSent(NodeMessageEvent event) {
+
+						}
+
+						@Override
+						public void messageTimeout(NodeMessageEvent event) {
+							// TODO Auto-generated method stub
+
+						}
+					});
+			env.run(86400l);
+
+			System.out.println(serverCount + "\t" + all.getAverage() + "\t"
+					+ read.getAverage() + "\t" + write.getAverage() + "\t"
+					+ read.getCount() + "\t" + write.getCount());
 		}
-
-		env.run(8640000l);
 	}
-
 }

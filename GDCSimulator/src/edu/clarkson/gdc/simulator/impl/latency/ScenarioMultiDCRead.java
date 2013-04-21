@@ -15,8 +15,8 @@ public class ScenarioMultiDCRead {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		for (int serverCount = 1; serverCount < 20; serverCount++) {
-			int clientCount = 500;
+		for (int serverCount = 5; serverCount < 6; serverCount++) {
+			int clientCount = 100;
 
 			LatencyEnvironment env = new LatencyEnvironment();
 

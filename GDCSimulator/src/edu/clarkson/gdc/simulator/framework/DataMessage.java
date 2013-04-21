@@ -1,6 +1,7 @@
 package edu.clarkson.gdc.simulator.framework;
 
 import java.util.Stack;
+import java.util.UUID;
 
 /**
  * 
@@ -57,6 +58,7 @@ public class DataMessage {
 	public DataMessage() {
 		super();
 		this.paths = new Stack<PathNode>();
+		setSessionId(UUID.randomUUID().toString());
 	}
 
 	public void access(PathNode node) {

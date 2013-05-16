@@ -66,7 +66,6 @@ public class ScenarioEventual {
 
 			@Override
 			public void messageReceived(NodeMessageEvent event) {
-				System.out.println(env.getClock().getCounter());
 				if (event.getSource() instanceof Client
 						&& event.getMessage() instanceof ClientResponse) {
 					ClientResponse resp = (ClientResponse) event.getMessage();

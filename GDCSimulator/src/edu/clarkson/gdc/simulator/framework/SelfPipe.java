@@ -15,6 +15,8 @@ public class SelfPipe extends Pipe {
 		this.source = owner;
 		this.destination = owner;
 		source.addPipe(this);
+
+		setId(source.getId() + "--");
 	}
 
 	public List<DataMessage> get() {

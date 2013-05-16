@@ -46,6 +46,8 @@ public class Pipe extends Component {
 		// Build Connections
 		this.source.addPipe(this);
 		this.destination.addPipe(this);
+
+		setId(source.getId() + "-" + destination.getId());
 	}
 
 	public Pipe(Node source, Node destination, int latency) {

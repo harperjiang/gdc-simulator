@@ -34,15 +34,19 @@ public class SortingListTest {
 	}
 
 	@Test
-	public void testPosition() {
+	public void testPositionBinary() {
 		SortingList<Long> sorting = new SortingList<Long>();
-		assertEquals(0, sorting.position(5l));
+		assertEquals(0, sorting.position_binary(5l));
+		assertEquals(0, sorting.position_postlinear(5l));
 		sorting.add(10l);
-		assertEquals(0, sorting.position(5l));
+		assertEquals(0, sorting.position_binary(5l));
+		assertEquals(0, sorting.position_postlinear(5l));
 		sorting.add(5l);
-		assertEquals(1, sorting.position(5l));
+		assertEquals(1, sorting.position_binary(5l));
+		assertEquals(1, sorting.position_postlinear(5l));
 		sorting.add(5l);
-		assertEquals(2, sorting.position(5l));
+		assertEquals(2, sorting.position_binary(5l));
+		assertEquals(2, sorting.position_postlinear(5l));
 
 	}
 

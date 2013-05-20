@@ -38,9 +38,9 @@ public class ScenarioTACT {
 					slowPart = 0;
 				}
 			};
-			tdcs[i].setNumError(10);
-			tdcs[i].setOrderError(10);
-			tdcs[i].setStaleness(100);
+			tdcs[i].setNumError(60);
+			tdcs[i].setOrderError(60);
+			tdcs[i].setStaleness(200);
 			env.add(tdcs[i]);
 			new Pipe(tdcs[i], loadbalancer);
 		}

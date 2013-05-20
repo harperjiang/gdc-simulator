@@ -59,10 +59,14 @@ public class Pipe extends Component {
 	public Clock getClock() {
 		if (null != super.getClock())
 			return super.getClock();
-		if (source.getClock() != null)
-			return source.getClock();
-		if (destination.getClock() != null)
-			return destination.getClock();
+		if (source.getEnvironment() != null) {
+			setEnvironment(source.getEnvironment());
+			return getClock();
+		}
+		if (destination.getEnvironment() != null) {
+			setEnvironment(destination.getEnvironment());
+			return getClock();
+		}
 		return null;
 	}
 

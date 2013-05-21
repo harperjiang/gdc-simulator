@@ -6,11 +6,12 @@ import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
-import edu.clarkson.gdc.simulator.scenario.AbstractDataCenter;
+import edu.clarkson.gdc.simulator.module.message.ClientRead;
+import edu.clarkson.gdc.simulator.module.message.ClientResponse;
+import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
+import edu.clarkson.gdc.simulator.module.server.LoadBalancer;
+import edu.clarkson.gdc.simulator.module.server.isolate.IsolateServer;
 import edu.clarkson.gdc.simulator.scenario.Averager;
-import edu.clarkson.gdc.simulator.scenario.LoadBalancer;
-import edu.clarkson.gdc.simulator.scenario.tact.message.ClientRead;
-import edu.clarkson.gdc.simulator.scenario.tact.message.ClientResponse;
 
 public class ScenarioEventual {
 

@@ -2,7 +2,9 @@ package edu.clarkson.gdc.simulator.scenario.latency;
 
 import java.util.UUID;
 
-import edu.clarkson.gdc.simulator.scenario.RandomClient;
+import edu.clarkson.gdc.simulator.module.client.RandomClient;
+import edu.clarkson.gdc.simulator.module.message.ClientRead;
+import edu.clarkson.gdc.simulator.module.message.ClientWrite;
 import edu.clarkson.gdc.simulator.scenario.simple.DefaultData;
 
 public class WaitClient extends RandomClient {

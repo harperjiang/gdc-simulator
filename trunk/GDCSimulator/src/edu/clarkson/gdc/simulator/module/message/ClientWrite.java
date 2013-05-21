@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.scenario.latency;
+package edu.clarkson.gdc.simulator.module.message;
 
 import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.framework.DataMessage;

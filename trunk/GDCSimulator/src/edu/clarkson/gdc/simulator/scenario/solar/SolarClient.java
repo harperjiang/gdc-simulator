@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.scenario.RandomClient;
+import edu.clarkson.gdc.simulator.module.client.RandomClient;
 
 public class SolarClient extends RandomClient {
 

@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.scenario.simple.datadist;
+package edu.clarkson.gdc.simulator.module.datadist.ch;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -13,9 +13,9 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import edu.clarkson.gdc.simulator.scenario.simple.datadist.ConsistentHashing;
-import edu.clarkson.gdc.simulator.scenario.simple.datadist.ConsistentHashing.Position;
-import edu.clarkson.gdc.simulator.scenario.simple.datadist.ConsistentHashing.PositionHolder;
+import edu.clarkson.gdc.simulator.module.datadist.ch.ConsistentHashing;
+import edu.clarkson.gdc.simulator.module.datadist.ch.ConsistentHashing.Position;
+import edu.clarkson.gdc.simulator.module.datadist.ch.ConsistentHashing.PositionHolder;
 
 public class ConsistentHashingTest {
 

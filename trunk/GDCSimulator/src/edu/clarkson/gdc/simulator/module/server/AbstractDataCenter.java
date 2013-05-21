@@ -1,9 +1,9 @@
-package edu.clarkson.gdc.simulator.scenario;
+package edu.clarkson.gdc.simulator.module.server;
 
-import edu.clarkson.gdc.simulator.Client;
+import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.Node;
 
-public abstract class AbstractClient extends Node implements Client {
+public abstract class AbstractDataCenter extends Node implements DataCenter {
 
 	private Object location;
 

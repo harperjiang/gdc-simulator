@@ -1,9 +1,9 @@
 package edu.clarkson.gdc.simulator.scenario.tact;
 
-import edu.clarkson.gdc.simulator.scenario.RandomClient;
+import edu.clarkson.gdc.simulator.module.client.RandomClient;
+import edu.clarkson.gdc.simulator.module.message.ClientRead;
+import edu.clarkson.gdc.simulator.module.message.ClientWrite;
 import edu.clarkson.gdc.simulator.scenario.simple.DefaultData;
-import edu.clarkson.gdc.simulator.scenario.tact.message.ClientRead;
-import edu.clarkson.gdc.simulator.scenario.tact.message.ClientWrite;
 
 public class TACTClient extends RandomClient {
 

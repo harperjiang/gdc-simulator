@@ -5,7 +5,9 @@ import java.util.Random;
 import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.scenario.AbstractClient;
+import edu.clarkson.gdc.simulator.module.client.AbstractClient;
+import edu.clarkson.gdc.simulator.module.message.ClientRead;
+import edu.clarkson.gdc.simulator.module.message.ClientWrite;
 import edu.clarkson.gdc.simulator.scenario.simple.DefaultData;
 
 public class HurryClient extends AbstractClient {

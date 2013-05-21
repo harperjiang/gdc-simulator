@@ -17,9 +17,9 @@ import edu.clarkson.gdc.simulator.framework.NodeStateListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 import edu.clarkson.gdc.simulator.framework.storage.WritePolicy;
+import edu.clarkson.gdc.simulator.module.datadist.ch.ConsistentHashingDistribution;
 import edu.clarkson.gdc.simulator.scenario.simple.cdloader.XMLFileCloudLoader;
 import edu.clarkson.gdc.simulator.scenario.simple.client.RequestIndexClient;
-import edu.clarkson.gdc.simulator.scenario.simple.datadist.ConsistentHashingDistribution;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.scenario;
+package edu.clarkson.gdc.simulator.module.client;
 
 import java.util.Iterator;
 import java.util.Random;

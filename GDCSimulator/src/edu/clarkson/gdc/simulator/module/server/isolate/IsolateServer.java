@@ -1,8 +1,11 @@
-package edu.clarkson.gdc.simulator.scenario.latency;
+package edu.clarkson.gdc.simulator.module.server.isolate;
 
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.scenario.AbstractDataCenter;
+import edu.clarkson.gdc.simulator.module.message.ClientRead;
+import edu.clarkson.gdc.simulator.module.message.ClientResponse;
+import edu.clarkson.gdc.simulator.module.message.ClientWrite;
+import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
 
 public class IsolateServer extends AbstractDataCenter {
 	@Override

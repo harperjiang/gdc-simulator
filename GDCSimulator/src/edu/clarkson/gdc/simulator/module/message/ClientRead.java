@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.scenario.latency;
+package edu.clarkson.gdc.simulator.module.message;
 
 import java.util.UUID;
 

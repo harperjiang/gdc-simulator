@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.scenario.latency.twopc;
+package edu.clarkson.gdc.simulator.module.server.twopc;
 
 import edu.clarkson.gdc.simulator.framework.ResponseMessage;
 

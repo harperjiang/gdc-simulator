@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.scenario;
+package edu.clarkson.gdc.simulator.module.server;
 
 import java.util.ArrayList;
 import java.util.List;

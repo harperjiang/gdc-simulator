@@ -13,7 +13,7 @@ import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.NodeFailMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.scenario.AbstractClient;
+import edu.clarkson.gdc.simulator.module.client.AbstractClient;
 import edu.clarkson.gdc.simulator.scenario.simple.WorkloadProvider;
 import edu.clarkson.gdc.simulator.scenario.simple.message.LocateDCFail;
 import edu.clarkson.gdc.simulator.scenario.simple.message.LocateDCRequest;

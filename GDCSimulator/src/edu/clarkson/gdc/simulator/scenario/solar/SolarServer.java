@@ -6,7 +6,7 @@ import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.NodeException;
 import edu.clarkson.gdc.simulator.framework.Pipe;
-import edu.clarkson.gdc.simulator.scenario.AbstractDataCenter;
+import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
 
 /**
  * Solar Power varies by time

@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.scenario.tact;
+package edu.clarkson.gdc.simulator.module.server.twopc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,14 +9,10 @@ import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.session.Session;
 import edu.clarkson.gdc.simulator.framework.session.SessionManager;
-import edu.clarkson.gdc.simulator.scenario.AbstractDataCenter;
-import edu.clarkson.gdc.simulator.scenario.latency.twopc.FinalizeMessage;
-import edu.clarkson.gdc.simulator.scenario.latency.twopc.FinalizeResponse;
-import edu.clarkson.gdc.simulator.scenario.latency.twopc.VoteMessage;
-import edu.clarkson.gdc.simulator.scenario.latency.twopc.VoteResponse;
-import edu.clarkson.gdc.simulator.scenario.tact.message.ClientRead;
-import edu.clarkson.gdc.simulator.scenario.tact.message.ClientResponse;
-import edu.clarkson.gdc.simulator.scenario.tact.message.ClientWrite;
+import edu.clarkson.gdc.simulator.module.message.ClientRead;
+import edu.clarkson.gdc.simulator.module.message.ClientResponse;
+import edu.clarkson.gdc.simulator.module.message.ClientWrite;
+import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
 
 public class TwoPCServer extends AbstractDataCenter {
 
@@ -48,7 +44,8 @@ public class TwoPCServer extends AbstractDataCenter {
 	protected void processEach(Pipe source, DataMessage message,
 			MessageRecorder recorder) {
 		if (message instanceof ClientRead) {
-			recorder.record(10l, 10l, source, new ClientResponse(message));
+			recorder.record(30l, 100l, source,
+					new ClientResponse(message, true));
 		}
 
 		if (message instanceof ClientWrite) {
@@ -58,20 +55,19 @@ public class TwoPCServer extends AbstractDataCenter {
 				// Need some time to prepare 2-pc env
 				VoteMessage vm = new VoteMessage(message.getSessionId(),
 						cw.getData());
-				recorder.record(5l, 0l, pipe, vm);
+				recorder.record(60l, 0l, pipe, vm);
 			}
 			Session session = sessionManager.createSession(message
 					.getSessionId());
 			session.put(TRANSACTION, new TransactionStatus(serverPipes.size()));
 			session.put(MESSAGE, message);
 			session.put(PIPE, source);
-			recorder.record(10l,15l,source,new ClientResponse(message));
 		}
 		if (message instanceof VoteMessage) {
 			// TODO Always accept?
 			VoteMessage vote = (VoteMessage) message;
 			// This time is the same as IsolatedServer
-			recorder.record(5l, 10l, source, new VoteResponse(vote, true));
+			recorder.record(40l, 120l, source, new VoteResponse(vote, true));
 		}
 		if (message instanceof VoteResponse) {
 			VoteResponse vr = (VoteResponse) message;
@@ -81,7 +77,7 @@ public class TwoPCServer extends AbstractDataCenter {
 				tran.receiveResponse(vr.isAccept());
 				if (tran.canFinalize()) {
 					for (Pipe pipe : serverPipes) {
-						recorder.record(6l, 0l, pipe, new FinalizeMessage(
+						recorder.record(30l, 0l, pipe, new FinalizeMessage(
 								message.getSessionId(), tran.canCommit()));
 					}
 				}
@@ -90,11 +86,11 @@ public class TwoPCServer extends AbstractDataCenter {
 		if (message instanceof FinalizeMessage) {
 			FinalizeMessage fm = (FinalizeMessage) message;
 			if (fm.isCommit()) {
-				recorder.record(6l, 0l, source, new FinalizeResponse(
+				recorder.record(30l, 0l, source, new FinalizeResponse(
 						(FinalizeMessage) message));
 			} else {
 				// Rollback takes more time than commit
-				recorder.record(6l, 30l, source, new FinalizeResponse(
+				recorder.record(60l, 120l, source, new FinalizeResponse(
 						(FinalizeMessage) message));
 			}
 		}
@@ -108,7 +104,8 @@ public class TwoPCServer extends AbstractDataCenter {
 					Pipe pipe = session.get(PIPE);
 					// Failed Transaction need to rollback, which requires a
 					// write time
-//					recorder.record(6l, 0l, pipe, new ClientResponse(original));
+					recorder.record(30l, 0l, pipe, new ClientResponse(original,
+							tran.isSuccess()));
 					sessionManager.discardSession(session);
 				}
 			}

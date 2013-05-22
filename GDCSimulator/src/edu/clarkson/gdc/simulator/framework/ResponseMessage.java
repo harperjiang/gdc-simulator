@@ -23,7 +23,7 @@ public abstract class ResponseMessage extends DataMessage {
 
 	public void setRequest(DataMessage request) {
 		this.request = request;
-		if (!StringUtils.isEmpty(request.getSessionId())) {
+		if (request != null && !StringUtils.isEmpty(request.getSessionId())) {
 			setSessionId(request.getSessionId());
 		}
 	}

@@ -47,6 +47,10 @@ public class DefaultCacheStorage implements NestedStorage {
 		if (!index.containsKey(data.getKey())) {
 			// Store the data
 			if (index.size() == size) {
+				// Storage is full
+				if (getInnerStorage() == null) {
+					throw new OutOfSpaceException();
+				}
 				String old = recentUsed.remove(0);
 				index.remove(old);
 			}

@@ -11,7 +11,7 @@ import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.NodeState;
 import edu.clarkson.gdc.simulator.framework.NodeStateEvent;
 import edu.clarkson.gdc.simulator.framework.NodeStateListener;
-import edu.clarkson.gdc.simulator.scenario.simple.DefaultCloud;
+import edu.clarkson.gdc.simulator.scenario.latency.simple.DefaultCloud;
 
 public class ConsistentHashingDistribution implements DataBlockDistribution,
 		NodeStateListener {

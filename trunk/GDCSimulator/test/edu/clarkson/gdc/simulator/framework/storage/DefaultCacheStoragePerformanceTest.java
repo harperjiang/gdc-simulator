@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.common.Pair;
-import edu.clarkson.gdc.simulator.scenario.simple.DefaultData;
+import edu.clarkson.gdc.simulator.scenario.latency.simple.DefaultData;
 
 public class DefaultCacheStoragePerformanceTest {
 

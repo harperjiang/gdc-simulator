@@ -5,13 +5,12 @@ import edu.clarkson.gdc.simulator.framework.DataMessage;
 
 public class ClientWrite extends DataMessage {
 
-	private Data data;
-	
 	public ClientWrite(Data data) {
-		this.data = data;
+		super();
+		setLoad(data);
 	}
-	
+
 	public Data getData() {
-		return data;
+		return getLoad();
 	}
 }

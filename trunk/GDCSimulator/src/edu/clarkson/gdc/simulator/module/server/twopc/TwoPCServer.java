@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import edu.clarkson.gdc.simulator.Data;
+import edu.clarkson.gdc.simulator.common.Pair;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
@@ -15,6 +17,18 @@ import edu.clarkson.gdc.simulator.module.message.ClientWrite;
 import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
 
 public class TwoPCServer extends AbstractDataCenter {
+
+	public static final String READ_DATA = "read_data";
+
+	public static final String WRITE_DATA = "write_data";
+
+	public static final String SEND_VOTE = "send_vote";
+
+	public static final String RECEIVE_VOTE = "receive_vote";
+
+	public static final String SEND_FINALIZE = "send_finalize";
+
+	public static final String RECEIVE_FINALIZE = "receive_finalize";
 
 	protected List<Pipe> serverPipes;
 
@@ -44,8 +58,10 @@ public class TwoPCServer extends AbstractDataCenter {
 	protected void processEach(Pipe source, DataMessage message,
 			MessageRecorder recorder) {
 		if (message instanceof ClientRead) {
-			recorder.record(30l, 100l, source,
-					new ClientResponse(message, true));
+			ClientRead cr = (ClientRead) message;
+			Pair<Long, Data> readresult = getStorage().read(cr.getKey());
+			recorder.record(getCpuCost(READ_DATA), readresult.getA(), source,
+					new ClientResponse(message, readresult.getB()));
 		}
 
 		if (message instanceof ClientWrite) {
@@ -55,7 +71,7 @@ public class TwoPCServer extends AbstractDataCenter {
 				// Need some time to prepare 2-pc env
 				VoteMessage vm = new VoteMessage(message.getSessionId(),
 						cw.getData());
-				recorder.record(60l, 0l, pipe, vm);
+				recorder.record(getCpuCost(SEND_VOTE), 0l, pipe, vm);
 			}
 			Session session = sessionManager.createSession(message
 					.getSessionId());
@@ -66,8 +82,8 @@ public class TwoPCServer extends AbstractDataCenter {
 		if (message instanceof VoteMessage) {
 			// TODO Always accept?
 			VoteMessage vote = (VoteMessage) message;
-			// This time is the same as IsolatedServer
-			recorder.record(40l, 120l, source, new VoteResponse(vote, true));
+			recorder.record(getCpuCost(RECEIVE_VOTE), getStorage()
+					.getWriteTime(), source, new VoteResponse(vote, true));
 		}
 		if (message instanceof VoteResponse) {
 			VoteResponse vr = (VoteResponse) message;
@@ -77,8 +93,9 @@ public class TwoPCServer extends AbstractDataCenter {
 				tran.receiveResponse(vr.isAccept());
 				if (tran.canFinalize()) {
 					for (Pipe pipe : serverPipes) {
-						recorder.record(30l, 0l, pipe, new FinalizeMessage(
-								message.getSessionId(), tran.canCommit()));
+						recorder.record(getCpuCost(SEND_FINALIZE), 0l, pipe,
+								new FinalizeMessage(message.getSessionId(),
+										tran.canCommit()));
 					}
 				}
 			}
@@ -86,11 +103,12 @@ public class TwoPCServer extends AbstractDataCenter {
 		if (message instanceof FinalizeMessage) {
 			FinalizeMessage fm = (FinalizeMessage) message;
 			if (fm.isCommit()) {
-				recorder.record(30l, 0l, source, new FinalizeResponse(
-						(FinalizeMessage) message));
+				recorder.record(getCpuCost(RECEIVE_FINALIZE), 0l, source,
+						new FinalizeResponse((FinalizeMessage) message));
 			} else {
 				// Rollback takes more time than commit
-				recorder.record(60l, 120l, source, new FinalizeResponse(
+				recorder.record(getCpuCost(RECEIVE_FINALIZE), getStorage()
+						.getWriteTime(), source, new FinalizeResponse(
 						(FinalizeMessage) message));
 			}
 		}
@@ -104,8 +122,8 @@ public class TwoPCServer extends AbstractDataCenter {
 					Pipe pipe = session.get(PIPE);
 					// Failed Transaction need to rollback, which requires a
 					// write time
-					recorder.record(30l, 0l, pipe, new ClientResponse(original,
-							tran.isSuccess()));
+					recorder.record(getCpuCost(WRITE_DATA), 0l, pipe,
+							new ClientResponse(original, tran.isSuccess()));
 					sessionManager.discardSession(session);
 				}
 			}
@@ -135,7 +153,7 @@ public class TwoPCServer extends AbstractDataCenter {
 		}
 
 		public boolean canFinalize() {
-			return voteCounter == 0;
+			return voteCounter == 0 || !accept;
 		}
 
 		public boolean canCommit() {

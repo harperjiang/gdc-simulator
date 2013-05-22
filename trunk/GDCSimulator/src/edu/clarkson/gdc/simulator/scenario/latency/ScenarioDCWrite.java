@@ -7,6 +7,7 @@ import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 import edu.clarkson.gdc.simulator.module.message.ClientRead;
 import edu.clarkson.gdc.simulator.module.message.ClientResponse;
 import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
@@ -20,8 +21,12 @@ public class ScenarioDCWrite {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		DefaultCacheStorage storage = new DefaultCacheStorage();
+		storage.setReadTime(50);
+		storage.setWriteTime(70);
+
 		for (int index = 1; index < 50; index++) {
-			int clientCount = 500;
+			int clientCount = 100;
 			int serverCount = index;
 
 			LatencyEnvironment env = new LatencyEnvironment();
@@ -35,8 +40,16 @@ public class ScenarioDCWrite {
 					{
 						power = 4;
 						slowPart = 0;
+
+						setCpuCost(TwoPCServer.READ_DATA, 30);
+						setCpuCost(TwoPCServer.WRITE_DATA, 30);
+						setCpuCost(TwoPCServer.SEND_VOTE, 30);
+						setCpuCost(TwoPCServer.RECEIVE_VOTE, 30);
+						setCpuCost(TwoPCServer.SEND_FINALIZE, 30);
+						setCpuCost(TwoPCServer.RECEIVE_FINALIZE, 30);
 					}
 				};
+				server.setStorage(storage);
 				env.add(server);
 				servers.add(server);
 				new Pipe(loadbalancer, server);
@@ -51,7 +64,7 @@ public class ScenarioDCWrite {
 			for (int i = 0; i < clientCount; i++) {
 				WaitClient client = new WaitClient() {
 					{
-						readRatio = 0.75f;
+						readRatio = 0.25f;
 					}
 				};
 				new Pipe(client, loadbalancer);
@@ -91,7 +104,6 @@ public class ScenarioDCWrite {
 
 						@Override
 						public void messageTimeout(NodeMessageEvent event) {
-							// TODO Auto-generated method stub
 
 						}
 					});

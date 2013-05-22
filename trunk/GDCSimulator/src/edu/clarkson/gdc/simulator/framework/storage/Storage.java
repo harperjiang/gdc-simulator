@@ -7,8 +7,16 @@ import edu.clarkson.gdc.simulator.common.Pair;
 
 public interface Storage {
 
+	/**
+	 * General Read Time
+	 * @return
+	 */
 	public long getReadTime();
 
+	/**
+	 * General Write Time
+	 * @return
+	 */
 	public long getWriteTime();
 
 	public long write(Data data);

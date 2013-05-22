@@ -5,6 +5,7 @@ import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
+import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 import edu.clarkson.gdc.simulator.module.message.ClientRead;
 import edu.clarkson.gdc.simulator.module.message.ClientResponse;
 import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
@@ -18,6 +19,10 @@ public class ScenarioStrong {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		DefaultCacheStorage storage = new DefaultCacheStorage();
+		storage.setReadTime(50);
+		storage.setWriteTime(70);
+
 		int serverCount = 5;
 		int clientCount = 100;
 
@@ -33,8 +38,16 @@ public class ScenarioStrong {
 				{
 					power = 4;
 					slowPart = 0;
+
+					setCpuCost(TwoPCServer.READ_DATA, 30);
+					setCpuCost(TwoPCServer.WRITE_DATA, 30);
+					setCpuCost(TwoPCServer.SEND_VOTE, 30);
+					setCpuCost(TwoPCServer.RECEIVE_VOTE, 30);
+					setCpuCost(TwoPCServer.SEND_FINALIZE, 30);
+					setCpuCost(TwoPCServer.RECEIVE_FINALIZE, 30);
 				}
 			};
+			tdcs[i].setStorage(storage);
 			env.add(tdcs[i]);
 			new Pipe(tdcs[i], loadbalancer);
 		}

@@ -19,6 +19,10 @@ public class ScenarioEventual {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		DefaultCacheStorage storage = new DefaultCacheStorage();
+		storage.setReadTime(50);
+		storage.setWriteTime(70);
+
 		int serverCount = 5;
 		int clientCount = 100;
 
@@ -29,17 +33,17 @@ public class ScenarioEventual {
 
 		AbstractDataCenter[] tdcs = new AbstractDataCenter[serverCount];
 
-		DefaultCacheStorage storage = new DefaultCacheStorage();
-		storage.setReadTime(5l);
-		storage.setWriteTime(10l);
-
 		for (int i = 0; i < serverCount; i++) {
 			tdcs[i] = new IsolateServer() {
 				{
 					power = 4;
 					slowPart = 0;
+					
+					setCpuCost(IsolateServer.READ_DATA, 30);
+					setCpuCost(IsolateServer.WRITE_DATA, 35);
 				}
 			};
+			tdcs[i].setStorage(storage);
 			env.add(tdcs[i]);
 			new Pipe(tdcs[i], loadbalancer);
 		}

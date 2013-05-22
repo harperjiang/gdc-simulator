@@ -7,6 +7,7 @@ import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 import edu.clarkson.gdc.simulator.module.message.ClientResponse;
 import edu.clarkson.gdc.simulator.module.server.LoadBalancer;
 import edu.clarkson.gdc.simulator.module.server.isolate.IsolateServer;
@@ -17,7 +18,10 @@ public class ScenarioMultiDCRead {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		for (int serverCount = 5; serverCount < 6; serverCount++) {
+		DefaultCacheStorage storage = new DefaultCacheStorage();
+		storage.setReadTime(50);
+		storage.setWriteTime(70);
+		for (int serverCount = 1; serverCount < 20; serverCount++) {
 			int clientCount = 100;
 
 			LatencyEnvironment env = new LatencyEnvironment();
@@ -30,8 +34,12 @@ public class ScenarioMultiDCRead {
 					{
 						power = 4;
 						slowPart = 0;
+
+						setCpuCost(IsolateServer.READ_DATA, 30);
+						setCpuCost(IsolateServer.WRITE_DATA, 35);
 					}
 				};
+				server.setStorage(storage);
 				server.setId(String.valueOf(i));
 				env.add(server);
 				new Pipe(loadbalancer, server);
@@ -72,7 +80,7 @@ public class ScenarioMultiDCRead {
 						@Override
 						public void messageTimeout(NodeMessageEvent event) {
 							// TODO Auto-generated method stub
-							
+
 						}
 					});
 

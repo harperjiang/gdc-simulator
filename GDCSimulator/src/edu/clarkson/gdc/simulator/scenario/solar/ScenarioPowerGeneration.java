@@ -1,13 +1,10 @@
 package edu.clarkson.gdc.simulator.scenario.solar;
 
 import java.awt.geom.Point2D;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.clarkson.gdc.simulator.framework.Environment;
-import edu.clarkson.gdc.simulator.scenario.SectionAverager;
-import edu.clarkson.gdc.simulator.scenario.SectionAverager.Section;
 
 public class ScenarioPowerGeneration {
 

@@ -9,4 +9,12 @@ public class ClientRead extends DataMessage {
 		super();
 		setSessionId(UUID.randomUUID().toString());
 	}
+
+	public String getKey() {
+		return getLoad();
+	}
+
+	public void setKey(String key) {
+		setLoad(key);
+	}
 }

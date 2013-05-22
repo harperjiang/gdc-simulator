@@ -4,6 +4,7 @@ import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 import edu.clarkson.gdc.simulator.module.message.ClientRead;
 import edu.clarkson.gdc.simulator.module.message.ClientResponse;
 import edu.clarkson.gdc.simulator.module.server.isolate.IsolateServer;
@@ -15,6 +16,10 @@ public class ScenarioSingleDCRead {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		DefaultCacheStorage storage = new DefaultCacheStorage();
+		storage.setReadTime(50);
+		storage.setWriteTime(70);
+
 		for (int clientCount = 1; clientCount < 100; clientCount++) {
 			LatencyEnvironment env = new LatencyEnvironment();
 
@@ -22,8 +27,12 @@ public class ScenarioSingleDCRead {
 				{
 					power = 4;
 					slowPart = 0;
+
+					setCpuCost(IsolateServer.READ_DATA, 30);
+					setCpuCost(IsolateServer.WRITE_DATA, 35);
 				}
 			};
+			server.setStorage(storage);
 			env.add(server);
 
 			for (int i = 0; i < clientCount; i++) {
@@ -65,7 +74,6 @@ public class ScenarioSingleDCRead {
 
 						@Override
 						public void messageTimeout(NodeMessageEvent event) {
-							// TODO Auto-generated method stub
 
 						}
 					});

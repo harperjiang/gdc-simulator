@@ -1,4 +1,7 @@
-package edu.clarkson.gdc.simulator.scenario.latency;
+package edu.clarkson.gdc.simulator.scenario.readwrite;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
@@ -7,10 +10,12 @@ import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 import edu.clarkson.gdc.simulator.module.message.ClientRead;
 import edu.clarkson.gdc.simulator.module.message.ClientResponse;
-import edu.clarkson.gdc.simulator.module.server.isolate.IsolateServer;
+import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
+import edu.clarkson.gdc.simulator.module.server.LoadBalancer;
+import edu.clarkson.gdc.simulator.module.server.twopc.TwoPCServer;
 import edu.clarkson.gdc.simulator.scenario.Averager;
 
-public class ScenarioSingleDCRead {
+public class ScenarioDCWrite {
 
 	/**
 	 * @param args
@@ -20,24 +25,49 @@ public class ScenarioSingleDCRead {
 		storage.setReadTime(50);
 		storage.setWriteTime(70);
 
-		for (int clientCount = 1; clientCount < 100; clientCount++) {
+		for (int index = 1; index < 50; index++) {
+			int clientCount = 100;
+			int serverCount = index;
+
 			LatencyEnvironment env = new LatencyEnvironment();
 
-			IsolateServer server = new IsolateServer() {
-				{
-					power = 4;
-					slowPart = 0;
+			LoadBalancer loadbalancer = new LoadBalancer();
+			env.add(loadbalancer);
 
-					setCpuCost(IsolateServer.READ_DATA, 30);
-					setCpuCost(IsolateServer.WRITE_DATA, 35);
+			List<AbstractDataCenter> servers = new ArrayList<AbstractDataCenter>();
+			for (int i = 0; i < serverCount; i++) {
+				AbstractDataCenter server = new TwoPCServer() {
+					{
+						power = 4;
+						slowPart = 0;
+
+						setCpuCost(TwoPCServer.READ_DATA, 30);
+						setCpuCost(TwoPCServer.WRITE_DATA, 30);
+						setCpuCost(TwoPCServer.SEND_VOTE, 30);
+						setCpuCost(TwoPCServer.RECEIVE_VOTE, 30);
+						setCpuCost(TwoPCServer.SEND_FINALIZE, 30);
+						setCpuCost(TwoPCServer.RECEIVE_FINALIZE, 30);
+					}
+				};
+				server.setStorage(storage);
+				env.add(server);
+				servers.add(server);
+				new Pipe(loadbalancer, server);
+			}
+			for (int i = 0; i < serverCount; i++) {
+				for (int j = i + 1; j < serverCount; j++) {
+					// Assume a relative high latency between data centers
+					new Pipe(servers.get(i), servers.get(j), 20);
 				}
-			};
-			server.setStorage(storage);
-			env.add(server);
+			}
 
 			for (int i = 0; i < clientCount; i++) {
-				WaitClient client = new WaitClient();
-				new Pipe(client, server);
+				WaitClient client = new WaitClient() {
+					{
+						readRatio = 0.25f;
+					}
+				};
+				new Pipe(client, loadbalancer);
 				env.add(client);
 				client.addListener(NodeMessageListener.class,
 						env.getProbe(NodeMessageListener.class));
@@ -80,9 +110,10 @@ public class ScenarioSingleDCRead {
 
 			env.run(86400l);
 
-			System.out.println(clientCount + "\t" + all.getAverage() + "\t"
-					+ all.getCount() + "\t" + read.getAverage() + "\t"
-					+ write.getAverage());
+			System.out.println(serverCount + "\t" + all.getAverage() + "\t"
+					+ read.getAverage() + "\t" + write.getAverage() + "\t"
+					+ read.getCount() + "\t" + write.getCount());
 		}
 	}
+
 }

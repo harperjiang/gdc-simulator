@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.scenario.latency;
+package edu.clarkson.gdc.simulator.scenario.readwrite;
 
 import java.util.Random;
 

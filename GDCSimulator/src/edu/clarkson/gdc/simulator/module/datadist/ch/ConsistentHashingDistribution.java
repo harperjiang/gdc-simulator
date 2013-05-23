@@ -6,14 +6,14 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 
 import edu.clarkson.gdc.simulator.Cloud;
-import edu.clarkson.gdc.simulator.DataBlockDistribution;
+import edu.clarkson.gdc.simulator.DataDistribution;
 import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.NodeState;
 import edu.clarkson.gdc.simulator.framework.NodeStateEvent;
 import edu.clarkson.gdc.simulator.framework.NodeStateListener;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.DefaultCloud;
 
-public class ConsistentHashingDistribution implements DataBlockDistribution,
+public class ConsistentHashingDistribution implements DataDistribution,
 		NodeStateListener {
 
 	private ConsistentHashing hashing;

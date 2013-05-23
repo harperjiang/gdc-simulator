@@ -20,19 +20,30 @@ import edu.clarkson.gdc.simulator.framework.Pipe;
  */
 public abstract class RandomClient extends AbstractClient {
 
-	protected double readRatio = 1;
+	protected double readRatio;
 
-	protected long interval = 25;
+	protected long interval;
 
-	protected long timeout = -1;
+	protected long timeout;
 
-	protected boolean waitResponse = false;
+	protected boolean waitResponse;
 
 	private Random random = new Random(System.currentTimeMillis() * hashCode());
 
 	private transient boolean waiting = false;
 
 	private transient long start;
+
+	public RandomClient(double rr, long ntrvl, long tmot, boolean wr) {
+		this.readRatio = rr;
+		this.interval = ntrvl;
+		this.timeout = tmot;
+		this.waitResponse = wr;
+	}
+
+	public RandomClient() {
+		this(1f, 25, -1, true);
+	}
 
 	@Override
 	protected void processNew(MessageRecorder recorder) {

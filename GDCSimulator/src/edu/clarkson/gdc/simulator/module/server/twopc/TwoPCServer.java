@@ -11,9 +11,9 @@ import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.session.Session;
 import edu.clarkson.gdc.simulator.framework.session.SessionManager;
-import edu.clarkson.gdc.simulator.module.message.ClientRead;
-import edu.clarkson.gdc.simulator.module.message.ClientResponse;
-import edu.clarkson.gdc.simulator.module.message.ClientWrite;
+import edu.clarkson.gdc.simulator.module.message.KeyRead;
+import edu.clarkson.gdc.simulator.module.message.KeyResponse;
+import edu.clarkson.gdc.simulator.module.message.KeyWrite;
 import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
 
 public class TwoPCServer extends AbstractDataCenter {
@@ -57,15 +57,15 @@ public class TwoPCServer extends AbstractDataCenter {
 	@Override
 	protected void processEach(Pipe source, DataMessage message,
 			MessageRecorder recorder) {
-		if (message instanceof ClientRead) {
-			ClientRead cr = (ClientRead) message;
+		if (message instanceof KeyRead) {
+			KeyRead cr = (KeyRead) message;
 			Pair<Long, Data> readresult = getStorage().read(cr.getKey());
 			recorder.record(getCpuCost(READ_DATA), readresult.getA(), source,
-					new ClientResponse(message, readresult.getB()));
+					new KeyResponse(message, readresult.getB()));
 		}
 
-		if (message instanceof ClientWrite) {
-			ClientWrite cw = (ClientWrite) message;
+		if (message instanceof KeyWrite) {
+			KeyWrite cw = (KeyWrite) message;
 			// Start 2-pc commit, send voting message
 			for (Pipe pipe : serverPipes) {
 				// Need some time to prepare 2-pc env
@@ -118,12 +118,12 @@ public class TwoPCServer extends AbstractDataCenter {
 			if (null != tran) {
 				tran.receiveAck();
 				if (tran.isFinalized()) {
-					ClientWrite original = session.get(MESSAGE);
+					KeyWrite original = session.get(MESSAGE);
 					Pipe pipe = session.get(PIPE);
 					// Failed Transaction need to rollback, which requires a
 					// write time
 					recorder.record(getCpuCost(WRITE_DATA), 0l, pipe,
-							new ClientResponse(original, tran.isSuccess()));
+							new KeyResponse(original, tran.isSuccess()));
 					sessionManager.discardSession(session);
 				}
 			}

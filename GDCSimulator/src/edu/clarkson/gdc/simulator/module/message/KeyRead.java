@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 
-public class ClientRead extends DataMessage {
-	public ClientRead() {
+public class KeyRead extends DataMessage {
+	public KeyRead() {
 		super();
 		setSessionId(UUID.randomUUID().toString());
 	}

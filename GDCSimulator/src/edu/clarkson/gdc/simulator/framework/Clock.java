@@ -59,7 +59,7 @@ public class Clock {
 			listener.stepForward(event);
 		}
 	}
-	
+
 	protected void setCounter(long counter) {
 		this.counter = counter;
 	}
@@ -71,16 +71,15 @@ public class Clock {
 		// slower
 		/*
 		 * List<Callable<Object>> tasks = new ArrayList<Callable<Object>>(); for
-		 * (Stepper stepper : steppers) tasks.add(new SendTask(stepper)); try {
-		 * threadPool.invokeAll(tasks); } catch (InterruptedException e) {
-		 * LoggerFactory.getLogger(getClass()).error(
-		 * "Task was interrupted on send phase", e); } tasks.clear(); for
 		 * (Stepper stepper : steppers) tasks.add(new ProcessTask(stepper)); try
 		 * { threadPool.invokeAll(tasks); } catch (InterruptedException e) {
 		 * LoggerFactory.getLogger(getClass()).error(
-		 * "Task was interrupted on process phase", e); }
+		 * "Task was interrupted on working phase", e); } tasks.clear(); for
+		 * (Stepper stepper : steppers) tasks.add(new SendTask(stepper)); try {
+		 * threadPool.invokeAll(tasks); } catch (InterruptedException e) {
+		 * LoggerFactory.getLogger(getClass()).error(
+		 * "Task was interrupted on sending phase", e); }
 		 */
-
 		for (Stepper stepper : steppers) {
 			stepper.work();
 		}

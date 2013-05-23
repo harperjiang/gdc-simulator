@@ -160,4 +160,9 @@ public class DefaultCacheStorage implements NestedStorage {
 	public void setSize(long size) {
 		this.size = size;
 	}
+
+	@Override
+	public long getRemaining() {
+		return size > 0 ? size - index.size() : size;
+	}
 }

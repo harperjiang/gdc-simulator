@@ -24,4 +24,6 @@ public interface Storage {
 	public long write(Collection<Data> datas);
 
 	public Pair<Long, Data> read(String key);
+	
+	public long getRemaining();
 }

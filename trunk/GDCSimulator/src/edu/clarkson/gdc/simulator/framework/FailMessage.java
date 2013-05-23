@@ -8,6 +8,11 @@ public abstract class FailMessage extends ResponseMessage {
 		super(request);
 	}
 
+	public FailMessage(DataMessage request, NodeException e) {
+		this(request);
+		exception = e;
+	}
+
 	public NodeException getException() {
 		return exception;
 	}

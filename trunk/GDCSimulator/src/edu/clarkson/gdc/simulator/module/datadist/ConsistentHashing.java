@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.module.datadist.ch;
+package edu.clarkson.gdc.simulator.module.datadist;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;

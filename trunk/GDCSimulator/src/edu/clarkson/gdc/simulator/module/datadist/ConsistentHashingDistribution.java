@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.module.datadist.ch;
+package edu.clarkson.gdc.simulator.module.datadist;
 
 import java.util.ArrayList;
 import java.util.List;

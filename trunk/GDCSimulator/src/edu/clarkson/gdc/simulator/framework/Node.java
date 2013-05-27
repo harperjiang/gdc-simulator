@@ -13,7 +13,6 @@ import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.DataMessage.PathNode;
 import edu.clarkson.gdc.simulator.framework.NodeState.NodeStateMachine;
 import edu.clarkson.gdc.simulator.framework.session.Session;
@@ -52,6 +51,8 @@ public abstract class Node extends Component {
 
 	protected Logger logger;
 
+	private Random random = new Random(System.currentTimeMillis());
+
 	protected int power = 1;
 
 	protected int capacity = -1;
@@ -77,7 +78,7 @@ public abstract class Node extends Component {
 	protected Pipe getSelfPipe() {
 		return selfPipe;
 	}
-	
+
 	protected Map<Pipe, List<DataMessage>> collectInput() {
 		Map<Pipe, List<DataMessage>> events = new HashMap<Pipe, List<DataMessage>>();
 		for (Pipe inputPipe : pipes.values()) {
@@ -85,7 +86,7 @@ public abstract class Node extends Component {
 			if (!input.isEmpty()) {
 				events.put(inputPipe, input);
 				for (DataMessage message : input) {
-					message.access(new PathNode(this, getClock().getCounter()));
+					message.access(this, getClock().getCounter());
 					fireMessageReceived(message);
 				}
 			}
@@ -135,8 +136,7 @@ public abstract class Node extends Component {
 						for (DataMessage msg : entry.getValue()) {
 							FailMessage fail = new NodeFailMessage(msg,
 									stateMachine.getException());
-							fail.access(new PathNode(this, getClock()
-									.getCounter()));
+							fail.access(this, getClock().getCounter());
 							entry.getKey().put(this, fail);
 						}
 					}
@@ -144,15 +144,15 @@ public abstract class Node extends Component {
 				// In exception status, messages that waiting for process
 				// will be emptied, error returned
 				for (ProcessResult pr : cpuBuffer) {
-					FailMessage fail = new NodeFailMessage(pr.message,
+					FailMessage fail = new NodeInterruptMessage(pr.message,
 							stateMachine.getException());
-					fail.access(new PathNode(this, getClock().getCounter()));
+					fail.access(this, getClock().getCounter());
 					pr.getPipe().put(this, fail);
 				}
 				for (ProcessResult pr : ioBuffer) {
-					FailMessage fail = new NodeFailMessage(pr.message,
+					FailMessage fail = new NodeInterruptMessage(pr.message,
 							stateMachine.getException());
-					fail.access(new PathNode(this, getClock().getCounter()));
+					fail.access(this, getClock().getCounter());
 					pr.getPipe().put(this, fail);
 				}
 				cpuBuffer.clear();
@@ -182,8 +182,6 @@ public abstract class Node extends Component {
 				newBuffer.addAll(results);
 
 				// Decrease cpu count until power is used up
-				Random random = new Random(System.currentTimeMillis()
-						* recorder.hashCode());
 				/*
 				 * With more requests to process, higher possibility to slow
 				 * down. This is simulated by adding a random delay
@@ -320,8 +318,20 @@ public abstract class Node extends Component {
 		return null;
 	}
 
-	protected int getPower() {
+	public int getPower() {
 		return power;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public void setPower(int power) {
+		this.power = power;
 	}
 
 	protected void fireMessageSent(DataMessage message) {

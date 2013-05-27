@@ -1,15 +1,17 @@
-package edu.clarkson.gdc.simulator;
+package edu.clarkson.gdc.simulator.framework;
 
 import java.util.List;
 
-public interface DataBlockDistribution {
+import edu.clarkson.gdc.simulator.DataCenter;
+
+public interface DataDistribution {
 
 	/**
 	 * Initialize the distribution of blocks on cloud
 	 * 
 	 * @param cloud
 	 */
-	public void init(Cloud cloud);
+	public void init(Environment env, List<DataCenter> dcs);
 
 	/**
 	 * Determine which server(s) will this existing key be found on
@@ -18,9 +20,10 @@ public interface DataBlockDistribution {
 	 * @return the id of data center that contains this key
 	 */
 	public List<String> locate(String key);
-	
+
 	/**
 	 * Determine which server(s) should this new key be placed to
+	 * 
 	 * @param key
 	 * @return
 	 */

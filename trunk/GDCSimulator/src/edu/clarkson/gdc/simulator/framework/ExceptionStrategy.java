@@ -1,6 +1,5 @@
-package edu.clarkson.gdc.simulator;
+package edu.clarkson.gdc.simulator.framework;
 
-import edu.clarkson.gdc.simulator.framework.NodeException;
 
 /**
  * ExceptionStrategy is introduced to simulate unexpected exception when

@@ -3,12 +3,9 @@ package edu.clarkson.gdc.simulator.module.datadist;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.Validate;
-
-import edu.clarkson.gdc.simulator.Cloud;
-import edu.clarkson.gdc.simulator.DataDistribution;
 import edu.clarkson.gdc.simulator.DataCenter;
-import edu.clarkson.gdc.simulator.scenario.latency.simple.DefaultCloud;
+import edu.clarkson.gdc.simulator.framework.DataDistribution;
+import edu.clarkson.gdc.simulator.framework.Environment;
 
 /**
  * 
@@ -20,11 +17,10 @@ import edu.clarkson.gdc.simulator.scenario.latency.simple.DefaultCloud;
 public class UniformDistribution implements DataDistribution {
 
 	@Override
-	public void init(Cloud cloud) {
-		Validate.isTrue(cloud instanceof DefaultCloud);
+	public void init(Environment env, List<DataCenter> dcs) {
 		// Init Key Allocation Between Data Centers
 		dcids = new ArrayList<String>();
-		for (DataCenter dc : cloud.getDataCenters())
+		for (DataCenter dc : dcs)
 			dcids.add(dc.getId());
 	}
 

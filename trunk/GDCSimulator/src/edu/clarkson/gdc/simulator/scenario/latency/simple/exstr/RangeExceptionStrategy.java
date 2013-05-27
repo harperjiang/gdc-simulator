@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.clarkson.gdc.simulator.ExceptionStrategy;
+import edu.clarkson.gdc.simulator.framework.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.NodeException;
 import edu.clarkson.gdc.simulator.framework.StrategyException;
 import edu.clarkson.gdc.simulator.framework.utils.FileCursor;

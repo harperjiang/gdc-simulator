@@ -3,12 +3,14 @@ package edu.clarkson.gdc.simulator.scenario.latency.readwrite;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.commons.lang.time.StopWatch;
+
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
-import edu.clarkson.gdc.simulator.module.message.ClientResponse;
+import edu.clarkson.gdc.simulator.module.message.KeyResponse;
 import edu.clarkson.gdc.simulator.module.server.LoadBalancer;
 import edu.clarkson.gdc.simulator.module.server.isolate.IsolateServer;
 
@@ -63,8 +65,8 @@ public class ScenarioMultiDCRead {
 						@Override
 						public void messageReceived(NodeMessageEvent event) {
 							if (event.getSource() instanceof Client
-									&& event.getMessage() instanceof ClientResponse) {
-								ClientResponse resp = (ClientResponse) event
+									&& event.getMessage() instanceof KeyResponse) {
+								KeyResponse resp = (KeyResponse) event
 										.getMessage();
 								messageCount.incrementAndGet();
 								timeCount.addAndGet(resp.getReceiveTime()
@@ -84,10 +86,13 @@ public class ScenarioMultiDCRead {
 						}
 					});
 
-			env.run(86400l);
-
+			StopWatch watch = new StopWatch();
+			watch.start();
+			env.run(864000l);
+			watch.stop();
 			System.out.println(serverCount + "\t" + timeCount.get()
 					/ messageCount.get() + "\t" + messageCount.get());
+			System.out.println(watch.getTime());
 		}
 	}
 }

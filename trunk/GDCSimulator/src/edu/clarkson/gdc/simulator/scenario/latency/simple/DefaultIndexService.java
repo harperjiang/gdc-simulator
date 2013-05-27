@@ -2,15 +2,10 @@ package edu.clarkson.gdc.simulator.scenario.latency.simple;
 
 import java.awt.geom.Point2D;
 import java.text.MessageFormat;
-import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.clarkson.gdc.simulator.Cloud;
-import edu.clarkson.gdc.simulator.DataCenter;
-import edu.clarkson.gdc.simulator.IndexService;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
@@ -28,41 +23,40 @@ import edu.clarkson.gdc.simulator.scenario.latency.simple.message.LocateDCRespon
  * @version 1.0
  * 
  */
-public class DefaultIndexService extends Node implements IndexService {
+public class DefaultIndexService extends Node {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Override
 	public String locate(String key, Object location) {
-		Point2D loc = (Point2D) location;
+		return null;
+		// Point2D loc = (Point2D) location;
 
-		if (StringUtils.isEmpty(key)) {
-			return ((DefaultCloud) getEnvironment()).getDataCenterByLocation(
-					location).getId();
-		} else {
-			// Get Distribution, compare the location
-			List<String> dcids = ((DefaultCloud) getEnvironment())
-					.getDataBlockDistribution().locate(key);
-			DataCenter minDc = null;
-			Double minVal = Double.MAX_VALUE;
-			for (String dcid : dcids) {
-				DataCenter currentDc = ((Cloud) getEnvironment())
-						.getDataCenter(dcid);
-				// Ignore Failed Data Center
-				if (null != currentDc.getExceptionStrategy().getException(
-						getClock().getCounter()))
-					continue;
-				Point2D currentLoc = (Point2D) currentDc.getLocation();
-				Double length = currentLoc.distance(loc);
-				if (length < minVal) {
-					minVal = length;
-					minDc = currentDc;
-				}
-			}
-			if (null == minDc)
-				return null;
-			return minDc.getId();
-		}
+		// if (StringUtils.isEmpty(key)) {
+		// return ((DefaultCloud) getEnvironment()).getDataCenterByLocation(
+		// location).getId();
+		// } else {
+		// // Get Distribution, compare the location
+		// List<String> dcids = ((DefaultCloud) getEnvironment())
+		// .getDataBlockDistribution().locate(key);
+		// DataCenter minDc = null;
+		// Double minVal = Double.MAX_VALUE;
+		// for (String dcid : dcids) {
+		// DataCenter currentDc = getEnvironment().getDataCenter(dcid);
+		// // Ignore Failed Data Center
+		// if (null != currentDc.getExceptionStrategy().getException(
+		// getClock().getCounter()))
+		// continue;
+		// Point2D currentLoc = (Point2D) currentDc.getLocation();
+		// Double length = currentLoc.distance(loc);
+		// if (length < minVal) {
+		// minVal = length;
+		// minDc = currentDc;
+		// }
+		// }
+		// if (null == minDc)
+		// return null;
+		// return minDc.getId();
+		// }
 	}
 
 	@Override

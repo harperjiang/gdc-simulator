@@ -2,8 +2,11 @@ package edu.clarkson.gdc.simulator.framework;
 
 import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
 import edu.clarkson.gdc.simulator.framework.utils.EventListenerProxy;
@@ -22,18 +25,28 @@ public class Environment {
 
 	private List<Component> components;
 
+	private Map<String, Component> index;
+
 	public Environment() {
 		// Create a clock
 		clock = new Clock();
 
 		components = new ArrayList<Component>();
-
+		index = new HashMap<String, Component>();
 		// Create Proxy
 		proxy = new EventListenerProxy();
 	}
 
 	public Clock getClock() {
 		return clock;
+	}
+
+	public List<Component> getComponents() {
+		return components;
+	}
+
+	public Component getComponent(String id) {
+		return index.get(id);
 	}
 
 	public void add(Component component) {
@@ -43,6 +56,8 @@ public class Environment {
 		Validate.notNull(getClock());
 		component.setEnvironment(this);
 		components.add(component);
+		if (StringUtils.isNotEmpty(component.getId()))
+			index.put(component.getId(), component);
 		getClock().register(component);
 	}
 
@@ -50,6 +65,8 @@ public class Environment {
 		Validate.notNull(getClock());
 		component.setEnvironment(null);
 		components.remove(component);
+		if (StringUtils.isNotEmpty(component.getId()))
+			index.remove(component.getId());
 		getClock().unregister(component);
 	}
 

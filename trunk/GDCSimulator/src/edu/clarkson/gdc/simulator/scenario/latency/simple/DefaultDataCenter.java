@@ -4,9 +4,9 @@ import java.awt.geom.Point2D;
 
 import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.DataCenter;
-import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.common.Pair;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
+import edu.clarkson.gdc.simulator.framework.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.storage.Storage;

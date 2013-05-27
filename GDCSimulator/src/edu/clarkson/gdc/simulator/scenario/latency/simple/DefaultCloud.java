@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import edu.clarkson.gdc.simulator.Client;
-import edu.clarkson.gdc.simulator.Cloud;
-import edu.clarkson.gdc.simulator.DataBlockDistribution;
 import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.Component;
+import edu.clarkson.gdc.simulator.framework.DataDistribution;
 import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.Node;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
@@ -17,7 +16,7 @@ import edu.clarkson.gdc.simulator.framework.NodeStateListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
 import edu.clarkson.gdc.simulator.framework.storage.WritePolicy;
-import edu.clarkson.gdc.simulator.module.datadist.ch.ConsistentHashingDistribution;
+import edu.clarkson.gdc.simulator.module.datadist.ConsistentHashingDistribution;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.cdloader.XMLFileCloudLoader;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.client.RequestIndexClient;
 
@@ -28,7 +27,7 @@ import edu.clarkson.gdc.simulator.scenario.latency.simple.client.RequestIndexCli
  * @version 1.0
  * 
  */
-public class DefaultCloud extends Environment implements Cloud {
+public class DefaultCloud extends Environment {
 
 	private DefaultCacheStorage nas;
 
@@ -79,7 +78,7 @@ public class DefaultCloud extends Environment implements Cloud {
 			dataCenterIndex.put(dc.getId(), dc);
 		}
 		// Init Data Distribution
-		getDataBlockDistribution().init(this);
+		getDataBlockDistribution().init(this, dataCenters);
 		// Register Listeners
 
 		// Create Pipes between nodes
@@ -126,24 +125,21 @@ public class DefaultCloud extends Environment implements Cloud {
 		this.unit = unit;
 	}
 
-	@Override
 	public List<DataCenter> getDataCenters() {
 		return dataCenters;
 	}
 
-	@Override
 	public DataCenter getDataCenter(String dcid) {
 		return dataCenterIndex.get(dcid);
 	}
 
-	@Override
 	public DataCenter getDataCenterByLocation(Object location) {
 		return getDataCenter(getIndexService().locate(null, location));
 	}
 
 	private DefaultIndexService indexService;
 
-	private DataBlockDistribution dataBlockDistribution;
+	private DataDistribution dataBlockDistribution;
 
 	private CloudDataLoader loader;
 
@@ -156,12 +152,11 @@ public class DefaultCloud extends Environment implements Cloud {
 		add(indexService);
 	}
 
-	public DataBlockDistribution getDataBlockDistribution() {
+	public DataDistribution getDataBlockDistribution() {
 		return dataBlockDistribution;
 	}
 
-	public void setDataBlockDistribution(
-			DataBlockDistribution dataBlockDistribution) {
+	public void setDataBlockDistribution(DataDistribution dataBlockDistribution) {
 		this.dataBlockDistribution = dataBlockDistribution;
 	}
 

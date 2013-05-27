@@ -8,8 +8,8 @@ import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
-import edu.clarkson.gdc.simulator.module.message.ClientRead;
-import edu.clarkson.gdc.simulator.module.message.ClientResponse;
+import edu.clarkson.gdc.simulator.module.message.KeyRead;
+import edu.clarkson.gdc.simulator.module.message.KeyResponse;
 import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
 import edu.clarkson.gdc.simulator.module.server.LoadBalancer;
 import edu.clarkson.gdc.simulator.module.server.twopc.TwoPCServer;
@@ -83,13 +83,13 @@ public class ScenarioDCWrite {
 						@Override
 						public void messageReceived(NodeMessageEvent event) {
 							if (event.getSource() instanceof Client
-									&& event.getMessage() instanceof ClientResponse) {
-								ClientResponse resp = (ClientResponse) event
+									&& event.getMessage() instanceof KeyResponse) {
+								KeyResponse resp = (KeyResponse) event
 										.getMessage();
 								long time = resp.getReceiveTime()
 										- resp.getRequest().getSendTime();
 								all.add(time);
-								if (resp.getRequest() instanceof ClientRead) {
+								if (resp.getRequest() instanceof KeyRead) {
 									read.add(time);
 								} else {
 									write.add(time);

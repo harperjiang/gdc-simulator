@@ -6,8 +6,8 @@ import edu.clarkson.gdc.simulator.DataCenter;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.module.client.AbstractClient;
-import edu.clarkson.gdc.simulator.module.message.ClientRead;
-import edu.clarkson.gdc.simulator.module.message.ClientWrite;
+import edu.clarkson.gdc.simulator.module.message.KeyRead;
+import edu.clarkson.gdc.simulator.module.message.KeyWrite;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.DefaultData;
 
 public class HurryClient extends AbstractClient {
@@ -23,9 +23,9 @@ public class HurryClient extends AbstractClient {
 		if (0 != random.nextInt((int) interval))
 			return;
 		if (random.nextDouble() < readRatio) {
-			recorder.record(getServerPipe(), new ClientRead());
+			recorder.record(getServerPipe(), new KeyRead());
 		} else {
-			recorder.record(getServerPipe(), new ClientWrite(new DefaultData(
+			recorder.record(getServerPipe(), new KeyWrite(new DefaultData(
 					"key")));
 		}
 	}

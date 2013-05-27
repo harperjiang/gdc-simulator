@@ -64,6 +64,10 @@ public class DataMessage {
 	public void access(PathNode node) {
 		this.paths.push(node);
 	}
+	
+	public void access(Node node, long clock) {
+		access(new PathNode(node,clock));
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T getLoad() {

@@ -7,9 +7,9 @@ import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.ResponseMessage;
 import edu.clarkson.gdc.simulator.framework.SelfPipe;
-import edu.clarkson.gdc.simulator.module.message.ClientRead;
-import edu.clarkson.gdc.simulator.module.message.ClientResponse;
-import edu.clarkson.gdc.simulator.module.message.ClientWrite;
+import edu.clarkson.gdc.simulator.module.message.KeyRead;
+import edu.clarkson.gdc.simulator.module.message.KeyResponse;
+import edu.clarkson.gdc.simulator.module.message.KeyWrite;
 import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;
 import edu.clarkson.gdc.simulator.scenario.latency.tact.message.ServerPull;
 import edu.clarkson.gdc.simulator.scenario.latency.tact.message.ServerPullResponse;
@@ -53,17 +53,17 @@ public class TACTDataCenter extends AbstractDataCenter {
 	@Override
 	protected void processEach(Pipe source, DataMessage message,
 			MessageRecorder recorder) {
-		if (message instanceof ClientRead) {
+		if (message instanceof KeyRead) {
 			// Consume some time
-			ResponseMessage response = new ClientResponse(message);
+			ResponseMessage response = new KeyResponse(message);
 			recorder.record(readcpu, readio, source, response);
 		}
-		if (message instanceof ClientWrite) {
+		if (message instanceof KeyWrite) {
 			// Add new operation
 			Operation operation = new Operation(getClock().getCounter(), index,
 					message);
 			core.add(operation);
-			recorder.record(writecpu, writeio, source, new ClientResponse(
+			recorder.record(writecpu, writeio, source, new KeyResponse(
 					message));
 		}
 		if (message instanceof ServerPush) {

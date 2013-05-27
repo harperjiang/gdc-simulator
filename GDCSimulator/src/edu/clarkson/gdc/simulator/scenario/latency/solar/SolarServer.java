@@ -2,8 +2,8 @@ package edu.clarkson.gdc.simulator.scenario.latency.solar;
 
 import java.awt.geom.Point2D;
 
-import edu.clarkson.gdc.simulator.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
+import edu.clarkson.gdc.simulator.framework.ExceptionStrategy;
 import edu.clarkson.gdc.simulator.framework.NodeException;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.module.server.AbstractDataCenter;

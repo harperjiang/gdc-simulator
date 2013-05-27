@@ -2,14 +2,13 @@ package edu.clarkson.gdc.simulator.framework.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.common.Pair;
-import edu.clarkson.gdc.simulator.framework.storage.DefaultCacheStorage;
-import edu.clarkson.gdc.simulator.framework.storage.WritePolicy;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.DefaultData;
 
 public class DefaultCacheStorageTest {
@@ -68,10 +67,10 @@ public class DefaultCacheStorageTest {
 	@Test
 	public void testRead() {
 		// Read a non existing data should not return null
-		Pair<Long,Data> result = cache.read("aka");
+		Pair<Long, Data> result = cache.read("aka");
 		assertNotNull(result);
-		assertEquals(new Long(555),result.getA());
-		
+		assertEquals(new Long(555), result.getA());
+
 		cache.setWritePolicy(WritePolicy.WRITE_THROUGH);
 		for (int i = 0; i < 26; i++)
 			cache.write(new DefaultData("" + i));
@@ -91,7 +90,19 @@ public class DefaultCacheStorageTest {
 	}
 
 	@Test
-	public void testPerformace() {
-		
+	public void testException() {
+		DefaultCacheStorage storage = new DefaultCacheStorage();
+		storage.setSize(5);
+		storage.write(new DefaultData("A"));
+		storage.write(new DefaultData("B"));
+		storage.write(new DefaultData("C"));
+		storage.write(new DefaultData("D"));
+		storage.write(new DefaultData("E"));
+		try {
+			storage.write(new DefaultData("F"));
+			fail("Over Size");
+		} catch (OutOfSpaceException e) {
+
+		}
 	}
 }

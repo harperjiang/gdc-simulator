@@ -7,11 +7,6 @@ public class KeyResponse extends ResponseMessage {
 
 	private int response;
 
-	public static final int SUCCESS = 0;
-	public static final int READ_NOTFOUND = 1;
-	public static final int WRITE_FULL = 2;
-	public static final int WRITE_NOTENOUGHCOPY = 3;
-
 	public KeyResponse(DataMessage request) {
 		this(request, null);
 	}

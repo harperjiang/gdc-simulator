@@ -20,7 +20,7 @@ public class ScenarioReadMyWrite {
 			int interval) {
 		Environment env = new Environment();
 
-		Gateway gw = new Gateway();
+		KeyGateway gw = new KeyGateway();
 		env.add(gw);
 
 		for (int i = 0; i < wdcCount; i++) {

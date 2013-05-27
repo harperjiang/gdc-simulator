@@ -13,10 +13,11 @@ import edu.clarkson.gdc.simulator.framework.DataDistribution;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.FailMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
+import edu.clarkson.gdc.simulator.framework.NodeFailMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.framework.session.Session;
 import edu.clarkson.gdc.simulator.framework.session.SessionManager;
-import edu.clarkson.gdc.simulator.framework.storage.OutOfSpaceException;
+import edu.clarkson.gdc.simulator.module.message.KeyException;
 import edu.clarkson.gdc.simulator.module.message.KeyRead;
 import edu.clarkson.gdc.simulator.module.message.KeyResponse;
 import edu.clarkson.gdc.simulator.module.message.KeyWrite;
@@ -24,6 +25,8 @@ import edu.clarkson.gdc.simulator.module.message.KeyWrite;
 public class KeyGateway extends Node {
 
 	public static final int UNLIMITED = Integer.MAX_VALUE;
+
+	public static final String PIPE = "pipe";
 
 	public static final String CLIENT_READ_COUNT = "client_read_count";
 
@@ -65,6 +68,7 @@ public class KeyGateway extends Node {
 						.getSessionId());
 				// Send request to each data center
 				session.put(CLIENT_READ_COUNT, servers.size());
+				session.put(PIPE, source);
 				for (String serverId : servers) {
 					Pipe pipe = getPipe((Node) getEnvironment().getComponent(
 							serverId));
@@ -72,8 +76,8 @@ public class KeyGateway extends Node {
 					recorder.record(pipe, read);
 				}
 			} else {
-				recorder.record(source, new KeyResponse(read,
-						KeyResponse.READ_NOTFOUND, null));
+				recorder.record(source, new NodeFailMessage(read,
+						new KeyException(this, KeyException.READ_NOTFOUND)));
 			}
 		}
 		if (message instanceof KeyWrite) {
@@ -81,12 +85,14 @@ public class KeyGateway extends Node {
 			List<String> servers = getDistribution().choose(
 					write.getData().getKey());
 			if (servers.size() < writeCopy) {
-				recorder.record(source, new KeyResponse(write,
-						KeyResponse.WRITE_NOTENOUGHCOPY, null));
+				recorder.record(source,
+						new NodeFailMessage(write, new KeyException(this,
+								KeyException.WRITE_NOTENOUGHCOPY)));
 			} else {
 				Session session = sessionManager.createSession(write
 						.getSessionId());
 				session.put(CLIENT_WRITE_COUNT, 0);
+				session.put(PIPE, source);
 				// Write to the first server
 				String id = servers.remove(0);
 				session.put(CLIENT_WRITE_REMAIN, servers);
@@ -96,15 +102,61 @@ public class KeyGateway extends Node {
 		}
 		if (message instanceof FailMessage) {
 			FailMessage fail = (FailMessage) message;
-			if (fail.getRequest() instanceof KeyRead) {
-
+			Session session = sessionManager.getSession(fail.getSessionId());
+			if (fail.getRequest() instanceof KeyRead && null != session) {
+				// Decrease the wait count
+				// If none successful message ever arrived
+				int readCount = session.get(CLIENT_READ_COUNT);
+				if (readCount == 1) {
+					Pipe pipe = session.get(PIPE);
+					recorder.record(pipe, fail);
+					sessionManager.discardSession(session);
+				} else {
+					session.put(CLIENT_READ_COUNT, readCount - 1);
+				}
 			}
-			if (fail.getRequest() instanceof KeyWrite) {
 
+			if (fail.getRequest() instanceof KeyWrite && null != session) {
+				// Send message to next server
+				List<String> remain = session.get(CLIENT_WRITE_REMAIN);
+				int success = session.get(CLIENT_WRITE_COUNT);
+				if (remain.size() < getWriteCopy() - success) {
+					// Cannot success, return fail
+					Pipe pipe = session.get(PIPE);
+					recorder.record(pipe, fail);
+					sessionManager.discardSession(session);
+				} else {
+					String nextId = remain.remove(0);
+					Pipe pipe = getPipe((Node) getEnvironment().getComponent(
+							nextId));
+					recorder.record(pipe, fail.getRequest());
+				}
 			}
 		}
 		if (message instanceof KeyResponse) {
 			KeyResponse response = (KeyResponse) message;
+			Session session = sessionManager
+					.getSession(response.getSessionId());
+			if (response.getRequest() instanceof KeyRead && null != session) {
+				Pipe pipe = session.get(PIPE);
+				recorder.record(pipe, new KeyResponse(response.getRequest()));
+				sessionManager.discardSession(session);
+			}
+			if (response.getRequest() instanceof KeyWrite && null != session) {
+				int count = session.get(CLIENT_WRITE_COUNT);
+				if (count >= getWriteCopy()) {
+					Pipe pipe = session.get(PIPE);
+					recorder.record(pipe,
+							new KeyResponse(response.getRequest()));
+				} else {
+					session.put(CLIENT_WRITE_COUNT, count++);
+					List<String> remain = session.get(CLIENT_WRITE_REMAIN);
+					String nextId = remain.remove(0);
+					Pipe pipe = getPipe((Node) getEnvironment().getComponent(
+							nextId));
+					recorder.record(pipe, response.getRequest());
+				}
+			}
 		}
 	}
 

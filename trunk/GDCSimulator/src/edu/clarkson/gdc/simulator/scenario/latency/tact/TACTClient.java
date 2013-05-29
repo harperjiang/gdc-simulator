@@ -14,14 +14,15 @@ public class TACTClient extends RandomClient {
 	}
 
 	@Override
-	protected void genRead(MessageRecorder recorder) {
+	protected boolean genRead(MessageRecorder recorder) {
 		recorder.record(getServerPipe(), new KeyRead());
+		return true;
 	}
 
 	@Override
-	protected void genWrite(MessageRecorder recorder) {
-		recorder.record(getServerPipe(),
-				new KeyWrite(new DefaultData("key")));
+	protected boolean genWrite(MessageRecorder recorder) {
+		recorder.record(getServerPipe(), new KeyWrite(new DefaultData("key")));
+		return true;
 	}
 
 }

@@ -37,7 +37,7 @@ public class ScenarioReadMyWrite {
 		}
 
 		for (int i = 0; i < wcCount; i++) {
-			WorkloadClient wc = new WorkloadClient(i, readratio, interval);
+			ReadMyWriteClient wc = new ReadMyWriteClient(i, readratio, interval);
 			env.add(wc);
 			wc.addListener(NodeMessageListener.class,
 					env.getProbe(NodeMessageListener.class));

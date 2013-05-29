@@ -143,6 +143,14 @@ public class KeyGateway extends Node {
 				sessionManager.discardSession(session);
 			}
 			if (response.getRequest() instanceof KeyWrite && null != session) {
+				// Record key to server
+				String key = ((KeyWrite) response.getRequest()).getData()
+						.getKey();
+				if (!keyToServer.containsKey(key)) {
+					keyToServer.put(key, new ArrayList<String>());
+				}
+				keyToServer.get(key).add(response.getOrigin().getId());
+				// Send next message
 				int count = session.get(CLIENT_WRITE_COUNT);
 				if (count >= getWriteCopy() - 1) {
 					Pipe pipe = session.get(PIPE);

@@ -17,9 +17,11 @@ import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.FailMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
+import edu.clarkson.gdc.simulator.framework.NodeFailMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.module.client.AbstractClient;
 import edu.clarkson.gdc.simulator.module.message.KeyException;
+import edu.clarkson.gdc.simulator.module.message.KeyRead;
 import edu.clarkson.gdc.simulator.module.message.KeyResponse;
 import edu.clarkson.gdc.simulator.module.message.KeyWrite;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.DefaultData;
@@ -86,8 +88,12 @@ public class KeyGatewayTest {
 					MessageRecorder recorder) {
 				if (message instanceof KeyWrite) {
 					keydc2.add((((KeyWrite) message).getData().getKey()));
+					recorder.record(source, new KeyResponse(message));
 				}
-				recorder.record(source, new KeyResponse(message));
+				if (message instanceof KeyRead) {
+					recorder.record(source, new NodeFailMessage(message,
+							new KeyException(this, KeyException.READ_NOTFOUND)));
+				}
 			}
 		};
 		env.add(dc2);
@@ -104,6 +110,9 @@ public class KeyGatewayTest {
 							new DefaultData("key1")));
 					recorder.record(20l, getServerPipe(), new KeyWrite(
 							new DefaultData("key2")));
+					KeyRead read = new KeyRead();
+					read.setKey("key2");
+					recorder.record(40l, getServerPipe(), read);
 				}
 			}
 
@@ -152,5 +161,13 @@ public class KeyGatewayTest {
 		assertTrue(message instanceof KeyResponse);
 		assertTrue(keydc1.contains("key2"));
 		assertTrue(keydc2.contains("key2"));
+
+		response.clear();
+		while (response.isEmpty()) {
+			env.getClock().tick();
+		}
+		message = response.get(0);
+		assertTrue(message instanceof KeyResponse);
+
 	}
 }

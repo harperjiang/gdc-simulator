@@ -50,12 +50,13 @@ public abstract class RandomClient extends AbstractClient {
 		if (!(waitResponse && waiting)) {
 			if (0 != random.nextInt((int) interval))
 				return;
+			boolean generated = false;
 			if (random.nextDouble() < readRatio) {
-				genRead(recorder);
+				generated = genRead(recorder);
 			} else {
-				genWrite(recorder);
+				generated = genWrite(recorder);
 			}
-			waiting = true;
+			waiting = generated;
 			start = getClock().getCounter();
 		} else {
 			if (timeout != -1 && getClock().getCounter() - start > timeout) {
@@ -65,9 +66,9 @@ public abstract class RandomClient extends AbstractClient {
 		}
 	}
 
-	protected abstract void genRead(MessageRecorder recorder);
+	protected abstract boolean genRead(MessageRecorder recorder);
 
-	protected abstract void genWrite(MessageRecorder recorder);
+	protected abstract boolean genWrite(MessageRecorder recorder);
 
 	/**
 	 * Client should override this to implement customized judge function

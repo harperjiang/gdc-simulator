@@ -53,7 +53,7 @@ public class SolarClient extends RandomClient {
 	}
 
 	@Override
-	protected void genRead(MessageRecorder recorder) {
+	protected boolean genRead(MessageRecorder recorder) {
 		// Send to the most noon
 		int nextp = (pointer + 1) % boundary.length;
 		long current = getClock().getCounter() / (1000 / TimeConstant.UNIT);
@@ -63,10 +63,12 @@ public class SolarClient extends RandomClient {
 		SolarClientRead scr = new SolarClientRead();
 		scr.setTimeout(2000);// 20s
 		recorder.record(boundary[pointer].pipe, scr);
+		return true;
 	}
 
 	@Override
-	protected void genWrite(MessageRecorder recorder) {
+	protected boolean genWrite(MessageRecorder recorder) {
+		return false;
 	}
 
 	protected static class Holder implements Comparable<Holder> {

@@ -14,16 +14,18 @@ public class WaitClient extends RandomClient {
 		setWaitResponse(true);
 	}
 
-	protected void genRead(MessageRecorder recorder) {
+	protected boolean genRead(MessageRecorder recorder) {
 		KeyRead read = new KeyRead();
 		read.setSessionId(UUID.randomUUID().toString());
 		recorder.record(getServerPipe(), read);
+		return true;
 	}
 
-	protected void genWrite(MessageRecorder recorder) {
+	protected boolean genWrite(MessageRecorder recorder) {
 		KeyWrite write = new KeyWrite(new DefaultData("key"));
 		write.setSessionId(UUID.randomUUID().toString());
 		recorder.record(getServerPipe(), write);
+		return true;
 	}
 
 }

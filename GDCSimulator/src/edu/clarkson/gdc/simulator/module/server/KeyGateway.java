@@ -82,8 +82,8 @@ public class KeyGateway extends Node {
 		}
 		if (message instanceof KeyWrite) {
 			KeyWrite write = (KeyWrite) message;
-			List<String> servers = getDistribution().choose(
-					write.getData().getKey());
+			List<String> servers = new ArrayList<String>();
+			servers.addAll(getDistribution().choose(write.getData().getKey()));
 			if (servers.size() < writeCopy) {
 				recorder.record(source,
 						new NodeFailMessage(write, new KeyException(this,
@@ -144,12 +144,13 @@ public class KeyGateway extends Node {
 			}
 			if (response.getRequest() instanceof KeyWrite && null != session) {
 				int count = session.get(CLIENT_WRITE_COUNT);
-				if (count >= getWriteCopy()) {
+				if (count >= getWriteCopy() - 1) {
 					Pipe pipe = session.get(PIPE);
 					recorder.record(pipe,
 							new KeyResponse(response.getRequest()));
+					sessionManager.discardSession(session);
 				} else {
-					session.put(CLIENT_WRITE_COUNT, count++);
+					session.put(CLIENT_WRITE_COUNT, count + 1);
 					List<String> remain = session.get(CLIENT_WRITE_REMAIN);
 					String nextId = remain.remove(0);
 					Pipe pipe = getPipe((Node) getEnvironment().getComponent(

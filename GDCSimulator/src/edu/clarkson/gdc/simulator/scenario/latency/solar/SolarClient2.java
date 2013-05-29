@@ -32,22 +32,22 @@ public class SolarClient2 extends RandomClient {
 		Arrays.sort(boundary);
 	}
 
-	
-
 	@Override
-	protected void genRead(MessageRecorder recorder) {
+	protected boolean genRead(MessageRecorder recorder) {
 		SolarClientRead scr = new SolarClientRead();
 		scr.setTimeout(2000);// 20s
-		for(Holder h: boundary) {
-			if(h.pipe.getOpponent(this).getState() == NodeState.FREE) {
+		for (Holder h : boundary) {
+			if (h.pipe.getOpponent(this).getState() == NodeState.FREE) {
 				recorder.record(h.pipe, scr);
 				break;
 			}
 		}
+		return true;
 	}
 
 	@Override
-	protected void genWrite(MessageRecorder recorder) {
+	protected boolean genWrite(MessageRecorder recorder) {
+		return false;
 	}
 
 	protected static class Holder implements Comparable<Holder> {

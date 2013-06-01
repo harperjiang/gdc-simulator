@@ -84,7 +84,7 @@ public class ScenarioReadMyWrite {
 			}
 		});
 
-		env.run(864000l);
+		env.run(86400l);
 		averager.stop();
 
 		for (Entry<String, Set<String>> entry : gw.getKeyDistribution()
@@ -99,15 +99,13 @@ public class ScenarioReadMyWrite {
 	}
 
 	public static void main(String[] args) throws Exception {
-		for (int k = 0; k < 10; k++) {
-			PrintWriter pw = new PrintWriter(new FileOutputStream(
-					"/home/harper/plot" + k));
-			for (int i = 1; i < 20; i++) {
-				pw.println(MessageFormat.format("{0}\t{1}", i,
-						new ScenarioReadMyWrite(10, 50, 1000, 10, 0.05,
-								0.75, 20, 100, i).result));
-			}
-			pw.close();
+		PrintWriter pw = new PrintWriter(new FileOutputStream(
+				"/home/harper/plot"));
+		for (int i = 2; i < 30; i++) {
+			pw.println(MessageFormat.format("{0}\t{1}", i,
+					new ScenarioReadMyWrite(i, 50, 5000, 10, 0.05, 0.75, 20,
+							100, 2).result));
 		}
+		pw.close();
 	}
 }

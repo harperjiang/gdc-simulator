@@ -1,8 +1,6 @@
 package edu.clarkson.gdc.simulator.framework.storage;
 
-import edu.clarkson.gdc.simulator.framework.NodeException;
-
-public class OutOfSpaceException extends NodeException {
+public class OutOfSpaceException extends StorageException {
 
 	/**
 	 * 

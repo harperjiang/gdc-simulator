@@ -96,7 +96,7 @@ public class DefaultCacheStorage implements NestedStorage {
 			return new Pair<Long, Data>(getReadTime(), index.get(key));
 		}
 		if (null == getInnerStorage())
-			return new Pair<Long, Data>(getReadTime(), null);
+			throw new NotFoundException();
 		Pair<Long, Data> result = getInnerStorage().read(key);
 
 		if (null != result.getB()) {

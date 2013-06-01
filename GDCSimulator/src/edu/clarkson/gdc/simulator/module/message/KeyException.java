@@ -12,6 +12,7 @@ public class KeyException extends NodeException {
 	public static final int READ_NOTFOUND = 1;
 	public static final int WRITE_FULL = 2;
 	public static final int WRITE_NOTENOUGHCOPY = 3;
+	public static final int INTERNAL = 4;
 
 	private int error;
 

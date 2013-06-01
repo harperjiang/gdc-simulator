@@ -1,8 +1,10 @@
 package edu.clarkson.gdc.simulator.scenario;
 
+import java.math.BigDecimal;
+
 public class Averager {
 
-	private long sum;
+	private BigDecimal sum;
 	private long count;
 
 	public Averager() {
@@ -11,18 +13,22 @@ public class Averager {
 
 	public void reset() {
 		count = 0;
-		sum = 0;
+		sum = BigDecimal.ZERO;
 	}
 
 	public void add(long val) {
-		count++;
-		sum += val;
+		add(new BigDecimal(val));
 	}
 
-	public long getAverage() {
+	public void add(BigDecimal val) {
+		count++;
+		sum = sum.add(val);
+	}
+
+	public BigDecimal getAverage() {
 		if (0 == count)
-			return 0;
-		return sum / count;
+			return BigDecimal.ZERO;
+		return sum.divide(new BigDecimal(count), 4, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public long getCount() {

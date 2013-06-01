@@ -237,6 +237,7 @@ public abstract class Node extends Component {
 				pr.getMessage().access(
 						new PathNode(this, getClock().getCounter()));
 				pr.getPipe().put(this, pr.getMessage());
+				fireMessageSent(pr.getMessage());
 				ioBuffer.remove(i);
 				i--;
 			} else {

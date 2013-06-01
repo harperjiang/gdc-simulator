@@ -17,6 +17,7 @@ import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.FailMessage;
 import edu.clarkson.gdc.simulator.framework.Node;
+import edu.clarkson.gdc.simulator.framework.NodeException;
 import edu.clarkson.gdc.simulator.framework.NodeFailMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
 import edu.clarkson.gdc.simulator.module.client.AbstractClient;
@@ -62,7 +63,10 @@ public class KeyGatewayTest {
 		});
 		env.add(gw);
 
-		Node dc1 = new Node() {
+		Node dc1 = new AbstractDataCenter() {
+
+			int writeCount = 0;
+			int readCount = 0;
 			{
 				setId("dc1");
 			}
@@ -71,14 +75,41 @@ public class KeyGatewayTest {
 			protected void processEach(Pipe source, DataMessage message,
 					MessageRecorder recorder) {
 				if (message instanceof KeyWrite) {
-					keydc1.add((((KeyWrite) message).getData().getKey()));
+					switch (writeCount) {
+					case 0:
+						keydc1.add((((KeyWrite) message).getData().getKey()));
+						recorder.record(source, new KeyResponse(message));
+						break;
+					case 1:
+						recorder.record(source, new NodeFailMessage(message,
+								new NodeException(this)));
+						break;
+					default:
+						break;
+					}
+					writeCount++;
+				} else {
+					switch (readCount) {
+					case 0:
+						recorder.record(source, new KeyResponse(message));
+						break;
+					case 1:
+						recorder.record(source, new NodeFailMessage(message,
+								new NodeException(this)));
+						break;
+					default:
+						break;
+					}
+					readCount++;
 				}
-				recorder.record(source, new KeyResponse(message));
 			}
 		};
 		env.add(dc1);
 
-		Node dc2 = new Node() {
+		Node dc2 = new AbstractDataCenter() {
+
+			int writeCount = 0;
+			int readCount = 0;
 			{
 				setId("dc2");
 			}
@@ -87,12 +118,32 @@ public class KeyGatewayTest {
 			protected void processEach(Pipe source, DataMessage message,
 					MessageRecorder recorder) {
 				if (message instanceof KeyWrite) {
-					keydc2.add((((KeyWrite) message).getData().getKey()));
-					recorder.record(source, new KeyResponse(message));
+					switch (writeCount) {
+					case 0:
+						keydc2.add((((KeyWrite) message).getData().getKey()));
+						recorder.record(source, new KeyResponse(message));
+						break;
+					case 1:
+						recorder.record(source, new NodeFailMessage(message,
+								new NodeException(this)));
+						break;
+					default:
+						break;
+					}
+					writeCount++;
 				}
 				if (message instanceof KeyRead) {
-					recorder.record(source, new NodeFailMessage(message,
-							new KeyException(this, KeyException.READ_NOTFOUND)));
+					switch (readCount) {
+					case 0:
+					case 1:
+						recorder.record(source, new NodeFailMessage(message,
+								new KeyException(this,
+										KeyException.READ_NOTFOUND)));
+						break;
+					default:
+						break;
+					}
+					readCount++;
 				}
 			}
 		};
@@ -110,9 +161,22 @@ public class KeyGatewayTest {
 							new DefaultData("key1")));
 					recorder.record(20l, getServerPipe(), new KeyWrite(
 							new DefaultData("key2")));
+
 					KeyRead read = new KeyRead();
 					read.setKey("key2");
 					recorder.record(40l, getServerPipe(), read);
+
+					read = new KeyRead();
+					read.setKey("key3");
+					recorder.record(60l, getServerPipe(), read);
+
+					recorder.record(80l, getServerPipe(), new KeyWrite(
+							new DefaultData("key3")));
+
+					read = new KeyRead();
+					read.setKey("key2");
+					recorder.record(100l, getServerPipe(), read);
+
 				}
 			}
 
@@ -138,6 +202,8 @@ public class KeyGatewayTest {
 		new Pipe(client, gw);
 		new Pipe(gw, dc1);
 		new Pipe(gw, dc2);
+
+		env.run(0);
 
 		gw.setWriteCopy(3);
 
@@ -169,5 +235,40 @@ public class KeyGatewayTest {
 		message = response.get(0);
 		assertTrue(message instanceof KeyResponse);
 
+		response.clear();
+		while (response.isEmpty()) {
+			env.getClock().tick();
+		}
+		message = response.get(0);
+
+		assertTrue(message instanceof FailMessage);
+		assertTrue(((FailMessage) message).getException() instanceof KeyException);
+		assertEquals(KeyException.READ_NOTFOUND,
+				((KeyException) ((FailMessage) message).getException())
+						.getError());
+
+		gw.setWriteCopy(1);
+
+		response.clear();
+		while (response.isEmpty()) {
+			env.getClock().tick();
+		}
+		message = response.get(0);
+		assertTrue(message instanceof FailMessage);
+		assertTrue(((FailMessage) message).getException() instanceof KeyException);
+		assertEquals(KeyException.INTERNAL,
+				((KeyException) ((FailMessage) message).getException())
+						.getError());
+
+		response.clear();
+		while (response.isEmpty()) {
+			env.getClock().tick();
+		}
+		message = response.get(0);
+		assertTrue(message instanceof FailMessage);
+		assertTrue(((FailMessage) message).getException() instanceof KeyException);
+		assertEquals(KeyException.INTERNAL,
+				((KeyException) ((FailMessage) message).getException())
+						.getError());
 	}
 }

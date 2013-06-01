@@ -1,8 +1,12 @@
 package edu.clarkson.gdc.simulator.module.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -38,9 +42,9 @@ public class KeyGateway extends Node {
 
 	private SessionManager sessionManager;
 
-	private Map<String, List<String>> keyToServer;
+	private Map<String, Set<String>> keyToServer;
 
-	private int writeCopy;
+	private int writeCopy = 1;
 
 	public KeyGateway() {
 		super();
@@ -48,7 +52,7 @@ public class KeyGateway extends Node {
 		power = UNLIMITED;
 		sessionManager = new SessionManager();
 
-		keyToServer = new ConcurrentHashMap<String, List<String>>();
+		keyToServer = new ConcurrentHashMap<String, Set<String>>();
 	}
 
 	@Override
@@ -62,7 +66,7 @@ public class KeyGateway extends Node {
 			MessageRecorder recorder) {
 		if (message instanceof KeyRead) {
 			KeyRead read = (KeyRead) message;
-			List<String> servers = keyToServer.get(read.getKey());
+			Set<String> servers = keyToServer.get(read.getKey());
 			if (CollectionUtils.isNotEmpty(servers)) {
 				Session session = sessionManager.createSession(read
 						.getSessionId());
@@ -109,7 +113,8 @@ public class KeyGateway extends Node {
 				int readCount = session.get(CLIENT_READ_COUNT);
 				if (readCount == 1) {
 					Pipe pipe = session.get(PIPE);
-					recorder.record(pipe, fail);
+					recorder.record(pipe, new NodeFailMessage(message,
+							new KeyException(this, KeyException.INTERNAL)));
 					sessionManager.discardSession(session);
 				} else {
 					session.put(CLIENT_READ_COUNT, readCount - 1);
@@ -123,7 +128,8 @@ public class KeyGateway extends Node {
 				if (remain.size() < getWriteCopy() - success) {
 					// Cannot success, return fail
 					Pipe pipe = session.get(PIPE);
-					recorder.record(pipe, fail);
+					recorder.record(pipe, new NodeFailMessage(message,
+							new KeyException(this, KeyException.INTERNAL)));
 					sessionManager.discardSession(session);
 				} else {
 					String nextId = remain.remove(0);
@@ -139,7 +145,7 @@ public class KeyGateway extends Node {
 					.getSession(response.getSessionId());
 			if (response.getRequest() instanceof KeyRead && null != session) {
 				Pipe pipe = session.get(PIPE);
-				recorder.record(pipe, new KeyResponse(response.getRequest()));
+				recorder.record(pipe, response);
 				sessionManager.discardSession(session);
 			}
 			if (response.getRequest() instanceof KeyWrite && null != session) {
@@ -147,7 +153,7 @@ public class KeyGateway extends Node {
 				String key = ((KeyWrite) response.getRequest()).getData()
 						.getKey();
 				if (!keyToServer.containsKey(key)) {
-					keyToServer.put(key, new ArrayList<String>());
+					keyToServer.put(key, new HashSet<String>());
 				}
 				keyToServer.get(key).add(response.getOrigin().getId());
 				// Send next message
@@ -193,4 +199,17 @@ public class KeyGateway extends Node {
 		this.writeCopy = writeCopy;
 	}
 
+	public Map<String, Set<String>> getKeyDistribution() {
+		HashMap<String, Set<String>> dist = new HashMap<String, Set<String>>();
+		for (Entry<String, Set<String>> entry : keyToServer.entrySet()) {
+			for (String server : entry.getValue()) {
+				if (!dist.containsKey(server)) {
+					dist.put(server, new HashSet<String>());
+				}
+				dist.get(server).add(entry.getKey());
+			}
+		}
+
+		return dist;
+	}
 }

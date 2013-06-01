@@ -13,6 +13,8 @@ public abstract class ResponseMessage extends DataMessage {
 	private DataMessage request;
 
 	public DataMessage getRequest() {
+		if (request instanceof ResponseMessage)
+			return ((ResponseMessage) request).getRequest();
 		return request;
 	}
 

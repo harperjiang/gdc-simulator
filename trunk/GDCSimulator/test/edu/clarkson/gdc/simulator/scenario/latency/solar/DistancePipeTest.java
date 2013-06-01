@@ -24,6 +24,6 @@ public class DistancePipeTest {
 			}
 		};
 		long val = DistancePipe.calculate(a, b);
-		assertEquals(100,val);
+		assertEquals(257,val);
 	}
 }

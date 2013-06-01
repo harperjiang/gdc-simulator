@@ -64,6 +64,7 @@ public class TypedAverager {
 			total = total + val.getA();
 			sum = sum.add(val.getB());
 		}
+		Validate.isTrue(0 != total, "No result received");
 		average = sum.divide(BigDecimal.valueOf(total), SCALE,
 				BigDecimal.ROUND_HALF_UP);
 		BigDecimal totalBD = BigDecimal.valueOf(total);

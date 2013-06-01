@@ -112,7 +112,7 @@ public class NodeTest {
 		env.getClock().tick();
 		assertEquals(NodeState.EXCEPTION, node2.getState());
 		env.getClock().tick();
-		assertEquals(NodeState.BUSY, node2.getState());
+		assertEquals(NodeState.FREE, node2.getState());
 		env.getClock().tick();
 		assertEquals(NodeState.EXCEPTION, node2.getState());
 		env.getClock().tick();
@@ -128,9 +128,9 @@ public class NodeTest {
 		assertEquals(NodeState.FREE, node2.getState());
 
 		Map<Long, List<DataMessage>> feedback = node1.getFeedback();
-		assertTrue(feedback.containsKey(6l) || feedback.containsKey(8l)
-				|| feedback.containsKey(10l) || feedback.containsKey(11l)
-				|| feedback.containsKey(12l));
+		assertTrue(feedback.containsKey(5l) || feedback.containsKey(7l)
+				|| feedback.containsKey(9l) || feedback.containsKey(11l)
+				|| feedback.containsKey(10l));
 	}
 
 	@Test

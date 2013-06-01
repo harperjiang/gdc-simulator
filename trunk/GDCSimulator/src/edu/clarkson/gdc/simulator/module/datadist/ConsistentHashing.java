@@ -41,6 +41,7 @@ public class ConsistentHashing {
 
 	// Arrange hashing cycle
 	public void add(String node) {
+		Validate.notNull(node);
 		Validate.isTrue(!index.containsKey(node));
 		List<PositionHolder> indexList = new ArrayList<PositionHolder>();
 		for (int i = 0; i < base; i++) {
@@ -76,21 +77,22 @@ public class ConsistentHashing {
 	}
 
 	public Set<String> get(String key, int count) {
+		Validate.isTrue(count <= index.size());
 		Set<String> result = new HashSet<String>();
 		if (count > index.size() * base)
 			return result;
 		BigDecimal hash = hash(key);
 		int position = locate(positions, new Position(hash, key), 0,
 				positions.size());
-		int index = position;
+		int indx = position;
 		int counter = 0;
 		while (result.size() < count) {
-			index %= positions.size();
-			if (positions.get(index).position != null) {
-				result.add(positions.get(index).position.id);
+			indx %= positions.size();
+			if (positions.get(indx).position != null) {
+				result.add(positions.get(indx).position.id);
 				counter++;
 			}
-			index++;
+			indx++;
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug(MessageFormat.format(

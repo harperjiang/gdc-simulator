@@ -13,14 +13,17 @@ public class ReadMyWriteClient extends RandomClient {
 
 	private int writeSize;
 
+	private double readRatioToBe;
+	
 	private List<String> written;
 
 	private Random random;
 
 	public ReadMyWriteClient(int index, double readratio, int interval, int ws) {
-		super(readratio, interval, -1, true);
+		super(0, interval, -1, true);
 		this.setId(String.valueOf(index));
 
+		this.readRatioToBe = readratio;
 		this.writeSize = ws;
 		this.written = new ArrayList<String>();
 
@@ -40,6 +43,9 @@ public class ReadMyWriteClient extends RandomClient {
 
 	@Override
 	protected boolean genWrite(MessageRecorder recorder) {
+		if(writeSize == written.size()) {
+			setReadRatio(readRatioToBe);
+		}
 		int newindex = random.nextInt(writeSize);
 		String key = null;
 		if (newindex >= written.size()) {

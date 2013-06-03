@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.simulator.scenario.latency.simple.exstr;
+package edu.clarkson.gdc.simulator.module.exstrgy;
 
 import java.text.DateFormat;
 import java.text.ParsePosition;

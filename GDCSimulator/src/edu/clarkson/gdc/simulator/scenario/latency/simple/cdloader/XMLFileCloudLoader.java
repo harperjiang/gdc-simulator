@@ -14,11 +14,11 @@ import org.w3c.dom.NodeList;
 
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
+import edu.clarkson.gdc.simulator.module.exstrgy.RangeExceptionStrategy;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.CloudDataLoader;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.DefaultDataCenter;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.client.DefaultWorkloadProvider;
 import edu.clarkson.gdc.simulator.scenario.latency.simple.client.RequestIndexClient;
-import edu.clarkson.gdc.simulator.scenario.latency.simple.exstr.RangeExceptionStrategy;
 
 /**
  * 

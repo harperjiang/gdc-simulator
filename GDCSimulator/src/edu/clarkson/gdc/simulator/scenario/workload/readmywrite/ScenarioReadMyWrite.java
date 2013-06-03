@@ -30,7 +30,7 @@ public class ScenarioReadMyWrite {
 
 		KeyGateway gw = new KeyGateway();
 		ConsistentHashingDistribution dist = new ConsistentHashingDistribution();
-		dist.setWritecopy(writecpy);
+		dist.setWritecopy(wdcCount);
 		gw.setDistribution(dist);
 		gw.setWriteCopy(writecpy);
 		env.add(gw);
@@ -87,11 +87,11 @@ public class ScenarioReadMyWrite {
 		env.run(86400l);
 		averager.stop();
 
-		for (Entry<String, Set<String>> entry : gw.getKeyDistribution()
-				.entrySet()) {
-			System.out.println(MessageFormat.format("{0}:{1}", entry.getKey(),
-					entry.getValue().size()));
-		}
+		// for (Entry<String, Set<String>> entry : gw.getKeyDistribution()
+		// .entrySet()) {
+		// System.out.println(MessageFormat.format("{0}:{1}", entry.getKey(),
+		// entry.getValue().size()));
+		// }
 
 		result = averager.percent("FAIL1");
 		if (null == result)
@@ -99,13 +99,15 @@ public class ScenarioReadMyWrite {
 	}
 
 	public static void main(String[] args) throws Exception {
-		PrintWriter pw = new PrintWriter(new FileOutputStream(
-				"/home/harper/plot"));
-		for (int i = 2; i < 30; i++) {
-			pw.println(MessageFormat.format("{0}\t{1}", i,
-					new ScenarioReadMyWrite(i, 50, 5000, 10, 0.05, 0.75, 20,
-							100, 2).result));
+		for (int time = 0; time < 10; time++) {
+			PrintWriter pw = new PrintWriter(new FileOutputStream(
+					"/home/harper/plot_" + time));
+			for (int i = 2; i < 70; i++) {
+				pw.println(MessageFormat.format("{0}\t{1}", i,
+						new ScenarioReadMyWrite(i, 50, 5000, 10, 0.05, 0.75,
+								20, 100, 2).result));
+			}
+			pw.close();
 		}
-		pw.close();
 	}
 }

@@ -16,7 +16,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 			{
 				xtype : 'panel',
 				width : '100%',
-				height : 40,
+				height : 45,
 				styleHtmlContent : true,
 				styleHtmlCls : 'banner',
 				html : 'Summary',

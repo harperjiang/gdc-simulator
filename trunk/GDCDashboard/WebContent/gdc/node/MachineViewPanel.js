@@ -17,7 +17,7 @@ Ext.define('GDC.node.MachineViewPanel', {
 		itemId : 'banner',
 		xtype : 'panel',
 		width : '100%',
-		height : 40,
+		height : 45,
 		styleHtmlContent : true,
 		styleHtmlCls : 'banner',
 		html : '',
@@ -64,6 +64,10 @@ Ext.define('GDC.node.MachineViewPanel', {
 			+"<div class='slabeled_text'>"
 			+"	<label>Memory:</label>"
 			+"	{memory}"
+			+"</div>" 
+			+"<div class='slabeled_text'>" 
+			+"  <label>IP:</label>" 
+			+"  {ip}" 
 			+"</div>"
 		}, {
 			xtype : 'component',

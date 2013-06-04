@@ -18,7 +18,7 @@ Ext.define('GDC.node.PowerViewPanel', {
 				itemId : 'banner',
 				xtype : 'panel',
 				width : '100%',
-				height : 40,
+				height : 45,
 				styleHtmlContent : true,
 				styleHtmlCls : 'banner',
 				html : '',

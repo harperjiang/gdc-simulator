@@ -2,16 +2,17 @@ package edu.clarkson.gdc.dashboard.domain.dao;
 
 import java.util.List;
 
+import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 
 public interface VMDao {
 
 	void create(VirtualMachine vm);
 
-	VirtualMachine get(String vmId);
+	VirtualMachine find(Machine owner, String name);
 
-	List<VirtualMachine> list(String owner);
+	List<VirtualMachine> list(Machine owner);
 
-	void migrate(String vmId, String destMachine);
+	void migrate(VirtualMachine vm, Machine source, Machine dest);
 
 }

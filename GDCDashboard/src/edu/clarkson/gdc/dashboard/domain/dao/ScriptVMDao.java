@@ -7,16 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.clarkson.gdc.common.proc.OutputHandler;
+import edu.clarkson.gdc.common.proc.ProcessRunner;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 
-public class MemoryVMDao implements VMDao {
+public class ScriptVMDao implements VMDao {
+
+	private String listScript;
+
+	private String migrateScript;
 
 	private Map<String, Long> lastRefresh;
 
 	private Map<String, Map<String, VirtualMachine>> vms;
 
-	public MemoryVMDao() {
+	public ScriptVMDao() {
 		super();
 		vms = new HashMap<String, Map<String, VirtualMachine>>();
 		lastRefresh = new HashMap<String, Long>();
@@ -24,6 +30,7 @@ public class MemoryVMDao implements VMDao {
 
 	protected void refresh(Machine owner) {
 		// TODO
+		new ProcessRunner(listScript, owner.getAttributes().get("ip"));
 	}
 
 	@Override
@@ -54,6 +61,31 @@ public class MemoryVMDao implements VMDao {
 			}
 		});
 		return result;
+	}
+
+	protected static final class ListVMOutputHandler implements OutputHandler {
+
+		@Override
+		public void output(String input) {
+
+		}
+
+	}
+
+	public String getListScript() {
+		return listScript;
+	}
+
+	public void setListScript(String listScript) {
+		this.listScript = listScript;
+	}
+
+	public String getMigrateScript() {
+		return migrateScript;
+	}
+
+	public void setMigrateScript(String migrateScript) {
+		this.migrateScript = migrateScript;
 	}
 
 }

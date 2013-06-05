@@ -23,7 +23,7 @@ public class DefaultVMService implements VMService {
 	public void migrate(String vmId, String srcId, String destId) {
 		Machine srcMachine = getNodeDao().getNode(srcId);
 		Machine destMachine = getNodeDao().getNode(destId);
-		VirtualMachine vm = getVmDao().find(vmId);
+		VirtualMachine vm = getVmDao().find(srcMachine, vmId);
 		// TODO Test whether this vm exists on source
 		vmDao.migrate(vm, srcMachine, destMachine);
 	}

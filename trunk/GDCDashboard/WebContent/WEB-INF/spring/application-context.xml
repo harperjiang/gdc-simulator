@@ -6,7 +6,7 @@
 	<import resource="env.xml" />
 
 	<bean id="nodeDao" class="edu.clarkson.gdc.dashboard.domain.dao.XMLNodeDao" />
-	<bean id="vmDao" class="edu.clarkson.gdc.dashboard.domain.dao.ShellVMDao" />
+	<bean id="vmDao" class="edu.clarkson.gdc.dashboard.domain.dao.ScriptVMDao" />
 	<bean id="alertDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaAlertDao">
 		<property name="entityManager" ref="entityManager" />
 	</bean>

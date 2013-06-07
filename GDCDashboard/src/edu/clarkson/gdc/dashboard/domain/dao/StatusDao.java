@@ -10,4 +10,6 @@ public interface StatusDao {
 	public NodeStatus getStatus(Node node, String dataType);
 
 	public Map<String, NodeStatus> getStatus(Node node);
+
+	public void updateStatus(NodeStatus status);
 }

@@ -6,7 +6,12 @@
 	<import resource="env.xml" />
 
 	<bean id="nodeDao" class="edu.clarkson.gdc.dashboard.domain.dao.XMLNodeDao" />
-	<bean id="vmDao" class="edu.clarkson.gdc.dashboard.domain.dao.ScriptVMDao" />
+
+	<bean id="vmDao" class="edu.clarkson.gdc.dashboard.domain.dao.ScriptVMDao">
+		<property name="listScript" value="" />
+		<property name="migrateScript" value="" />
+	</bean>
+
 	<bean id="alertDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaAlertDao">
 		<property name="entityManager" ref="entityManager" />
 	</bean>
@@ -22,12 +27,18 @@
 		<property name="nodeDao" ref="nodeDao" />
 		<property name="alertDao" ref="alertDao" />
 	</bean>
+
 	<bean id="nodeService" class="edu.clarkson.gdc.dashboard.service.DefaultNodeService">
 		<property name="nodeDao" ref="nodeDao" />
 		<property name="historyDao" ref="historyDao" />
 		<property name="statusDao" ref="statusDao" />
 	</bean>
-	<bean id="vmService" class="edu.clarkson.gdc.dashboard.service.DefaultVMService">
 
+	<bean id="vmService" class="edu.clarkson.gdc.dashboard.service.DefaultVMService">
+		<property name="nodeDao" ref="nodeDao" />
+		<property name="vmDao" ref="vmDao" />
 	</bean>
+
+	<bean id="adapter"
+		class="edu.clarkson.gdc.common.ApplicationContextHolder.Adaptor" />
 </beans>

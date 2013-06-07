@@ -33,4 +33,8 @@ public class DummyStatusDao implements StatusDao {
 		}
 		return map;
 	}
+
+	@Override
+	public void updateStatus(NodeStatus status) {
+	}
 }

@@ -45,4 +45,9 @@ public class JpaHistoryDao extends JpaDaoSupport implements HistoryDao {
 				.getResultList();
 	}
 
+	@Override
+	public void addHistory(NodeHistory history) {
+		getJpaTemplate().getEntityManager().persist(history);
+	}
+
 }

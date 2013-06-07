@@ -14,4 +14,6 @@ public interface HistoryDao {
 	public List<NodeHistory> getHistories(Node node, String dataType, int count);
 
 	public NodeHistory getLatest(Node node, String dataType);
+	
+	public void addHistory(NodeHistory history);
 }

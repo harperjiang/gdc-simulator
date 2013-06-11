@@ -8,7 +8,7 @@ Ext.define('GDC.node.VMModel', {
 	}, {
 		name : 'name'
 	}, {
-		name : 'type'
+		name : 'status'
 	}, {
 		name : 'desc'
 	} ],
@@ -22,37 +22,55 @@ Ext.define('GDC.node.VMGrid', {
 	store : Ext.create('Ext.data.ArrayStore', {
 		model : 'GDC.node.VMModel'
 	}),
+	listeners : {
+		'selectionchange' : function(view, records) {
+			debugger;
+			this.down('#migrateButton').setDisabled(!records.length);
+		}
+	},
 	tbar : [ {
+		itemId : 'migrateButton',
 		text : 'Migrate VM',
 		handler : function() {
-			debugger;
 			var gridPanel = this.up('gdcVmGrid');
-			// gridPanel.get
-		}
+			var model = gridPanel.getSelectionModel().getSelection()[0];
+			var vmName = model.get('name');
+			var machinePanel = this.up('nodeMachinePanel');
+			var srcId = machinePanel.datas.id;
+			Ext.Msg.prompt('Destination', 'Enter Destination Machine:', function(btn, dest){
+			    debugger;
+				if (btn == 'ok'){
+					vmService.migrate(vmName, srcId, dest);
+					// TODO handle error message
+			    }
+			});
+		},
+		disabled : true
 	}, {
 		text : 'Create New VM',
 		handler : function() {
-
+			Ext.Msg.alert('Warning','Not implemented yet');
 		}
 	}, {
 		text : 'Refresh',
 		handler : function() {
+			this.up('gdcVmGrid').refresh();
 		}
 	} ],
 	collapsible : true,
-	multiSelect : true,
+	multiSelect : false, // This seems not working?
 	columns : [ {
 		text : 'Id',
 		width : 60,
 		sortable : false,
 		dataIndex : 'id'
 	}, {
-		text : 'Level',
+		text : 'Name',
 		width : 60,
 		sortable : false,
 		dataIndex : 'name'
 	}, {
-		text : 'Type',
+		text : 'Status',
 		width : 75,
 		sortable : false,
 		dataIndex : 'type'
@@ -66,5 +84,11 @@ Ext.define('GDC.node.VMGrid', {
 	viewConfig : {
 		stripeRows : true,
 		enableTextSelection : true
+	}, 
+	refresh : function() {
+		var machinePanel = this.up('nodeMachinePanel');
+		var srcId = machinePanel.datas.id;
+		var vmList = vmService.list(srcId);
+		this.store.load(vmList);
 	}
 });

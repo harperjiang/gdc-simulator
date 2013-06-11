@@ -21,6 +21,7 @@
 			<param name="beanName" value="vmService" />
 			<include method="create" />
 			<include method="migrate" />
+			<include method="list" />
 		</create>
 
 		<convert converter="bean"

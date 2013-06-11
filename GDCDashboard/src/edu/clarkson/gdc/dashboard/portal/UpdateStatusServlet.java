@@ -47,14 +47,16 @@ public class UpdateStatusServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		try {
-			ApplicationContextHolder.getInstance().getApplicationContext()
+			InterfaceService interfaceService = ApplicationContextHolder
+					.getInstance().getApplicationContext()
 					.getBean("interfaceService", InterfaceService.class);
 			// Parse input data
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					request.getInputStream()));
 			String line = br.readLine();
 			if (line != null) {
-
+				String[] data = line.split(",");
+				// TODO Save each data
 			}
 		} catch (Exception e) {
 			logger.error("Exception occurred in Interface", e);

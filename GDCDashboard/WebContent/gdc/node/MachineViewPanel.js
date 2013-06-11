@@ -138,6 +138,7 @@ Ext.define('GDC.node.MachineViewPanel', {
 		height : 240
 	} ],
 	loadData : function(datas) {
+		this.datas = datas;
 		this.getComponent('performance').getComponent('cpu').store
 				.loadData([ [ datas.power ] ]);
 		this.getComponent('performance').getComponent('memory').store

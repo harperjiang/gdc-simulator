@@ -39,6 +39,13 @@
 		<property name="vmDao" ref="vmDao" />
 	</bean>
 
+	<bean id="interfaceService"
+		class="edu.clarkson.gdc.dashboard.service.DefaultInterfaceService">
+		<property name="nodeDao" ref="nodeDao" />
+		<property name="historyDao" ref="historyDao" />
+		<property name="statusDao" ref="statusDao" />
+	</bean>
+
 	<bean id="adapter"
 		class="edu.clarkson.gdc.common.ApplicationContextHolder.Adaptor" />
 </beans>

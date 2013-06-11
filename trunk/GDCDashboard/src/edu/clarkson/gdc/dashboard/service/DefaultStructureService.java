@@ -7,6 +7,7 @@ import edu.clarkson.gdc.dashboard.domain.dao.AlertDao;
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.entity.Alert;
 import edu.clarkson.gdc.dashboard.domain.entity.DataCenter;
+import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.Summary;
 
@@ -59,5 +60,4 @@ public class DefaultStructureService implements StructureService {
 	public void setAlertDao(AlertDao alertDao) {
 		this.alertDao = alertDao;
 	}
-
 }

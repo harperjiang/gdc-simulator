@@ -9,3 +9,4 @@ function loadjs(jsurl) {
 loadjs('dwr/engine.js');
 loadjs('dwr/interface/structureService.js');
 loadjs('dwr/interface/nodeService.js');
+loadjs('dwr/interface/vmService.js');

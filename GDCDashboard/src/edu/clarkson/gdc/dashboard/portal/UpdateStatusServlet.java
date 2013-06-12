@@ -57,6 +57,7 @@ public class UpdateStatusServlet extends HttpServlet {
 			if (line != null) {
 				String[] data = line.split(",");
 				// TODO Save each data
+				//Iwind=34.02,Ibat=23.69,Iinv=31.88,Vbat=44.66,SOC=42.05,
 			}
 		} catch (Exception e) {
 			logger.error("Exception occurred in Interface", e);

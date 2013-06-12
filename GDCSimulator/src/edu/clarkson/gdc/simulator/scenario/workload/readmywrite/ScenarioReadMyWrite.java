@@ -102,8 +102,8 @@ public class ScenarioReadMyWrite {
 					"tempdata/client_count_" + r));
 			for (int i = 1; i < 10; i++) {
 				pw.println(MessageFormat.format("{0}\t{1}", i,
-						new ScenarioReadMyWrite(1, i, 5000, 10, 0.05,
-								0.5 + r * 0.05, 20, 100, 2).result));
+						new ScenarioReadMyWrite(i, 10, 5000, 10, 0.05,
+								0.5 + r * 0.05, 20, 100, 1).result));
 			}
 			pw.close();
 		}

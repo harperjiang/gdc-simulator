@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: gdc_dashboard
 -- ------------------------------------------------------
--- Server version	5.5.31-0ubuntu0.12.04.1
+-- Server version	5.5.31-0ubuntu0.13.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -79,7 +79,7 @@ DROP TABLE IF EXISTS `node_status`;
 CREATE TABLE `node_status` (
   `node_id` varchar(20) NOT NULL DEFAULT '',
   `data_type` varchar(20) NOT NULL DEFAULT '',
-  `vale` varchar(100) DEFAULT NULL,
+  `value` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`node_id`,`data_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -92,6 +92,30 @@ LOCK TABLES `node_status` WRITE;
 /*!40000 ALTER TABLE `node_status` DISABLE KEYS */;
 /*!40000 ALTER TABLE `node_status` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `seq_table`
+--
+
+DROP TABLE IF EXISTS `seq_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `seq_table` (
+  `name` varchar(20) NOT NULL,
+  `count` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `seq_table`
+--
+
+LOCK TABLES `seq_table` WRITE;
+/*!40000 ALTER TABLE `seq_table` DISABLE KEYS */;
+INSERT INTO `seq_table` VALUES ('alert',200),('node_history',150);
+/*!40000 ALTER TABLE `seq_table` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -102,4 +126,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-06-07 16:05:49
+-- Dump completed on 2013-06-15  4:32:58

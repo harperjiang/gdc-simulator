@@ -39,8 +39,8 @@ public class JpaHistoryDao extends JpaDaoSupport implements HistoryDao {
 				.createQuery(
 						"select h from NodeHistory h where h.nodeId = :nodeId "
 								+ "and h.dataType = :dataType "
-								+ "and h.time between :start and :end order by h.time desc",
-						NodeHistory.class).setParameter("nodeId", node.getId())
+								+ "order by h.time desc", NodeHistory.class)
+				.setParameter("nodeId", node.getId())
 				.setParameter("dataType", dataType).setMaxResults(count)
 				.getResultList();
 	}

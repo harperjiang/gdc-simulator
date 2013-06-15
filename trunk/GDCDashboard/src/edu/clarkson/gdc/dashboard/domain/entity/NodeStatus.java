@@ -74,4 +74,13 @@ public class NodeStatus {
 	public StatusType getType() {
 		return StatusType.valueOf(getDataType());
 	}
+
+	public static boolean isStatus(String string) {
+		try {
+			StatusType.valueOf(string);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
 }

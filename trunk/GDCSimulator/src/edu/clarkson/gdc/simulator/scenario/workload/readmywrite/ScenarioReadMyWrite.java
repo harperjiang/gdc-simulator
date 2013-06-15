@@ -36,7 +36,7 @@ public class ScenarioReadMyWrite {
 		for (int i = 0; i < wdcCount; i++) {
 			WorkloadDataCenter wdc = new WorkloadDataCenter(reqProcessTime);
 			wdc.setId("wdc-" + i);
-			wdc.setPower(5);
+			wdc.setPower(1);
 			wdc.setExceptionStrategy(new FailureRateStrategy(failureRate));
 			env.add(wdc);
 			// Creating Storage for WDC
@@ -99,11 +99,11 @@ public class ScenarioReadMyWrite {
 	public static void main(String[] args) throws Exception {
 		for (int r = 0; r < 10; r++) {
 			PrintWriter pw = new PrintWriter(new FileOutputStream(
-					"tempdata/client_count_" + r));
-			for (int i = 1; i < 10; i++) {
+					"tempdata/read_ratio_" + r));
+			for (int i = 1; i <= 10; i++) {
 				pw.println(MessageFormat.format("{0}\t{1}", i,
-						new ScenarioReadMyWrite(i, 10, 5000, 10, 0.05,
-								0.5 + r * 0.05, 20, 100, 1).result));
+						new ScenarioReadMyWrite(10, 10, 5000, 10, 0.05,
+								0.5 + 0.05 * r, 20, 100, i).result));
 			}
 			pw.close();
 		}

@@ -113,8 +113,8 @@ public class XMLNodeDao implements NodeDao {
 	}
 
 	@Override
-	public Node getNode(String id) {
-		return nodes.get(id);
+	public <T extends Node> T getNode(String id) {
+		return (T) nodes.get(id);
 	}
 
 	@Override

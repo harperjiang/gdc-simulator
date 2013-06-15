@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 
 @TableGenerator(name = "alertPk", table = "seq_table", pkColumnName = "name", pkColumnValue = "alert", valueColumnName = "count")
 @Entity
-@Table(name="alert")
+@Table(name = "alert")
 public class Alert {
 
 	@Id
@@ -23,7 +23,7 @@ public class Alert {
 	private long id;
 
 	@Column(name = "level")
-	private AlertLevel level;
+	private String level;
 
 	@Column(name = "node_id")
 	private String nodeId;
@@ -50,11 +50,11 @@ public class Alert {
 	}
 
 	public AlertLevel getLevel() {
-		return level;
+		return AlertLevel.valueOf(level);
 	}
 
 	public void setLevel(AlertLevel level) {
-		this.level = level;
+		this.level = level.name();
 	}
 
 	public String getNodeId() {

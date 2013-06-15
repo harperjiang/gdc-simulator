@@ -7,7 +7,6 @@ import edu.clarkson.gdc.dashboard.domain.dao.AlertDao;
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.entity.Alert;
 import edu.clarkson.gdc.dashboard.domain.entity.DataCenter;
-import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.Summary;
 
@@ -24,8 +23,8 @@ public class DefaultStructureService implements StructureService {
 
 	@Override
 	public List<Alert> getAlerts() {
-		List<Alert> result = getAlertDao().getAlerts();
-		for(Alert alert: result) {
+		List<Alert> result = getAlertDao().getAlerts(null);
+		for (Alert alert : result) {
 			Node node = nodeDao.getNode(alert.getNodeId());
 			alert.setNodeType(node.getType());
 		}

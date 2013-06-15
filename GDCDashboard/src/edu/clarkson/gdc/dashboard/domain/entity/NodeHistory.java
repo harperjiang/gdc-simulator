@@ -32,7 +32,7 @@ public class NodeHistory {
 	@Column(name = "data_type")
 	private String dataType;
 
-	@Column(name = "data")
+	@Column(name = "value")
 	private String value;
 
 	public long getId() {
@@ -73,6 +73,15 @@ public class NodeHistory {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public static boolean isHistory(String string) {
+		try {
+			HistoryType.valueOf(string);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
 	}
 
 }

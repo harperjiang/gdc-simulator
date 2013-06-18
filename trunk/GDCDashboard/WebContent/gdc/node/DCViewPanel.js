@@ -86,7 +86,7 @@ Ext.define('GDC.node.DCViewPanel', {
 				itemId : 'evaluation',
 				title : 'Evaluation',
 				collapsible : true,
-				height : 550,
+				height : 500,
 				width : 320,
 				rowspan : 3,
 				bodyStyle : 'padding:10px',
@@ -114,8 +114,8 @@ Ext.define('GDC.node.DCViewPanel', {
 									+ "of the data center.</div>" + "<ul>"
 									+ "<li>" + "<label>" + "Stability:"
 									+ "</label>"
-									+ "<div>The minimal power generation that "
-									+ "can be guaranteed by the station</div>"
+									+ "The minimal power generation that "
+									+ "can be guaranteed by the station.	"
 									+ "</li>" + "<li>" + "<label>"
 									+ "Efficiency:" + "</label>"
 									+ "The green power used vs."
@@ -142,7 +142,7 @@ Ext.define('GDC.node.DCViewPanel', {
 					}
 				} ],
 				items : [ {
-					xtype : 'gdcGaugeChart',
+					xtype : 'gdcGaugeChart2',
 					itemId : 'healthChart',
 					style : 'background:#fff',
 					store : Ext.create('Ext.data.ArrayStore', {
@@ -162,7 +162,7 @@ Ext.define('GDC.node.DCViewPanel', {
 						margin : 7
 					} ]
 				}, {
-					xtype : 'gdcGaugeChart',
+					xtype : 'gdcGaugeChart2',
 					itemId : 'powerChart',
 					style : 'background:#fff',
 					store : Ext.create('Ext.data.ArrayStore', {
@@ -208,6 +208,7 @@ Ext.define('GDC.node.DCViewPanel', {
 				title : 'History',
 				height : 340,
 				width : 700,
+				rowspan : 2,
 				bodyStyle : 'padding:10px',
 				collapsible : true,
 				items : [ {
@@ -260,6 +261,10 @@ Ext.define('GDC.node.DCViewPanel', {
 						}
 					} ]
 				} ]
+			}, {
+				xtype : 'gdcMapPanel',
+				width : 320,
+				height : 240
 			} ],
 	loadData : function(datas) {
 		debugger;

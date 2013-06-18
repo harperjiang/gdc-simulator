@@ -5,8 +5,8 @@
 	<data-center id="dc1" name="Data Center 1">
 		<attributes>
 			<attribute key="power_source" value="Wind &amp; Solar" />
-			<attribute key="designed_capacity" value="200mW" />
-			<attribute key="peak_capacity" value="850mW" />
+			<attribute key="designed_capacity" value="200MW" />
+			<attribute key="peak_capacity" value="850MW" />
 		</attributes>
 		<battery id="dc1.bty1" name="APC UPS">
 			<attributes>

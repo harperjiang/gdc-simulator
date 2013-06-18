@@ -6,6 +6,7 @@ function loadjs(jsurl) {
 		eval(request.responseText);
 	}
 }
+
 loadjs('dwr/engine.js');
 loadjs('dwr/interface/structureService.js');
 loadjs('dwr/interface/nodeService.js');

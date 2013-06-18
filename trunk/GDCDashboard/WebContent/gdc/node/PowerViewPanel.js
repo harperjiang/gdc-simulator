@@ -121,7 +121,7 @@ Ext.define('GDC.node.PowerViewPanel', {
 					}
 				} ],
 				items : [ {
-					xtype : 'gdcGaugeChart',
+					xtype : 'gdcGaugeChart2',
 					itemId : 'power',
 					style : 'background:#fff',
 					store : Ext.create('Ext.data.ArrayStore', {
@@ -141,7 +141,7 @@ Ext.define('GDC.node.PowerViewPanel', {
 						title : 'Power\nPercentage'
 					} ]
 				}, {
-					xtype : 'gdcGaugeChart',
+					xtype : 'gdcGaugeChart2',
 					itemId : 'voltage',
 					style : 'background:#fff',
 					store : Ext.create('Ext.data.ArrayStore', {

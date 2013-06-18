@@ -8,6 +8,7 @@
 	<bean id="nodeDao" class="edu.clarkson.gdc.dashboard.domain.dao.XMLNodeDao" />
 
 	<bean id="vmDao" class="edu.clarkson.gdc.dashboard.domain.dao.ScriptVMDao">
+		<property name="refreshInterval" value="30000" />
 		<property name="listScript" value="/home/harper/GDC/display.sh" />
 		<property name="migrateScript" value="/home/harper/GDC/migrate.sh" />
 	</bean>

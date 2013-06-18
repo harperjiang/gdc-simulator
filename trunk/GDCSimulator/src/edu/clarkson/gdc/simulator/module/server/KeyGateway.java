@@ -38,6 +38,8 @@ public class KeyGateway extends Node {
 
 	public static final String CLIENT_WRITE_REMAIN = "client_write_remain";
 
+	public static final String CLIENT_WRITE_FAIL = "client_write_fail";
+
 	private DataDistribution distribution;
 
 	private SessionManager sessionManager;
@@ -96,6 +98,7 @@ public class KeyGateway extends Node {
 				Session session = sessionManager.createSession(write
 						.getSessionId());
 				session.put(CLIENT_WRITE_COUNT, 0);
+				session.put(CLIENT_WRITE_FAIL, 0);
 				session.put(PIPE, source);
 				// Write to the first server
 				String id = servers.remove(0);
@@ -122,6 +125,10 @@ public class KeyGateway extends Node {
 			}
 
 			if (fail.getRequest() instanceof KeyWrite && null != session) {
+				// Record the failure
+				session.put(CLIENT_WRITE_FAIL,
+						Integer.valueOf(Integer.valueOf(String.valueOf(session
+								.get(CLIENT_WRITE_FAIL))) + 1));
 				// Send message to next server
 				List<String> remain = session.get(CLIENT_WRITE_REMAIN);
 				int success = session.get(CLIENT_WRITE_COUNT);
@@ -160,8 +167,9 @@ public class KeyGateway extends Node {
 				int count = session.get(CLIENT_WRITE_COUNT);
 				if (count >= getWriteCopy() - 1) {
 					Pipe pipe = session.get(PIPE);
-					recorder.record(pipe,
-							new KeyResponse(response.getRequest()));
+					KeyResponse resp = new KeyResponse(response.getRequest());
+					resp.setLoad(session.get(CLIENT_WRITE_FAIL));
+					recorder.record(pipe, resp);
 					sessionManager.discardSession(session);
 				} else {
 					session.put(CLIENT_WRITE_COUNT, count + 1);

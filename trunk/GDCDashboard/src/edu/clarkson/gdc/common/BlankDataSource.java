@@ -51,7 +51,6 @@ public class BlankDataSource implements DataSource {
 		return false;
 	}
 
-	@Override
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		// TODO Auto-generated method stub
 		return null;

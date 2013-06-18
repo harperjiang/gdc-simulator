@@ -14,16 +14,25 @@ public class FailureRateStrategy implements ExceptionStrategy {
 
 	private Random random;
 
+	private long current;
+
+	private NodeException status;
+
 	public FailureRateStrategy(double p) {
 		Validate.isTrue(p <= 1 && p >= 0,
 				"The possibility should be between 0 and 1");
 		this.rate = p;
 		this.random = new Random(hashCode() * System.currentTimeMillis());
+		this.current = -1;
 	}
 
 	@Override
 	public NodeException getException(long tick) {
-		return (random.nextDouble() > rate) ? null : new StrategyException();
+		if (current != tick) {
+			current = tick;
+			status = (random.nextDouble() > rate) ? null
+					: new StrategyException();
+		}
+		return status;
 	}
-
 }

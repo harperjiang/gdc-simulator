@@ -1,11 +1,10 @@
 package edu.clarkson.gdc.dashboard.service;
 
-import java.util.List;
-
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.dao.VMDao;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
+import edu.clarkson.gdc.dashboard.service.bean.ListVMResultBean;
 
 public class DefaultVMService implements VMService {
 
@@ -14,9 +13,12 @@ public class DefaultVMService implements VMService {
 	private VMDao vmDao;
 
 	@Override
-	public List<VirtualMachine> list(String owner) {
+	public ListVMResultBean list(String owner) {
 		Machine ownerMachine = getNodeDao().getNode(owner);
-		return vmDao.list(ownerMachine);
+		ListVMResultBean bean = new ListVMResultBean();
+		bean.setOwnerId(owner);
+		bean.setVms(vmDao.list(ownerMachine));
+		return bean;
 	}
 
 	@Override

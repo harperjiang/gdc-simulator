@@ -24,7 +24,6 @@ Ext.define('GDC.node.VMGrid', {
 	}),
 	listeners : {
 		'selectionchange' : function(view, records) {
-			debugger;
 			this.down('#migrateButton').setDisabled(!records.length);
 		}
 	},
@@ -37,7 +36,7 @@ Ext.define('GDC.node.VMGrid', {
 			var vmName = model.get('name');
 			var machinePanel = this.up('nodeMachinePanel');
 			var srcId = machinePanel.datas.id;
-			Ext.Msg.prompt('Destination', 'Enter Destination Machine:', function(btn, dest){
+			Ext.Msg.prompt('Destination', 'Enter Destination Machine:', function(btn, dest) {
 			    debugger;
 				if (btn == 'ok'){
 					vmService.migrate(vmName, srcId, dest);
@@ -66,14 +65,14 @@ Ext.define('GDC.node.VMGrid', {
 		dataIndex : 'id'
 	}, {
 		text : 'Name',
-		width : 60,
+		width : 120,
 		sortable : false,
 		dataIndex : 'name'
 	}, {
 		text : 'Status',
-		width : 75,
+		width : 90,
 		sortable : false,
-		dataIndex : 'type'
+		dataIndex : 'status'
 	}, {
 		text : 'Description',
 		flex : 1,
@@ -88,7 +87,19 @@ Ext.define('GDC.node.VMGrid', {
 	refresh : function() {
 		var machinePanel = this.up('nodeMachinePanel');
 		var srcId = machinePanel.datas.id;
-		var vmList = vmService.list(srcId);
-		this.store.load(vmList);
-	}
+		vmService.list(srcId,function(vmBean) {
+			var ownerId = vmBean.ownerId;
+			var vmGrid = Ext.getCmp('tab'+ownerId).down('gdcVmGrid');
+			var dataArray = new Array();
+			for(var i = 0 ; i < vmBean.vms.length; i++) {
+				dataArray[i] = new Array();
+				dataArray[i][0] = false;
+				dataArray[i][1] = vmBean.vms[i].id;
+				dataArray[i][2] = vmBean.vms[i].name;
+				dataArray[i][3] = vmBean.vms[i].attributes.status;
+				dataArray[i][4] = ' ';
+			}
+			vmGrid.store.loadData(dataArray);
+		});
+	} 
 });

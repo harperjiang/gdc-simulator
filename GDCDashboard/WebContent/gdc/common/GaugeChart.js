@@ -27,7 +27,6 @@ Ext.define("GDC.common.GaugeChart", {
 		colorList : [ '#00ff00', '#fbf80b', '#fd8c12', '#f65007', '#f81409' ],
 		colorList2 : [ '#f81409', '#f65007', '#fd8c12', '#fbf80b', '#00ff00' ],
 		renderer : function(sprite, storeItem, attr, i, store) {
-			debugger;
 			var data = storeItem.raw[0];
 			var colors = this.biggerBetter ? this.colorList2 : this.colorList;
 			return Ext.apply(attr, {
@@ -36,6 +35,6 @@ Ext.define("GDC.common.GaugeChart", {
 		}
 	} ]
 }, function(clazz) {
-	debugger;
-	clazz.series.biggerBetter = clazz.biggerBetter;
+//	debugger;
+//	clazz.series.biggerBetter = clazz.biggerBetter;
 });

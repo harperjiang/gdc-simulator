@@ -64,7 +64,7 @@ Ext.define('GDC.node.MachineViewPanel', {
 									+ "</div>" + "<div class='slabeled_text'>"
 									+ "	<label>Memory:</label>" + "	{memory}"
 									+ "</div>" + "<div class='slabeled_text'>"
-									+ "  <label>IP:</label>" + "  {ip}"
+									+ "  <label>IP Address:</label>" + "  {ip}"
 									+ "</div>"
 						}, {
 							xtype : 'component',

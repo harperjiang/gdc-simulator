@@ -39,8 +39,8 @@ public class DefaultStructureService implements StructureService {
 		summary.setDcRunning(2);
 		summary.setMtbm(230);
 		summary.setUtilization(new BigDecimal("79"));
-		summary.setUsage(40);
-		summary.setCapacity(65);
+		summary.setUsage(90);
+		summary.setCapacity(20);
 		return summary;
 	}
 

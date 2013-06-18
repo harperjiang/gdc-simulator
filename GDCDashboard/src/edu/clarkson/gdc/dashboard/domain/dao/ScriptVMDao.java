@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,19 +54,22 @@ public class ScriptVMDao implements VMDao {
 				return;
 			}
 			try {
-				ProcessRunner pr = new ProcessRunner(listScript, owner
-						.getAttributes().get(Attributes.MACHINE_IP.attrName()));
-				ListVMHandler lvh = new ListVMHandler();
-				pr.setHandler(lvh);
-				pr.runAndWait();
-				List<VirtualMachine> refreshed = lvh.getVms();
-				Map<String, VirtualMachine> refreshedMap = new HashMap<String, VirtualMachine>();
-				for (VirtualMachine newvm : refreshed) {
-					refreshedMap.put(newvm.getName(), newvm);
+				String ip = owner.getAttributes().get(
+						Attributes.MACHINE_IP.attrName());
+				if (!StringUtils.isEmpty(ip)) {
+					ProcessRunner pr = new ProcessRunner(listScript, ip);
+					ListVMHandler lvh = new ListVMHandler();
+					pr.setHandler(lvh);
+					pr.runAndWait();
+					List<VirtualMachine> refreshed = lvh.getVms();
+					Map<String, VirtualMachine> refreshedMap = new HashMap<String, VirtualMachine>();
+					for (VirtualMachine newvm : refreshed) {
+						refreshedMap.put(newvm.getName(), newvm);
+					}
+					vms.put(owner.getId(), refreshedMap);
+					// Update Refresh Time
+					lastRefresh.put(owner.getId(), System.currentTimeMillis());
 				}
-				vms.put(owner.getId(), refreshedMap);
-				// Update Refresh Time
-				lastRefresh.put(owner.getId(), System.currentTimeMillis());
 			} catch (Exception e) {
 				logger.error("Exception while executing refresh vm script", e);
 			}

@@ -65,7 +65,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 							width : 60,
 							height : 120
 						}, {
-							xtype : 'gdcGaugeChart',
+							xtype : 'gdcGaugeChart2',
 							id : 'summary.usageChart',
 							width : 210,
 							height : 120,
@@ -125,7 +125,12 @@ Ext.define('GDC.summary.SummaryPanel', {
 				id : 'summary.alertGrid',
 				width : 550,
 				height : 150
-			}, ],
+			}, {
+				xtype : 'gdcMapPanel',
+				width : 920,
+				height : 300,
+				colspan : 2
+			} ],
 	listeners : {
 		afterrender : function(val, eopt) {
 			// TODO Load Data

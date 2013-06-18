@@ -1,6 +1,5 @@
 Ext.define('GDC.common.HtmlRenderer', {
 	updateHtml : function(component, data) {
-		debugger;
 		var html = component.html;
 		if (html == undefined) {
 			html = Ext.get(component.id).dom.innerHTML;

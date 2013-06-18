@@ -246,11 +246,11 @@ Ext.define('GDC.node.PowerViewPanel', {
 		GDC.common.HtmlRendererInst.updateHtml(this.getComponent('info')
 				.getComponent('status'), datas);
 		this.getComponent('performance').getComponent('power').store
-				.loadData([ [ datas.power ] ]);
+				.loadData([ [ datas.s_power ] ]);
 		this.getComponent('performance').getComponent('voltage').store
-				.loadData([ [ datas.voltage ] ]);
+				.loadData([ [ datas.s_voltage ] ]);
 		this.getComponent('performance').getComponent('temperature').store
-				.loadData([ [ datas.temperature ] ]);
+				.loadData([ [ datas.s_temperature ] ]);
 
 		var data = [ {
 			time : '12:00',

@@ -36,6 +36,8 @@
 			match="edu.clarkson.gdc.dashboard.domain.entity.Machine" />
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine" />
+		<convert converter="bean"
+			match="edu.clarkson.gdc.dashboard.service.bean.ListVMResultBean" />
 
 		<!-- this is a bad idea for live, but can be useful in testing -->
 		<convert converter="exception" match="java.lang.Exception" />

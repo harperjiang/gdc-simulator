@@ -22,6 +22,7 @@
 					<attribute key="arch" value="Solaris X64" />
 					<attribute key="cpu" value="Spark-II" />
 					<attribute key="memory" value="20G" />
+					<attribute key="ip" value="128.153.145.179" />
 				</attributes>
 			</machine>
 			<machine id="dc1.bty1.mc2" name="Machine B" />

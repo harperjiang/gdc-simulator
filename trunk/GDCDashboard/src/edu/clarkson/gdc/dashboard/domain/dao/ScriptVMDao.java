@@ -7,18 +7,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.clarkson.gdc.common.proc.OutputHandler;
 import edu.clarkson.gdc.common.proc.ProcessRunner;
+import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 
 public class ScriptVMDao implements VMDao {
 
-	protected static final long REFRESH_INTERVAL = 60000;
+	private long refreshInterval = 60000;
 
 	private String listScript;
 
@@ -39,19 +42,19 @@ public class ScriptVMDao implements VMDao {
 
 	protected void refresh(Machine owner, boolean force) {
 		if (lastRefresh.containsKey(owner.getId())
-				&& lastRefresh.get(owner.getId()) + REFRESH_INTERVAL > System
+				&& lastRefresh.get(owner.getId()) + getRefreshInterval() > System
 						.currentTimeMillis() && !force) {
 			return;
 		}
 		synchronized (owner) {
 			if (lastRefresh.containsKey(owner.getId())
-					&& lastRefresh.get(owner.getId()) + REFRESH_INTERVAL > System
+					&& lastRefresh.get(owner.getId()) + getRefreshInterval() > System
 							.currentTimeMillis() && !force) {
 				return;
 			}
 			try {
 				ProcessRunner pr = new ProcessRunner(listScript, owner
-						.getAttributes().get("ip"));
+						.getAttributes().get(Attributes.MACHINE_IP.attrName()));
 				ListVMHandler lvh = new ListVMHandler();
 				pr.setHandler(lvh);
 				pr.runAndWait();
@@ -81,9 +84,10 @@ public class ScriptVMDao implements VMDao {
 			synchronized (dest) {
 				if (!vms.get(source.getId()).containsKey(vm.getName()))
 					return;
+				String ip = Attributes.MACHINE_IP.attrName();
 				ProcessRunner pr = new ProcessRunner(migrateScript, source
-						.getAttributes().get("ip"), dest.getAttributes().get(
-						"ip"), vm.getName());
+						.getAttributes().get(ip), dest.getAttributes().get(ip),
+						vm.getName());
 				pr.setHandler(new MigrationHandler());
 				try {
 					pr.runAndWait();
@@ -106,14 +110,17 @@ public class ScriptVMDao implements VMDao {
 
 	@Override
 	public List<VirtualMachine> list(Machine owner) {
+		refresh(owner, false);
 		List<VirtualMachine> result = new ArrayList<VirtualMachine>();
-		result.addAll(vms.get(owner.getId()).values());
-		Collections.sort(result, new Comparator<VirtualMachine>() {
-			@Override
-			public int compare(VirtualMachine o1, VirtualMachine o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
+		if (vms.containsKey(owner.getId())) {
+			result.addAll(vms.get(owner.getId()).values());
+			Collections.sort(result, new Comparator<VirtualMachine>() {
+				@Override
+				public int compare(VirtualMachine o1, VirtualMachine o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
+		}
 		return result;
 	}
 
@@ -133,9 +140,25 @@ public class ScriptVMDao implements VMDao {
 		this.migrateScript = migrateScript;
 	}
 
+	public long getRefreshInterval() {
+		return refreshInterval;
+	}
+
+	public void setRefreshInterval(long refreshInterval) {
+		this.refreshInterval = refreshInterval;
+	}
+
 	protected static final class ListVMHandler implements OutputHandler {
 
 		private List<VirtualMachine> vms;
+
+		private int counter = -1;
+
+		private static final Pattern start = Pattern
+				.compile("[\\t ]+Id[\\t ]+Name[\\t ]+State");
+
+		private static final Pattern pattern = Pattern
+				.compile("([\\w\\-]+)[\\t ]+([\\w\\-]+)[\\t ]+([\\w\\-]+)");
 
 		public ListVMHandler() {
 			super();
@@ -144,7 +167,26 @@ public class ScriptVMDao implements VMDao {
 
 		@Override
 		public void output(String input) {
-			throw new RuntimeException("Not implemented");
+			try {
+				if (start.matcher(input).matches()) {
+					counter = 0;
+				}
+				// Skip 2 lines
+				if (counter >= 2) {
+					Matcher matcher = pattern.matcher(input);
+					if (matcher.matches()) {
+						VirtualMachine vm = new VirtualMachine();
+						vm.setId(matcher.group(1));
+						vm.setName(matcher.group(2));
+						vm.getAttributes().put(Attributes.VM_STATUS.attrName(),
+								matcher.group(3));
+						vms.add(vm);
+					}
+				}
+			} finally {
+				if (counter >= 0)
+					counter++;
+			}
 		}
 
 		public List<VirtualMachine> getVms() {

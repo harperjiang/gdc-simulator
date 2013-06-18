@@ -43,32 +43,24 @@ Ext.define('GDC.node.MachineViewPanel', {
 			height : 120,
 			style : 'float:left;' + 'margin-left:30px;' + 'margin-top:10px;',
 			html : "<div class='slabeled_text'>"
-			+"	<label>Status:</label>"
-			+"	<img src='image/{image}'"
-			+"		style='width: 14px; "
-			+"		height: 14px; "
-			+"		display: inline;' />"
-			+"</div>"
-			+"<div class='slabeled_text'>"
-			+"	<label>Manufacture:</label>"
-			+"	{manufacture}"
-			+"</div>"
-			+"<div class='slabeled_text'>"
-			+"	<label>Architecture:</label>"
-			+"	{arch}"
-			+"</div>"
-			+"<div class='slabeled_text'>"
-			+"	<label>CPU:</label>"
-			+"	{cpu}"
-			+"</div>"
-			+"<div class='slabeled_text'>"
-			+"	<label>Memory:</label>"
-			+"	{memory}"
-			+"</div>" 
-			+"<div class='slabeled_text'>" 
-			+"  <label>IP:</label>" 
-			+"  {ip}" 
-			+"</div>"
+					+ "	<label>Status:</label>"
+					+ "	<img src='image/{image}'"
+					+ "		style='width: 14px; "
+					+ "		height: 14px; "
+					+ "		display: inline;' />" + "</div>"
+					+ "<div class='slabeled_text'>"
+					+ "	<label>Manufacture:</label>"
+					+ "	{manufacture}" + "</div>"
+					+ "<div class='slabeled_text'>"
+					+ "	<label>Architecture:</label>"
+					+ "	{arch}" + "</div>"
+					+ "<div class='slabeled_text'>"
+					+ "	<label>CPU:</label>" + "	{cpu}"
+					+ "</div>" + "<div class='slabeled_text'>"
+					+ "	<label>Memory:</label>" + "	{memory}"
+					+ "</div>" + "<div class='slabeled_text'>"
+					+ "  <label>IP:</label>" + "  {ip}"
+					+ "</div>"
 		}, {
 			xtype : 'component',
 			itemId : 'desc',
@@ -110,7 +102,13 @@ Ext.define('GDC.node.MachineViewPanel', {
 				steps : 4,
 				margin : 7,
 				title : 'CPU Usage'
-			} ]
+			} ],
+			initComponent: function() {
+				if(this.series === undefined)
+					alert('Undefined');
+				else
+					this.series[0].biggerBetter = true;
+			}
 		}, {
 			xtype : 'gdcGaugeChart',
 			itemId : 'memory',
@@ -140,20 +138,16 @@ Ext.define('GDC.node.MachineViewPanel', {
 	loadData : function(datas) {
 		this.datas = datas;
 		this.getComponent('performance').getComponent('cpu').store
-				.loadData([ [ datas.power ] ]);
+				.loadData([ [ datas.s_cpu ] ]);
 		this.getComponent('performance').getComponent('memory').store
-				.loadData([ [ datas.voltage ] ]);
+				.loadData([ [ datas.s_memory ] ]);
 		GDC.common.HtmlRendererInst.updateHtml(this.getComponent('info')
 				.getComponent('status'), datas);
 		this.getComponent('info').getComponent('desc').html = datas.desc;
-		
-		var myData = [ [ false, 'WT-001', 'Severe',
-							'Data Center', 'Data Center is Down' ] ];
-					myData.push([ false, 'ZZ-123', 'Warning', 'VM',
-							'VM will be migrated' ]);
-					
-		this.getComponent('vmGrid').store.loadData(myData);
+
 		this.getComponent('banner').html = "Machine: " + datas.name;
 		this.getComponent('techspec').html = datas.techSpec;
+
+		this.getComponent('vmGrid').refresh();
 	}
 });

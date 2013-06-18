@@ -34,6 +34,7 @@ public class DefaultNodeService implements NodeService {
 			data.put("id", node.getId());
 			data.put("name", node.getName());
 			data.put("desc", node.getDescription());
+			// Attributes
 			data.putAll(node.getAttributes());
 			if (node instanceof DataCenter) {
 				data.put("type", "dc");

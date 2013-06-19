@@ -22,6 +22,7 @@
 			<include method="create" />
 			<include method="migrate" />
 			<include method="list" />
+			<include method="operate" />
 		</create>
 
 		<convert converter="bean"

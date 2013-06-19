@@ -15,4 +15,5 @@ public interface VMDao {
 
 	void migrate(VirtualMachine vm, Machine source, Machine dest);
 
+	void operate(Machine source, VirtualMachine vm, String operation);
 }

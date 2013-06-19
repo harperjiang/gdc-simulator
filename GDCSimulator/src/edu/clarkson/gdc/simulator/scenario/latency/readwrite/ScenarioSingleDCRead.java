@@ -1,5 +1,8 @@
 package edu.clarkson.gdc.simulator.scenario.latency.readwrite;
 
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
@@ -15,11 +18,11 @@ public class ScenarioSingleDCRead {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		DefaultCacheStorage storage = new DefaultCacheStorage();
 		storage.setReadTime(50);
 		storage.setWriteTime(70);
-
+		PrintWriter pw = new PrintWriter(new FileOutputStream("read_resp"));
 		for (int clientCount = 1; clientCount < 100; clientCount++) {
 			LatencyEnvironment env = new LatencyEnvironment();
 
@@ -80,9 +83,10 @@ public class ScenarioSingleDCRead {
 
 			env.run(86400l);
 
-			System.out.println(clientCount + "\t" + all.getAverage() + "\t"
+			pw.println(clientCount + "\t" + all.getAverage() + "\t"
 					+ all.getCount() + "\t" + read.getAverage() + "\t"
 					+ write.getAverage());
 		}
+		pw.close();
 	}
 }

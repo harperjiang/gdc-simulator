@@ -1,5 +1,9 @@
 package edu.clarkson.gdc.simulator.scenario.latency.tact;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
@@ -17,11 +21,12 @@ public class ScenarioEventual {
 
 	/**
 	 * @param args
+	 * @throws FileNotFoundException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		DefaultCacheStorage storage = new DefaultCacheStorage();
-		storage.setReadTime(50);
-		storage.setWriteTime(70);
+		storage.setReadTime(1);
+		storage.setWriteTime(1);
 
 		int serverCount = 5;
 		int clientCount = 100;
@@ -38,9 +43,9 @@ public class ScenarioEventual {
 				{
 					power = 4;
 					slowPart = 0;
-					
-					setCpuCost(IsolateServer.READ_DATA, 30);
-					setCpuCost(IsolateServer.WRITE_DATA, 35);
+
+					setCpuCost(IsolateServer.READ_DATA, 20);
+					setCpuCost(IsolateServer.WRITE_DATA, 25);
 				}
 			};
 			tdcs[i].setStorage(storage);
@@ -97,9 +102,10 @@ public class ScenarioEventual {
 			}
 		});
 		env.run(86400l);
-
-		System.out.println(serverCount + "\t" + all.getAverage() + "\t"
+		PrintWriter pw = new PrintWriter(new FileOutputStream("tact_eventual"));
+		pw.println(serverCount + "\t" + all.getAverage() + "\t"
 				+ read.getAverage() + "\t" + write.getAverage() + "\t"
 				+ read.getCount() + "\t" + write.getCount());
+		pw.close();
 	}
 }

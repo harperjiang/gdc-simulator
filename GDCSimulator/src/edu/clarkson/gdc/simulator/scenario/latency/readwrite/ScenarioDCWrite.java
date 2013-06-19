@@ -1,5 +1,7 @@
 package edu.clarkson.gdc.simulator.scenario.latency.readwrite;
 
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +22,12 @@ public class ScenarioDCWrite {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		DefaultCacheStorage storage = new DefaultCacheStorage();
 		storage.setReadTime(50);
 		storage.setWriteTime(70);
-
+		PrintWriter pw = new PrintWriter(new FileOutputStream(
+				"read_multiserver2"));
 		for (int index = 1; index < 50; index++) {
 			int clientCount = 100;
 			int serverCount = index;
@@ -57,7 +60,7 @@ public class ScenarioDCWrite {
 			for (int i = 0; i < serverCount; i++) {
 				for (int j = i + 1; j < serverCount; j++) {
 					// Assume a relative high latency between data centers
-					new Pipe(servers.get(i), servers.get(j), 20);
+					new Pipe(servers.get(i), servers.get(j), 1);
 				}
 			}
 
@@ -110,10 +113,11 @@ public class ScenarioDCWrite {
 
 			env.run(86400l);
 
-			System.out.println(serverCount + "\t" + all.getAverage() + "\t"
+			pw.println(serverCount + "\t" + all.getAverage() + "\t"
 					+ read.getAverage() + "\t" + write.getAverage() + "\t"
 					+ read.getCount() + "\t" + write.getCount());
 		}
+		pw.close();
 	}
 
 }

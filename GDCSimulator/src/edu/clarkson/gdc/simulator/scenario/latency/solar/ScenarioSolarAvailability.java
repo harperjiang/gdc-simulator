@@ -3,18 +3,20 @@ package edu.clarkson.gdc.simulator.scenario.latency.solar;
 import java.awt.geom.Point2D;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.clarkson.gdc.simulator.framework.Environment;
 
-public class ScenarioPowerGeneration {
+public class ScenarioSolarAvailability {
 
 	/**
 	 * The unit in this environment is 10ms
 	 */
 	public static void main(String[] args) throws Exception {
-		final Environment solarenv = new Environment();
+
+		Environment env = new Environment();
 
 		List<SolarServer> solarservers = new ArrayList<SolarServer>();
 		solarservers.add(new SolarServer("egypt", new Point2D.Double(24.68695,
@@ -27,28 +29,28 @@ public class ScenarioPowerGeneration {
 				-115.66406)));
 		solarservers.add(new SolarServer("brazil", new Point2D.Double(-5.26601,
 				-39.90234)));
-
-		for (SolarServer ss : solarservers)
-			solarenv.add(ss);
+		for (SolarServer ss : solarservers) {
+			env.add(ss);
+		}
 
 		PrintWriter pw = new PrintWriter(
-				new FileOutputStream("solar_power_gen"));
-		while (solarenv.getClock().getCounter() <= 8640000) {
-			solarenv.getClock().tick();
-			if (solarenv.getClock().getCounter() % 10000l == 0) {
-				double time = ((double) solarenv.getClock().getCounter()) / 360000;
-				long powersum = 0;
-				pw.print(String.valueOf(time));
-				pw.print("\t");
-				for (SolarServer ss : solarservers) {
-					pw.print(String.valueOf((ss.getPower())));
-					pw.print("\t");
-					powersum += (ss.getPower());
+				new FileOutputStream("solar_ds_online"));
+
+		for (int i = 0; i < 8640000; i++) {
+			if (env.getClock().getCounter() % 10000l == 0) {
+				int sum = 0;
+				for (int j = 0; j < solarservers.size(); j++) {
+					if (solarservers.get(j).getExceptionStrategy()
+							.getException(i) == null)
+						sum++;
 				}
-				pw.println(powersum);
+
+				double start = ((double) i) / 360000;
+				pw.println(MessageFormat.format("{0}\t{1}",
+						Double.toString(start), sum));
 			}
+			env.getClock().tick();
 		}
 		pw.close();
-
 	}
 }

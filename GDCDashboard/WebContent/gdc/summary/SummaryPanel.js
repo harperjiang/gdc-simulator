@@ -2,6 +2,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 	extend : 'Ext.panel.Panel',
 	xtype : 'summaryPanel',
 	title : 'Summary',
+	autoScroll : true,
 	layout : {
 		type : 'table',
 		columns : 2,

@@ -4,6 +4,7 @@ import edu.clarkson.gdc.simulator.Data;
 import edu.clarkson.gdc.simulator.common.Pair;
 import edu.clarkson.gdc.simulator.framework.DataMessage;
 import edu.clarkson.gdc.simulator.framework.Pipe;
+import edu.clarkson.gdc.simulator.framework.storage.NotFoundException;
 import edu.clarkson.gdc.simulator.module.message.KeyRead;
 import edu.clarkson.gdc.simulator.module.message.KeyResponse;
 import edu.clarkson.gdc.simulator.module.message.KeyWrite;
@@ -20,9 +21,14 @@ public class IsolateServer extends AbstractDataCenter {
 			MessageRecorder recorder) {
 		if (message instanceof KeyRead) {
 			KeyRead cr = (KeyRead) message;
-			Pair<Long, Data> readresult = getStorage().read(cr.getKey());
-			recorder.record(getCpuCost(READ_DATA), readresult.getA(), source,
-					new KeyResponse(message, readresult.getB()));
+			try {
+				Pair<Long, Data> readresult = getStorage().read(cr.getKey());
+				recorder.record(getCpuCost(READ_DATA), readresult.getA(),
+						source, new KeyResponse(message, readresult.getB()));
+			} catch (NotFoundException e) {
+				recorder.record(getCpuCost(READ_DATA), getStorage()
+						.getReadTime(), source, new KeyResponse(message, null));
+			}
 		}
 
 		if (message instanceof KeyWrite) {

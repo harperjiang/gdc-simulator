@@ -25,6 +25,9 @@ Ext.define('GDC.node.VMGrid', {
 	listeners : {
 		'selectionchange' : function(view, records) {
 			this.down('#migrateButton').setDisabled(!records.length);
+			this.down('#restartButton').setDisabled(!records.length);
+			this.down('#startButton').setDisabled(!records.length);
+			this.down('#stopButton').setDisabled(!records.length);
 		}
 	},
 	tbar : [ {
@@ -54,6 +57,24 @@ Ext.define('GDC.node.VMGrid', {
 		text : 'Refresh',
 		handler : function() {
 			this.up('gdcVmGrid').refresh();
+		}
+	},{
+		text : 'Start',
+		itemId:	'startButton',
+		handler : function() {
+		
+		}
+	},{
+		text : 'Stop',
+		itemId:	'stopButton',
+		handler : function() {
+			
+		}
+	},{
+		text : 'Restart',
+		itemId:	'restartButton',
+		handler : function() {
+			
 		}
 	} ],
 	collapsible : true,

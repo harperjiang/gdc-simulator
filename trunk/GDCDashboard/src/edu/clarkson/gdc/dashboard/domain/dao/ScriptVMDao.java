@@ -95,8 +95,6 @@ public class ScriptVMDao implements VMDao {
 				pr.setHandler(new MigrationHandler());
 				try {
 					pr.runAndWait();
-					vms.get(dest.getId()).put(vm.getName(),
-							vms.get(source.getId()).remove(vm.getName()));
 				} catch (Exception e) {
 					logger.error("Exception while executing migration script",
 							e);
@@ -203,5 +201,11 @@ public class ScriptVMDao implements VMDao {
 		public void output(String input) {
 			// Catch exception and throw out
 		}
+	}
+
+	@Override
+	public void operate(Machine source, VirtualMachine vm, String operation) {
+		// TODO Auto-generated method stub
+		
 	}
 }

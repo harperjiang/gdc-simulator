@@ -1,6 +1,8 @@
 package edu.clarkson.gdc.simulator.scenario.latency.solar;
 
 import java.awt.geom.Point2D;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,6 @@ import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.FailMessage;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
-import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
 import edu.clarkson.gdc.simulator.scenario.Averager;
 import edu.clarkson.gdc.simulator.scenario.SectionAverager;
 import edu.clarkson.gdc.simulator.scenario.SectionAverager.Section;
@@ -20,7 +21,7 @@ public class ScenarioSolarLatency {
 	/**
 	 * The unit in this environment is 10ms
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		final Environment solarenv = new Environment();
 
 		List<SolarServer> solarservers = new ArrayList<SolarServer>();
@@ -38,12 +39,12 @@ public class ScenarioSolarLatency {
 		for (SolarServer ss : solarservers)
 			solarenv.add(ss);
 
-		SolarClient client = new SolarClient();
-//		client.setLocation(new Point2D.Double(64.14, -21.87));
+		SolarClient2 client = new SolarClient2();
+		 client.setLocation(new Point2D.Double(64.14, -21.87));
 		// Reykyavik, Iceland
-		 client.setLocation(new Point2D.Double(45.6, -73.7));//
+//		 client.setLocation(new Point2D.Double(45.6, -73.7));//
 		// Montreal,Canada
-//		 client.setLocation(new Point2D.Double(39.93, 116.46));
+//		client.setLocation(new Point2D.Double(39.93, 116.46));
 		// Beijing, China
 		solarenv.add(client);
 		client.addListener(NodeMessageListener.class,
@@ -51,8 +52,8 @@ public class ScenarioSolarLatency {
 
 		for (SolarServer ss : solarservers) {
 			DistancePipe dp = new DistancePipe(client, ss);
-//			System.out.println(ss.getId() + "\t"
-//					+ ((ConstantTimeModel) dp.getTimeModel()).getLatency());
+			// System.out.println(ss.getId() + "\t"
+			// + ((ConstantTimeModel) dp.getTimeModel()).getLatency());
 		}
 
 		final SectionAverager success = new SectionAverager(36000l);
@@ -99,12 +100,21 @@ public class ScenarioSolarLatency {
 
 		success.end(solarenv.getClock().getCounter());
 		failed.end(solarenv.getClock().getCounter());
-		 System.out.println(average.getAverage());
-//		for (int i = 0; i < success.getSections().size(); i++) {
-//			Section sec = success.getSections().get(i);
-//			Section f = failed.getSections().get(i);
-//			System.out.println(MessageFormat.format("{0}\t{1}\t{2}\t{3}",
-//					sec.start, sec.count, sec.average, f.count));
-//		}
+		// System.out.println(average.getAverage());
+		 PrintWriter pw = new PrintWriter(new FileOutputStream(
+		 "solar_latency_reykyavik2"));
+//		 PrintWriter pw = new PrintWriter(new FileOutputStream(
+//		 "solar_latency_montreal2"));
+//		PrintWriter pw = new PrintWriter(new FileOutputStream(
+//				"solar_latency_beijing"));
+		for (int i = 0; i < success.getSections().size(); i++) {
+			Section sec = success.getSections().get(i);
+			Section f = failed.getSections().get(i);
+			pw.println(MessageFormat.format("{0}\t{1}\t{2}\t{3}",
+					String.valueOf(((double) sec.start) / 360000),
+					String.valueOf(sec.count), String.valueOf(sec.average),
+					String.valueOf(f.count)));
+		}
+		pw.close();
 	}
 }

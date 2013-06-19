@@ -1,5 +1,9 @@
 package edu.clarkson.gdc.simulator.scenario.latency.tact;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+
 import edu.clarkson.gdc.simulator.Client;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
@@ -17,11 +21,12 @@ public class ScenarioStrong {
 
 	/**
 	 * @param args
+	 * @throws FileNotFoundException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		DefaultCacheStorage storage = new DefaultCacheStorage();
-		storage.setReadTime(50);
-		storage.setWriteTime(70);
+		storage.setReadTime(1);
+		storage.setWriteTime(1);
 
 		int serverCount = 5;
 		int clientCount = 100;
@@ -39,12 +44,12 @@ public class ScenarioStrong {
 					power = 4;
 					slowPart = 0;
 
-					setCpuCost(TwoPCServer.READ_DATA, 30);
-					setCpuCost(TwoPCServer.WRITE_DATA, 30);
-					setCpuCost(TwoPCServer.SEND_VOTE, 30);
-					setCpuCost(TwoPCServer.RECEIVE_VOTE, 30);
-					setCpuCost(TwoPCServer.SEND_FINALIZE, 30);
-					setCpuCost(TwoPCServer.RECEIVE_FINALIZE, 30);
+					setCpuCost(TwoPCServer.READ_DATA, 20);
+					setCpuCost(TwoPCServer.WRITE_DATA, 20);
+					setCpuCost(TwoPCServer.SEND_VOTE, 20);
+					setCpuCost(TwoPCServer.RECEIVE_VOTE, 15);
+					setCpuCost(TwoPCServer.SEND_FINALIZE, 15);
+					setCpuCost(TwoPCServer.RECEIVE_FINALIZE, 15);
 				}
 			};
 			tdcs[i].setStorage(storage);
@@ -101,9 +106,10 @@ public class ScenarioStrong {
 			}
 		});
 		env.run(86400l);
-
-		System.out.println(serverCount + "\t" + all.getAverage() + "\t"
+		PrintWriter pw = new PrintWriter(new FileOutputStream("tact_strong"));
+		pw.println(serverCount + "\t" + all.getAverage() + "\t"
 				+ read.getAverage() + "\t" + write.getAverage() + "\t"
 				+ read.getCount() + "\t" + write.getCount());
+		pw.close();
 	}
 }

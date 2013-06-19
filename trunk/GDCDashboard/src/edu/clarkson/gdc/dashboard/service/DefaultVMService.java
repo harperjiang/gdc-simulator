@@ -52,4 +52,9 @@ public class DefaultVMService implements VMService {
 		this.vmDao = vmDao;
 	}
 
+	@Override
+	public void operate(String srcMachine, String vmName, String operation) {
+		
+	}
+
 }

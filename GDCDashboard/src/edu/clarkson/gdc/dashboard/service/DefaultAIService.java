@@ -36,6 +36,12 @@ public class DefaultAIService implements AIService {
 		}
 	}
 
+	@Override
+	public void makeMigrationDecision() {
+		// TODO Auto-generated method stub
+
+	}
+
 	public HistoryDao getHistoryDao() {
 		return historyDao;
 	}

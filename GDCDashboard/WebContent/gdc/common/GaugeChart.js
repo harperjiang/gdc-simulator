@@ -19,7 +19,6 @@ Ext.define("GDC.common.GaugeChart", {
 		margin : 7,
 		title : 'Usage'
 	} ],
-	biggerBetter : false,
 	series : [ {
 		type : 'gauge',
 		field : 'data1',
@@ -33,5 +32,15 @@ Ext.define("GDC.common.GaugeChart", {
 				fill : i === 0 ? colors[Math.floor(data / 20)] : '#ddd'
 			});
 		}
-	} ]
+	} ],
+	initComponent: function() {
+		this.store = Ext.create('Ext.data.ArrayStore', {
+			// reader configs
+			fields : [ {
+				name : 'data1',
+				type : 'float'
+			} ]
+		});
+		this.callParent();
+	}
 });

@@ -54,7 +54,6 @@ function updateId(existed, dataid, newid) {
 
 function displayNode(id) {
 	nodeService.getData(id, function(reply) {
-		debugger;
 		var data = JSON.parse(reply);
 		var newid = "tab" + data.id;
 		var mainTabPanel = Ext.getCmp('maintab');

@@ -1,5 +1,4 @@
 function updateHtml(component, data) {
-	debugger;
 	var html = component.html;
 	if (html == undefined) {
 		html = Ext.get(component.id).dom.innerHTML;
@@ -267,7 +266,6 @@ Ext.define('GDC.node.DCViewPanel', {
 				height : 240
 			} ],
 	loadData : function(datas) {
-		debugger;
 		this.getComponent('info').getComponent('desc').html = datas.desc;
 		GDC.common.HtmlRendererInst.updateHtml(this.getComponent('info')
 				.getComponent('status'), datas);

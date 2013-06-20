@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+						http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 	<import resource="env.xml" />
 
@@ -19,9 +20,11 @@
 	<bean id="historyDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaHistoryDao">
 		<property name="entityManager" ref="entityManager" />
 	</bean>
-	<!-- bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaStatusDao"> 
-		<property name="entityManager" ref="entityManager" /> </bean -->
-	<bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.DummyStatusDao" />
+	<bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaStatusDao">
+		<property name="entityManager" ref="entityManager" />
+	</bean>
+	<!-- bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.DummyStatusDao" 
+		/ -->
 
 	<bean id="structureService"
 		class="edu.clarkson.gdc.dashboard.service.DefaultStructureService">
@@ -46,6 +49,20 @@
 		<property name="historyDao" ref="historyDao" />
 		<property name="statusDao" ref="statusDao" />
 	</bean>
+
+	<bean id="aiService" class="edu.clarkson.gdc.dashboard.service.DefaultAIService">
+		<property name="nodeDao" ref="nodeDao" />
+		<property name="historyDao" ref="historyDao" />
+		<property name="statusDao" ref="statusDao" />
+		<property name="latency" value="350000" />
+	</bean>
+
+	<task:scheduled-tasks scheduler="myScheduler">
+		<task:scheduled ref="aiService" method="updateStatus"
+			cron="* */5 * * * *" />
+	</task:scheduled-tasks>
+
+	<task:scheduler id="myScheduler" pool-size="5" />
 
 	<bean id="adapter"
 		class="edu.clarkson.gdc.common.ApplicationContextHolder.Adaptor" />

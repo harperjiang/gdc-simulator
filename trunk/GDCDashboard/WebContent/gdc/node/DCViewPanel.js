@@ -272,11 +272,11 @@ Ext.define('GDC.node.DCViewPanel', {
 		GDC.common.HtmlRendererInst.updateHtml(this.getComponent('info')
 				.getComponent('status'), datas);
 		this.getComponent('performance').getComponent('healthChart').store
-				.loadData([ [ datas.s_health ] ]);
+				.loadData([ [ datas.DC_HEALTH ] ]);
 		this.getComponent('performance').getComponent('capacityChart').store
-				.loadData([ [ datas.s_capacity ] ]);
+				.loadData([ [ datas.DC_CAPACITY ] ]);
 		this.getComponent('performance').getComponent('powerChart').store
-				.loadData([ [ datas.s_power ] ]);
+				.loadData([ [ datas.DC_POWER ] ]);
 		var data = [ {
 			time : '12:00',
 			value : 240

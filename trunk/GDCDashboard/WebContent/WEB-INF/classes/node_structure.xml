@@ -8,7 +8,7 @@
 			<attribute key="designed_capacity" value="200MW" />
 			<attribute key="peak_capacity" value="850MW" />
 		</attributes>
-		<battery id="dc1.bty1" name="APC UPS">
+		<battery id="dc1-bty1" name="APC UPS">
 			<attributes>
 				<attribute key="manufacture" value="APC" />
 				<attribute key="model" value="DL-650" />
@@ -16,7 +16,7 @@
 				<attribute key="designed_output" value="110Amp" />
 				<attribute key="output_voltage" value="110V" />
 			</attributes>
-			<machine id="dc1.bty1.mc1" name="GDC-Massena">
+			<machine id="dc1-bty1-mc1" name="GDC-Massena">
 				<attributes>
 					<attribute key="manufacture" value="Sun" />
 					<attribute key="arch" value="Solaris X64" />
@@ -25,13 +25,13 @@
 					<attribute key="ip" value="128.153.145.179" />
 				</attributes>
 			</machine>
-			<machine id="dc1.bty1.mc2" name="GDC-Watertown" />
+			<machine id="dc1-bty1-mc2" name="GDC-Watertown" />
 		</battery>
 		<description>This is a description to the data center 1</description>
 	</data-center>
 	<data-center id="dc2" name="Lab in CAMP">
-		<battery id="dc2.bty1" name="CyberPower UPS">
-			<machine id="dc2.bty1.mc1" name="CAMP Machine 1">
+		<battery id="dc2-bty1" name="CyberPower UPS">
+			<machine id="dc2-bty1-mc1" name="CAMP Machine 1">
 				<attributes>
 					<attribute key="manufacture" value="Sun" />
 					<attribute key="arch" value="Solaris X64" />

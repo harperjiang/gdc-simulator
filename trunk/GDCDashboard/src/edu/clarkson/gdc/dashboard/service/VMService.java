@@ -6,7 +6,17 @@ import edu.clarkson.gdc.dashboard.service.bean.ListVMResultBean;
 public interface VMService {
 
 	public static enum Operation {
-		START, STOP, DESTROY, RESTART
+		START("start"), STOP("destroy"), RESTART("reset");
+
+		private String operand;
+
+		Operation(String opr) {
+			this.operand = opr;
+		}
+
+		public String getOperand() {
+			return operand;
+		}
 	}
 
 	public ListVMResultBean list(String owner);

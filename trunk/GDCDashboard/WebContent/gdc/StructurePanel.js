@@ -54,6 +54,7 @@ function updateId(existed, dataid, newid) {
 
 function displayNode(id) {
 	nodeService.getData(id, function(reply) {
+		debugger;
 		var data = JSON.parse(reply);
 		var newid = "tab" + data.id;
 		var mainTabPanel = Ext.getCmp('maintab');
@@ -83,7 +84,7 @@ function displayNode(id) {
 		}
 		// Refresh Data
 		// Preprocess data
-		data.image = data.status ? 'green_light.png' : 'red_light.png';
+		data.image = data.STATUS ? 'green_light.png' : 'red_light.png';
 		existed.loadData(data);
 		// Set it as the active one
 		mainTabPanel.setActiveTab(newid);

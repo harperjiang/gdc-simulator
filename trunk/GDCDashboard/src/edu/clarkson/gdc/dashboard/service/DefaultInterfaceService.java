@@ -5,6 +5,7 @@ import java.util.Date;
 import edu.clarkson.gdc.dashboard.domain.dao.HistoryDao;
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.dao.StatusDao;
+import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
 
 public class DefaultInterfaceService implements InterfaceService {
@@ -27,7 +28,12 @@ public class DefaultInterfaceService implements InterfaceService {
 	@Override
 	public void updateNodeHistory(String nodeId, String type, String value,
 			Date timestamp) {
-		
+		NodeHistory history = new NodeHistory();
+		history.setNodeId(nodeId);
+		history.setTime(timestamp);
+		history.setDataType(type);
+		history.setValue(value);
+		getHistoryDao().addHistory(history);
 	}
 
 	public NodeDao getNodeDao() {

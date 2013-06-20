@@ -31,6 +31,13 @@ public class DefaultVMService implements VMService {
 	}
 
 	@Override
+	public void operate(String srcId, String vmName, String operation) {
+		Machine srcMachine = getNodeDao().getNode(srcId);
+		VirtualMachine vm = getVmDao().find(srcMachine, vmName);
+		vmDao.operate(srcMachine, vm, VMService.Operation.valueOf(operation));
+	}
+
+	@Override
 	public VirtualMachine create() {
 		// TODO Not implemented
 		return null;
@@ -50,11 +57,6 @@ public class DefaultVMService implements VMService {
 
 	public void setVmDao(VMDao vmDao) {
 		this.vmDao = vmDao;
-	}
-
-	@Override
-	public void operate(String srcMachine, String vmName, String operation) {
-		
 	}
 
 }

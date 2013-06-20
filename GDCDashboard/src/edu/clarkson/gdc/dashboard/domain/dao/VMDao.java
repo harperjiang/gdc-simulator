@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
+import edu.clarkson.gdc.dashboard.service.VMService;
 
 public interface VMDao {
 
@@ -15,5 +16,6 @@ public interface VMDao {
 
 	void migrate(VirtualMachine vm, Machine source, Machine dest);
 
-	void operate(Machine source, VirtualMachine vm, String operation);
+	void operate(Machine source, VirtualMachine vm,
+			VMService.Operation operation);
 }

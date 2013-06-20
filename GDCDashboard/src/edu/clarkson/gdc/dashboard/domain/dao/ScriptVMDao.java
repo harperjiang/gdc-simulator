@@ -19,6 +19,7 @@ import edu.clarkson.gdc.common.proc.ProcessRunner;
 import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
+import edu.clarkson.gdc.dashboard.service.VMService;
 
 public class ScriptVMDao implements VMDao {
 
@@ -27,6 +28,8 @@ public class ScriptVMDao implements VMDao {
 	private String listScript;
 
 	private String migrateScript;
+
+	private String operateScript;
 
 	private Map<String, Long> lastRefresh;
 
@@ -126,6 +129,23 @@ public class ScriptVMDao implements VMDao {
 		return result;
 	}
 
+	@Override
+	public void operate(Machine owner, VirtualMachine vm,
+			VMService.Operation operation) {
+		refresh(owner, true);
+		if (null == find(owner, vm.getName()))
+			return;
+		try {
+			ProcessRunner runner = new ProcessRunner(getOperateScript(), owner
+					.getAttributes().get(Attributes.MACHINE_IP.name()),
+					operation.getOperand(), vm.getName());
+			runner.setHandler(new OperateHandler());
+			runner.runAndWait();
+		} catch (Exception e) {
+			logger.error("Exception while executing operate vm script", e);
+		}
+	}
+
 	public String getListScript() {
 		return listScript;
 	}
@@ -150,6 +170,14 @@ public class ScriptVMDao implements VMDao {
 		this.refreshInterval = refreshInterval;
 	}
 
+	public String getOperateScript() {
+		return operateScript;
+	}
+
+	public void setOperateScript(String operateScript) {
+		this.operateScript = operateScript;
+	}
+
 	protected static final class ListVMHandler implements OutputHandler {
 
 		private List<VirtualMachine> vms;
@@ -160,7 +188,7 @@ public class ScriptVMDao implements VMDao {
 				.compile("[\\t ]+Id[\\t ]+Name[\\t ]+State");
 
 		private static final Pattern pattern = Pattern
-				.compile("([\\w\\-]+)[\\t ]+([\\w\\-]+)[\\t ]+([\\w\\-]+)");
+				.compile("[\\t ]*([\\w\\-]+)[\\t ]+([\\w\\-]+)[\\t ]+([\\w\\- ]+)");
 
 		public ListVMHandler() {
 			super();
@@ -178,7 +206,6 @@ public class ScriptVMDao implements VMDao {
 					Matcher matcher = pattern.matcher(input);
 					if (matcher.matches()) {
 						VirtualMachine vm = new VirtualMachine();
-						vm.setId(matcher.group(1));
 						vm.setName(matcher.group(2));
 						vm.getAttributes().put(Attributes.VM_STATUS.attrName(),
 								matcher.group(3));
@@ -203,9 +230,11 @@ public class ScriptVMDao implements VMDao {
 		}
 	}
 
-	@Override
-	public void operate(Machine source, VirtualMachine vm, String operation) {
-		// TODO Auto-generated method stub
-		
+	protected static final class OperateHandler implements OutputHandler {
+		@Override
+		public void output(String input) {
+			// Catch exception and throw out
+		}
 	}
+
 }

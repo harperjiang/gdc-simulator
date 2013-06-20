@@ -44,8 +44,6 @@ public class UpdateStatusServlet extends HttpServlet {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final static String node = "";
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -66,13 +64,14 @@ public class UpdateStatusServlet extends HttpServlet {
 				for (String data : datas) {
 					if (StringUtils.isNotEmpty(data)) {
 						String[] pair = data.split("=");
-						if (NodeStatus.isStatus(pair[0])) {
-							interfaceService.updateNodeStatus(node, pair[0],
-									pair[1]);
+						String[] parts = pair[0].split("\\.");
+						if (NodeStatus.isStatus(parts[1])) {
+							interfaceService.updateNodeStatus(parts[0],
+									parts[1], pair[1]);
 						}
-						if (NodeHistory.isHistory(pair[0])) {
-							interfaceService.updateNodeHistory(node, pair[0],
-									pair[1], new Date());
+						if (NodeHistory.isHistory(parts[1])) {
+							interfaceService.updateNodeHistory(parts[0],
+									parts[1], pair[1], new Date());
 						}
 					}
 				}

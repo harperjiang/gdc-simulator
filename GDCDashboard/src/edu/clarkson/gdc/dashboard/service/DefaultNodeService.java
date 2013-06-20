@@ -55,11 +55,13 @@ public class DefaultNodeService implements NodeService {
 									.convert(se.getValue().getValue()));
 				}
 			// History
+			Map<String, Object> history = new HashMap<String, Object>();
 			for (HistoryType type : HistoryType.values()) {
 				List<NodeHistory> histories = historyDao.getHistories(node,
 						type.name(), 50);
-				data.put(type.name(), histories);
+				history.put(type.name(), histories);
 			}
+			data.put("history", history);
 		}
 		return new Gson().toJson(data);
 	}

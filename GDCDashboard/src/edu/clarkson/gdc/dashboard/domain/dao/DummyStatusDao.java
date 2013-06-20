@@ -17,7 +17,7 @@ public class DummyStatusDao implements StatusDao {
 		NodeStatus ns = new NodeStatus();
 		ns.setDataType(dataType);
 		ns.setNodeId(node.getId());
-		if (StatusType.COMMON_RUNNING.name().equals(dataType)) {
+		if (StatusType.STATUS.name().equals(dataType)) {
 			ns.setValue("true");
 		} else {
 			ns.setValue(String.valueOf(random.nextInt(100)));
@@ -29,7 +29,7 @@ public class DummyStatusDao implements StatusDao {
 	public Map<String, NodeStatus> getStatus(Node node) {
 		Map<String, NodeStatus> map = new HashMap<String, NodeStatus>();
 		for (StatusType st : StatusType.values()) {
-			map.put(st.key(), getStatus(node, st.name()));
+			map.put(st.name(), getStatus(node, st.name()));
 		}
 		return map;
 	}

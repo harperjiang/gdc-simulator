@@ -89,7 +89,7 @@ Ext.define('GDC.node.MachineViewPanel', {
 				bodyStyle : 'padding:10px',
 				collapsible : true,
 				items : [ {
-					xtype : 'gdcGaugeChart2',
+					xtype : 'gdcGaugeChart',
 					itemId : 'cpu',
 					style : 'background:#fff',
 					store : Ext.create('Ext.data.ArrayStore', {
@@ -129,17 +129,21 @@ Ext.define('GDC.node.MachineViewPanel', {
 						title : 'Memory Usage'
 					} ]
 				} ]
-			}, {
-				xtype : 'gdcVmGrid',
-				itemId : 'vmGrid',
-				height : 240
 			} ],
+	initComponent : function() {
+		this.items.push({
+			xtype : 'gdcVmGrid',
+			itemId : 'vmGrid',
+			height : 240
+		});
+		this.callParent();
+	},
 	loadData : function(datas) {
 		this.datas = datas;
 		this.getComponent('performance').getComponent('cpu').store
-				.loadData([ [ datas.s_cpu ] ]);
+				.loadData([ [ datas.MACHINE_CPU ] ]);
 		this.getComponent('performance').getComponent('memory').store
-				.loadData([ [ datas.s_memory ] ]);
+				.loadData([ [ datas.MACHINE_MEMORY ] ]);
 		GDC.common.HtmlRendererInst.updateHtml(this.getComponent('info')
 				.getComponent('status'), datas);
 		this.getComponent('info').getComponent('desc').html = datas.desc;

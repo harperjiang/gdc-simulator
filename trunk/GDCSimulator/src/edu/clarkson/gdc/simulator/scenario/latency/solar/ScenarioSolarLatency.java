@@ -12,6 +12,7 @@ import edu.clarkson.gdc.simulator.framework.Environment;
 import edu.clarkson.gdc.simulator.framework.FailMessage;
 import edu.clarkson.gdc.simulator.framework.NodeMessageEvent;
 import edu.clarkson.gdc.simulator.framework.NodeMessageListener;
+import edu.clarkson.gdc.simulator.framework.ProcessTimeModel.ConstantTimeModel;
 import edu.clarkson.gdc.simulator.scenario.Averager;
 import edu.clarkson.gdc.simulator.scenario.SectionAverager;
 import edu.clarkson.gdc.simulator.scenario.SectionAverager.Section;
@@ -40,11 +41,11 @@ public class ScenarioSolarLatency {
 			solarenv.add(ss);
 
 		SolarClient2 client = new SolarClient2();
-		 client.setLocation(new Point2D.Double(64.14, -21.87));
+		// client.setLocation(new Point2D.Double(64.14, -21.87));
 		// Reykyavik, Iceland
-//		 client.setLocation(new Point2D.Double(45.6, -73.7));//
+		// client.setLocation(new Point2D.Double(45.6, -73.7));//
 		// Montreal,Canada
-//		client.setLocation(new Point2D.Double(39.93, 116.46));
+		client.setLocation(new Point2D.Double(39.93, 116.46));
 		// Beijing, China
 		solarenv.add(client);
 		client.addListener(NodeMessageListener.class,
@@ -52,8 +53,8 @@ public class ScenarioSolarLatency {
 
 		for (SolarServer ss : solarservers) {
 			DistancePipe dp = new DistancePipe(client, ss);
-			// System.out.println(ss.getId() + "\t"
-			// + ((ConstantTimeModel) dp.getTimeModel()).getLatency());
+			System.out.println(ss.getId() + "\t"
+					+ ((ConstantTimeModel) dp.getTimeModel()).getLatency());
 		}
 
 		final SectionAverager success = new SectionAverager(36000l);
@@ -101,12 +102,12 @@ public class ScenarioSolarLatency {
 		success.end(solarenv.getClock().getCounter());
 		failed.end(solarenv.getClock().getCounter());
 		// System.out.println(average.getAverage());
-		 PrintWriter pw = new PrintWriter(new FileOutputStream(
-		 "solar_latency_reykyavik2"));
-//		 PrintWriter pw = new PrintWriter(new FileOutputStream(
-//		 "solar_latency_montreal2"));
-//		PrintWriter pw = new PrintWriter(new FileOutputStream(
-//				"solar_latency_beijing"));
+		// PrintWriter pw = new PrintWriter(new FileOutputStream(
+		// "solar_latency_reykyavik2"));
+		// PrintWriter pw = new PrintWriter(new FileOutputStream(
+		// "solar_latency_montreal"));
+		PrintWriter pw = new PrintWriter(new FileOutputStream(
+				"solar_latency_beijing2"));
 		for (int i = 0; i < success.getSections().size(); i++) {
 			Section sec = success.getSections().get(i);
 			Section f = failed.getSections().get(i);

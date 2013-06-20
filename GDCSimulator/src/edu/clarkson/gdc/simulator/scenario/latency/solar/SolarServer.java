@@ -48,7 +48,7 @@ public class SolarServer extends AbstractDataCenter {
 		double realtime = (getClock().getCounter() / (1000 / TimeConstant.UNIT))
 				+ timediff;
 		double rad = Math.abs(43200 - realtime % 86400) / 14400;
-		if(rad > 1)
+		if (rad > 1)
 			return 0;
 		double ratio = Math.cos(rad * Math.PI / 2);
 		int res = (int) (basepower * ratio);
@@ -59,7 +59,7 @@ public class SolarServer extends AbstractDataCenter {
 	protected void processEach(Pipe source, DataMessage message,
 			MessageRecorder recorder) {
 		if (message instanceof SolarClientRead) {
-			recorder.record(50l, 0l, source, new SolarClientResponse(message));
+			recorder.record(1l, 0l, source, new SolarClientResponse(message));
 		}
 	}
 }

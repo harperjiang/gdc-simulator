@@ -54,7 +54,7 @@ Ext.define('GDC.node.MachineViewPanel', {
 									+ "		height: 14px; "
 									+ "		display: inline;' />" + "</div>"
 									+ "<div class='slabeled_text'>"
-									+ "	<label>Manufacture:</label>"
+									+ "	<label>Manufacturer:</label>"
 									+ "	{manufacture}" + "</div>"
 									+ "<div class='slabeled_text'>"
 									+ "	<label>Architecture:</label>"
@@ -92,13 +92,6 @@ Ext.define('GDC.node.MachineViewPanel', {
 					xtype : 'gdcGaugeChart',
 					itemId : 'cpu',
 					style : 'background:#fff',
-					store : Ext.create('Ext.data.ArrayStore', {
-						// reader configs
-						fields : [ {
-							name : 'data1',
-							type : 'float'
-						} ]
-					}),
 					axes : [ {
 						type : 'gauge',
 						position : 'gauge',
@@ -112,13 +105,6 @@ Ext.define('GDC.node.MachineViewPanel', {
 					xtype : 'gdcGaugeChart',
 					itemId : 'memory',
 					style : 'background:#fff',
-					store : Ext.create('Ext.data.ArrayStore', {
-						// reader configs
-						fields : [ {
-							name : 'data1',
-							type : 'float'
-						} ]
-					}),
 					axes : [ {
 						type : 'gauge',
 						position : 'gauge',

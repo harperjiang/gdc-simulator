@@ -33,5 +33,15 @@ Ext.define("GDC.common.GaugeChart2", {
 				fill : i === 0 ? colors[Math.floor(data / 20)] : '#ddd'
 			});
 		}
-	} ]
+	} ],
+	initComponent : function() {
+		this.store = Ext.create('Ext.data.ArrayStore', {
+			// reader configs
+			fields : [ {
+				name : 'data1',
+				type : 'float'
+			} ]
+		});
+		this.callParent();
+	}
 });

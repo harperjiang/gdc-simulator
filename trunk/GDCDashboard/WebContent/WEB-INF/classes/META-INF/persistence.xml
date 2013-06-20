@@ -14,8 +14,8 @@
 			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/gdc_dashboard" />
-			<property name="javax.persistence.jdbc.user" value="root" />
-			<property name="javax.persistence.jdbc.password" value="jieninan" />
+			<property name="javax.persistence.jdbc.user" value="gdc" />
+			<property name="javax.persistence.jdbc.password" value="GDCscript" />
 		</properties>
 	</persistence-unit>
 </persistence>

@@ -7,12 +7,22 @@ public class DataCenter extends Node {
 
 	private List<Battery> batteries;
 
+	private PowerSource powerSource;
+
 	public DataCenter() {
 		batteries = new ArrayList<Battery>();
 	}
 
 	public List<Battery> getBatteries() {
 		return batteries;
+	}
+
+	public PowerSource getPowerSource() {
+		return powerSource;
+	}
+
+	public void setPowerSource(PowerSource powerSource) {
+		this.powerSource = powerSource;
 	}
 
 	public String getType() {

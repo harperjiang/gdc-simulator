@@ -24,7 +24,7 @@ Ext.require([ 'GDC.summary.AlertGrid', 'GDC.summary.SummaryPanel' ]);
 Ext.require('GDC.node.VMGrid');
 
 Ext.require([ 'GDC.node.DCViewPanel', 'GDC.node.PowerViewPanel',
-		'GDC.node.MachineViewPanel' ]);
+		'GDC.node.MachineViewPanel', 'GDC.node.UPSViewPanel' ]);
 
 Ext.application({
 	name : 'Kooobao Ecom System',

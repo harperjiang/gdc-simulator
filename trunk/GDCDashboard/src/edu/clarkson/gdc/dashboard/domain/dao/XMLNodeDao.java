@@ -19,6 +19,7 @@ import edu.clarkson.gdc.dashboard.domain.entity.Battery;
 import edu.clarkson.gdc.dashboard.domain.entity.DataCenter;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
+import edu.clarkson.gdc.dashboard.domain.entity.PowerSource;
 
 public class XMLNodeDao implements NodeDao {
 
@@ -60,6 +61,35 @@ public class XMLNodeDao implements NodeDao {
 				}
 				nodes.put(dc.getId(), dc);
 
+				// Power Source
+				NodeList powerNodes = dcElem.getElementsByTagName("power");
+				if (powerNodes.getLength() > 0) {
+					Element powerElem = (Element) powerNodes.item(0);
+
+					PowerSource powerSource = new PowerSource();
+					powerSource.setId(powerElem.getAttribute("id"));
+					powerSource.setName(powerElem.getAttribute("name"));
+					powerSource.setDescription(powerElem
+							.getAttribute("description"));
+
+					Element powerAttrs = (Element) powerElem
+							.getElementsByTagName("attributes").item(0);
+					if (powerAttrs != null
+							&& powerAttrs.getParentNode() == powerElem) {
+						NodeList attrList = powerAttrs
+								.getElementsByTagName("attribute");
+						for (int ii = 0; ii < attrList.getLength(); ii++) {
+							Element attr = (Element) attrList.item(ii);
+							powerSource.getAttributes().put(
+									attr.getAttribute("key"),
+									attr.getAttribute("value"));
+						}
+					}
+					nodes.put(powerSource.getId(), powerSource);
+					dc.setPowerSource(powerSource);
+				}
+
+				// Battery / UPS
 				NodeList batteryList = dcElem.getElementsByTagName("battery");
 				for (int j = 0; j < batteryList.getLength(); j++) {
 					Element batteryElem = (Element) batteryList.item(j);
@@ -81,7 +111,7 @@ public class XMLNodeDao implements NodeDao {
 						}
 					}
 					nodes.put(battery.getId(), battery);
-
+					// Machine
 					NodeList machineList = batteryElem
 							.getElementsByTagName("machine");
 					for (int k = 0; k < machineList.getLength(); k++) {

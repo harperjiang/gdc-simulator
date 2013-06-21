@@ -34,6 +34,8 @@
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.Battery" />
 		<convert converter="bean"
+			match="edu.clarkson.gdc.dashboard.domain.entity.PowerSource" />
+		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.Machine" />
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine" />

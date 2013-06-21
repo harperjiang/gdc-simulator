@@ -17,6 +17,7 @@ import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
+import edu.clarkson.gdc.dashboard.domain.entity.PowerSource;
 
 public class DefaultNodeService implements NodeService {
 
@@ -44,6 +45,9 @@ public class DefaultNodeService implements NodeService {
 			}
 			if (node instanceof Machine) {
 				data.put("type", "machine");
+			}
+			if (node instanceof PowerSource) {
+				data.put("type", "power");
 			}
 			// Status
 			Map<String, NodeStatus> status = statusDao.getStatus(node);

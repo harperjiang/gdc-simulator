@@ -4,14 +4,23 @@ structureService.getDataCenters(function(dcs) {
 	var root = {};
 	root.expanded = true;
 	root.children = new Array();
+	debugger;
 	for ( var dcCount = 0; dcCount < dcs.length; dcCount++) {
 		var dc = dcs[dcCount];
 		var dcNode = {
 			text : dc.name,
 			id : dc.id,
-			leaf : dc.batteries.length === 0,
+			leaf : dc.batteries.length === 0 && dc.powerSource === undefined,
 			children : new Array()
 		};
+		if (dc.powerSource !== undefined) {
+			var powerNode = {
+				text : dc.powerSource.name,
+				id : dc.powerSource.id,
+				left : true
+			};
+			dcNode.children.push(powerNode);
+		}
 		for ( var btyCount = 0; btyCount < dc.batteries.length; btyCount++) {
 			var bty = dc.batteries[btyCount];
 			var btyNode = {
@@ -68,10 +77,13 @@ function displayNode(id) {
 				existed = Ext.create('GDC.node.DCViewPanel');
 				break;
 			case 'battery':
-				existed = Ext.create('GDC.node.PowerViewPanel');
+				existed = Ext.create('GDC.node.UPSViewPanel');
 				break;
 			case 'machine':
 				existed = Ext.create('GDC.node.MachineViewPanel');
+				break;
+			case 'power':
+				existed = Ext.create('GDC.node.PowerViewPanel');
 				break;
 			default:
 				alert('Unrecognized type:' + data.type);

@@ -11,6 +11,9 @@
 				<element name="battery" type="tns:batteryType"></element>
 			</sequence>
 			<sequence maxOccurs="1" minOccurs="0">
+				<element name="power" type="tns:powerType"></element>
+			</sequence>
+			<sequence maxOccurs="1" minOccurs="0">
 				<element name="description" type="string"></element>
 			</sequence>
 		</sequence>
@@ -65,4 +68,16 @@
 			<element name="attribute" type="tns:attrType"></element>
 		</sequence>
 	</complexType>
+
+    <complexType name="powerType">
+		<sequence>
+			<sequence maxOccurs="1" minOccurs="0">
+				<element name="attributes" type="tns:attrsType"></element>
+			</sequence>
+			<sequence maxOccurs="1" minOccurs="0">
+				<element name="description" type="string"></element>
+			</sequence>
+		</sequence>
+		<attribute name="id" type="string"></attribute>
+		<attribute name="name" type="string"></attribute></complexType>
 </schema>

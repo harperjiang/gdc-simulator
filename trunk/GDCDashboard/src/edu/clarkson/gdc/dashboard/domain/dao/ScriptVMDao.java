@@ -1,5 +1,6 @@
 package edu.clarkson.gdc.dashboard.domain.dao;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -96,12 +97,7 @@ public class ScriptVMDao implements VMDao {
 						.getAttributes().get(ip), dest.getAttributes().get(ip),
 						vm.getName());
 				pr.setHandler(new MigrationHandler());
-				try {
-					pr.runAndWait();
-				} catch (Exception e) {
-					logger.error("Exception while executing migration script",
-							e);
-				}
+				pr.runLater();
 				refresh(dest, true);
 			}
 		}
@@ -132,18 +128,21 @@ public class ScriptVMDao implements VMDao {
 	@Override
 	public void operate(Machine owner, VirtualMachine vm,
 			VMService.Operation operation) {
-		refresh(owner, true);
-		if (null == find(owner, vm.getName()))
-			return;
+		// refresh(owner, true);
+		// if (null == find(owner, vm.getName()))
+		// return;
 		try {
 			ProcessRunner runner = new ProcessRunner(getOperateScript(), owner
-					.getAttributes().get(Attributes.MACHINE_IP.name()),
+					.getAttributes().get(Attributes.MACHINE_IP.attrName()),
 					operation.getOperand(), vm.getName());
 			runner.setHandler(new OperateHandler());
 			runner.runAndWait();
 		} catch (Exception e) {
-			logger.error("Exception while executing operate vm script", e);
+			logger.error(MessageFormat.format(
+					"Exception while doing operation {0} on {1}",
+					operation.name(), vm.getName()), e);
 		}
+		refresh(owner, true);
 	}
 
 	public String getListScript() {
@@ -195,8 +194,13 @@ public class ScriptVMDao implements VMDao {
 			vms = new ArrayList<VirtualMachine>();
 		}
 
+		private Logger logger = LoggerFactory.getLogger(getClass());
+
 		@Override
 		public void output(String input) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(input);
+			}
 			try {
 				if (start.matcher(input).matches()) {
 					counter = 0;
@@ -224,16 +228,27 @@ public class ScriptVMDao implements VMDao {
 	}
 
 	protected static final class MigrationHandler implements OutputHandler {
+
+		private Logger logger = LoggerFactory.getLogger(getClass());
+
 		@Override
 		public void output(String input) {
-			// Catch exception and throw out
+
+			// There should be no output
+			this.logger
+					.error("Exception while doing script migration:" + input);
 		}
 	}
 
 	protected static final class OperateHandler implements OutputHandler {
+
+		private Logger logger = LoggerFactory.getLogger(getClass());
+
 		@Override
 		public void output(String input) {
-			// Catch exception and throw out
+			if (logger.isDebugEnabled()) {
+				logger.debug(input);
+			}
 		}
 	}
 

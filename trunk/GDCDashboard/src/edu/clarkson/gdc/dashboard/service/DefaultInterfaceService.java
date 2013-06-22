@@ -7,6 +7,7 @@ import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.dao.StatusDao;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
+import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 
 public class DefaultInterfaceService implements InterfaceService {
 

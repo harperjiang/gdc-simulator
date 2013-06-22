@@ -10,8 +10,9 @@
 
 	<bean id="vmDao" class="edu.clarkson.gdc.dashboard.domain.dao.ScriptVMDao">
 		<property name="refreshInterval" value="30000" />
-		<property name="listScript" value="/home/harper/GDC/display.sh" />
-		<property name="migrateScript" value="/home/harper/GDC/migrate.sh" />
+		<property name="listScript" value="/home/gdc/deploy/GDCDashboard/display.sh" />
+		<property name="migrateScript" value="/home/gdc/deploy/GDCDashboard/migrate.sh" />
+		<property name="operateScript" value="/home/gdc/deploy/GDCDashboard/operate.sh" />
 	</bean>
 
 	<bean id="alertDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaAlertDao">
@@ -54,12 +55,12 @@
 		<property name="nodeDao" ref="nodeDao" />
 		<property name="historyDao" ref="historyDao" />
 		<property name="statusDao" ref="statusDao" />
-		<property name="latency" value="350000" />
+		<property name="latency" value="40000" />
 	</bean>
 
 	<task:scheduled-tasks scheduler="myScheduler">
 		<task:scheduled ref="aiService" method="updateStatus"
-			cron="* */5 * * * *" />
+			cron="30 */1 * * * *" />
 	</task:scheduled-tasks>
 
 	<task:scheduler id="myScheduler" pool-size="5" />

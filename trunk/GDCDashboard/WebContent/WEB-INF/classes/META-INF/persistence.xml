@@ -9,7 +9,6 @@
 		<class>edu.clarkson.gdc.dashboard.domain.entity.NodeStatus</class>
 		<class>edu.clarkson.gdc.dashboard.domain.entity.NodeHistory</class>
 		<properties>
-			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />
 			<property name="eclipselink.target-database" value="MySQL" />
 			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

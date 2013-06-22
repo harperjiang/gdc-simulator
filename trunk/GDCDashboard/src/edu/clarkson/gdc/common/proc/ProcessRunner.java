@@ -4,7 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ProcessRunner {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	private String[] commands;
 
@@ -36,6 +41,18 @@ public class ProcessRunner {
 			}
 		}
 		return result;
+	}
+
+	public void runLater() {
+		new Thread() {
+			public void run() {
+				try {
+					ProcessRunner.this.runAndWait();
+				} catch (Exception e) {
+					logger.error("Exception occurred on asynchronuous task", e);
+				}
+			}
+		}.start();
 	}
 
 	public Process getProcess() {

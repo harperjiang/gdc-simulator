@@ -15,7 +15,7 @@ Ext.require([ 'GDC.MainViewPort', 'GDC.StructurePanel' ]);
 Ext.require('GDC.common.HtmlRenderer');
 
 Ext.require('GDC.common.MapPanel');
-
+Ext.require('GDC.common.MachineChooseWindow');
 Ext.require([ 'GDC.common.GaugeChart', 'GDC.common.GaugeChart2',
 		'GDC.common.EvalRadarChart', 'GDC.common.LineChart' ]);
 

@@ -1,5 +1,7 @@
 package edu.clarkson.gdc.dashboard.domain.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +15,7 @@ import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus.NodeStatusId;
 @IdClass(NodeStatusId.class)
 public class NodeStatus {
 
-	public static class NodeStatusId {
+	public static class NodeStatusId implements Serializable {
 		private String nodeId;
 
 		private String dataType;
@@ -33,6 +35,22 @@ public class NodeStatus {
 		public void setDataType(String dataType) {
 			this.dataType = dataType;
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof NodeStatusId) {
+				NodeStatusId nsi = (NodeStatusId) obj;
+				return nsi.getDataType().equals(getDataType())
+						&& nsi.getNodeId().equals(getNodeId());
+			}
+			return super.equals(obj);
+		}
+
+		@Override
+		public int hashCode() {
+			return dataType.hashCode() * 13 + nodeId.hashCode();
+		}
+
 	}
 
 	@Id

@@ -19,10 +19,17 @@ Ext.define('GDC.node.VMGrid', {
 	xtype : 'gdcVmGrid',
 	listeners : {
 		'selectionchange' : function(view, records) {
-			this.down('#migrateButton').setDisabled(!records.length);
-			this.down('#restartButton').setDisabled(!records.length);
-			this.down('#startButton').setDisabled(!records.length);
-			this.down('#stopButton').setDisabled(!records.length);
+			if (undefined == records || null == records || records.length == 0)
+				return;
+			var data = records[0].data;
+			if (undefined == data || null == data)
+				return;
+			var running = (data.status == 'running');
+			var shutdown = (data.status == 'shut off');
+			this.down('#migrateButton').setDisabled(!running);
+			this.down('#restartButton').setDisabled(!running);
+			this.down('#startButton').setDisabled(!shutdown);
+			this.down('#stopButton').setDisabled(!running);
 		}
 	},
 	tbar : [ {
@@ -30,20 +37,31 @@ Ext.define('GDC.node.VMGrid', {
 		text : 'Migrate VM',
 		handler : function() {
 			var gridPanel = this.up('gdcVmGrid');
-			var model = gridPanel.getSelectionModel()
-					.getSelection()[0];
+			var model = gridPanel.getSelectionModel().getSelection()[0];
 			var vmName = model.get('name');
 			var machinePanel = this.up('nodeMachinePanel');
 			var srcId = machinePanel.datas.id;
-			Ext.Msg.prompt('Destination',
-					'Enter Destination Machine:', function(btn,
-							dest) {
-						if (btn == 'ok') {
-							vmService.migrate(vmName, srcId,
-									dest);
-							// TODO handle error message
-						}
-					});
+			var mcWindow = Ext.create('GDC.common.MachineChooseWindow');
+			gridPanel.getSelectionModel().deselectAll();
+			mcWindow.show();
+			mcWindow.on('hide', function() {
+				debugger;
+				var destId = this.machineId;
+				if (destId == undefined || destId == null || srcId == destId)
+					return;
+				vmService.migrate(vmName, srcId, destId, {
+					callback : function() {
+						Ext.Msg
+						.alert(
+								'Migration in progress',
+								'Migration may take'+ 
+								'some time, please wait');
+					},
+					errorHandler : function() {
+
+					}
+				});
+			});
 		},
 		disabled : true
 	}, {
@@ -99,7 +117,6 @@ Ext.define('GDC.node.VMGrid', {
 		sortable : false,
 		dataIndex : 'desc'
 	} ],
-	selModel : Ext.create('Ext.selection.CheckboxModel'),
 	viewConfig : {
 		stripeRows : true,
 		enableTextSelection : true
@@ -108,9 +125,13 @@ Ext.define('GDC.node.VMGrid', {
 		this.store = Ext.create('Ext.data.ArrayStore', {
 			model : 'GDC.node.VMModel'
 		});
+		this.selModel = Ext.create('Ext.selection.CheckboxModel');
 		this.callParent();
 	},
 	refresh : function() {
+		// Do not refresh if under selection
+		if (this.getSelectionModel().getSelection().length != 0)
+			return;
 		var machinePanel = this.up('nodeMachinePanel');
 		var srcId = machinePanel.datas.id;
 		vmService.list(srcId, function(vmBean) {
@@ -128,14 +149,43 @@ Ext.define('GDC.node.VMGrid', {
 		});
 	},
 	operate : function(operation) {
-		var gridPanel = this.up('gdcVmGrid');
-		var model = gridPanel.getSelectionModel()
-				.getSelection()[0];
+		debugger;
+		var gridPanel = this;
+		var model = gridPanel.getSelectionModel().getSelection()[0];
 		var vmName = model.get('name');
 		var machinePanel = this.up('nodeMachinePanel');
 		var srcId = machinePanel.datas.id;
-		vmService.operate(vmName, srcId, operation, function() {
-			
+		var oprText = '';
+		switch (operation) {
+		case 'START':
+			oprText = "Starting...";
+			break;
+		case 'STOP':
+			oprText = 'Stopping...';
+			break;
+		case 'RESTART':
+			oprText = 'Restarting...';
+			break;
+		}
+		Ext.MessageBox.show({
+			msg : oprText,
+			width : 300,
+			wait : true,
+			waitConfig : {
+				interval : 200
+			}
+		});
+		gridPanel.getSelectionModel().deselectAll();
+		vmService.operate(srcId, vmName, operation, {
+			callback : function() {
+				Ext.getCmp('maintab').down('gdcVmGrid').refresh();
+				Ext.MessageBox.hide();
+			},
+			errorHandler : function(errorString, exception) {
+				console.log(errorString);
+				console.log(exception);
+				Ext.MessageBox.hide();
+			}
 		});
 	}
 });

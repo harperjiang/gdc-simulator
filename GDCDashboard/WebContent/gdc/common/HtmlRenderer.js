@@ -1,13 +1,19 @@
 Ext.define('GDC.common.HtmlRenderer', {
 	updateHtml : function(component, data) {
-		var html = component.html;
+		var html = component.htmlContent;
 		if (html == undefined) {
-			html = Ext.get(component.id).dom.innerHTML;
+			component['htmlContent'] = Utils.loadhtml(component.baseHtml);
+			html = component.htmlContent;
 		}
 		for ( var i in data) {
 			html = html.replace('{' + i + '}', data[i]);
 		}
-		component.html = html;
+		if (Ext.get(component.id) == null) {
+			// Not created yet
+			component.html = html;
+		} else {
+			Ext.get(component.id).dom.innerHTML = html;
+		}
 	}
 });
 Ext.namespace('GDC.common.HtmlRendererInst');

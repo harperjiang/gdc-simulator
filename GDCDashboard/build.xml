@@ -1,0 +1,120 @@
+<project default="buildWar">
+
+	<property name="root" value="deploy" />
+	<property name="war" value="${root}/war" />
+
+	<property name="dest.user" value="gdc" />
+	<property name="dest.pass" value="GDCscript" />
+	<property name="dest.machine" value="128.153.145.179" />
+	<property name="dest.path" value="/home/gdc" />
+	<property name="dest.scriptpath" value="/home/gdc/deploy/GDCDashboard" />
+
+	<path id="DWR.userclasspath">
+		<pathelement location="../kooobao-shared-libs/dwr/dwr.jar" />
+	</path>
+	<path id="Apache Commons.userclasspath">
+		<pathelement location="../kooobao-shared-libs/apache-commons/commons-beanutils-1.8.2.jar" />
+		<pathelement location="../kooobao-shared-libs/apache-commons/commons-codec-1.3.jar" />
+		<pathelement location="../kooobao-shared-libs/apache-commons/commons-collections-3.2.1.jar" />
+		<pathelement location="../kooobao-shared-libs/apache-commons/commons-digester-1.8.jar" />
+		<pathelement location="../kooobao-shared-libs/apache-commons/commons-fileupload-1.2.2.jar" />
+		<pathelement location="../kooobao-shared-libs/apache-commons/commons-io-2.1.jar" />
+		<pathelement location="../kooobao-shared-libs/apache-commons/commons-lang-2.6.jar" />
+		<pathelement location="../kooobao-shared-libs/apache-commons/commons-logging-1.1.1.jar" />
+	</path>
+	<path id="Spring Framework 3.1.userclasspath">
+		<pathelement location="../kooobao-shared-libs/spring/aspectj/aspectjrt.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/aspectj/aspectjtools.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/aspectj/aspectjweaver.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/aspectj/org.aspectj.matcher.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.aop-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.asm-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.aspects-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.beans-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.context-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.context.support-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.core-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.expression-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.instrument-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.instrument.tomcat-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.jdbc-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.jms-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.orm-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.oxm-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.test-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.transaction-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.web-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.web.portlet-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.web.servlet-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/spring-3.1.0/dist/org.springframework.web.struts-3.1.0.M2.jar" />
+		<pathelement location="../kooobao-shared-libs/spring/aopalliance-1.0.jar" />
+	</path>
+	<path id="Logging.userclasspath">
+		<pathelement location="../kooobao-shared-libs/logging/jcl-over-slf4j-1.7.2.jar" />
+		<pathelement location="../kooobao-shared-libs/logging/logback-access-1.0.6.jar" />
+		<pathelement location="../kooobao-shared-libs/logging/logback-classic-1.0.6.jar" />
+		<pathelement location="../kooobao-shared-libs/logging/logback-core-1.0.6.jar" />
+		<pathelement location="../kooobao-shared-libs/logging/slf4j-api-1.7.2.jar" />
+	</path>
+	<path id="JSON.userclasspath">
+		<pathelement location="../kooobao-shared-libs/json/gson-2.2.2.jar" />
+	</path>
+	<path id="EclipseLink_2.1.2.userclasspath">
+		<pathelement location="../kooobao-shared-libs/jpa/eclipse212/eclipselink.jar" />
+		<pathelement location="../kooobao-shared-libs/jpa/eclipse212/javax.persistence_2.0.0.jar" />
+	</path>
+	<path id="MySQL JDBC Driver.userclasspath">
+		<pathelement location="../kooobao-shared-libs/jdbc/mysql-connector-java-5.1.17-bin.jar" />
+	</path>
+	<path id="Apache Tomcat v6.0 [Apache Tomcat v6.0].libraryclasspath">
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/jasper-el.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/tomcat-dbcp.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/jasper.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/catalina-ant.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/catalina.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/ecj-4.2.2.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/jsp-api.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/tomcat-i18n-es.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/tomcat-i18n-fr.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/catalina-ha.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/tomcat-i18n-ja.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/tomcat-coyote.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/servlet-api.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/annotations-api.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/el-api.jar" />
+		<pathelement location="../../../apache-tomcat-6.0.37/lib/catalina-tribes.jar" />
+	</path>
+	<path id="GDCDashboard.classpath">
+		<path refid="DWR.userclasspath" />
+		<path refid="Apache Commons.userclasspath" />
+		<path refid="Spring Framework 3.1.userclasspath" />
+		<path refid="Logging.userclasspath" />
+		<path refid="JSON.userclasspath" />
+		<path refid="EclipseLink_2.1.2.userclasspath" />
+		<path refid="MySQL JDBC Driver.userclasspath" />
+		<path refid="Apache Tomcat v6.0 [Apache Tomcat v6.0].libraryclasspath" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${root}" />
+	</target>
+
+	<target name="buildWar" depends="clean">
+		<mkdir dir="${root}" />
+		<mkdir dir="${war}/WEB-INF/classes" />
+		<javac destdir="${war}/WEB-INF/classes" includeantruntime="false" source="1.6" target="1.6">
+			<src path="src" />
+			<classpath refid="GDCDashboard.classpath" />
+		</javac>
+		<copy todir="${war}">
+			<fileset dir="WebContent" />
+		</copy>
+		<copy todir="${war}/WEB-INF/lib" flatten="true">
+			<path refid="GDCDashboard.classpath" />
+		</copy>
+		<jar destfile="GDCDashboard.war" basedir="${war}" compress="false" />
+		<exec executable="resource/deploy/copy_war.sh" />
+		<delete dir="${root}" />
+	</target>
+
+</project>

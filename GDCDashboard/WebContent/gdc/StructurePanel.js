@@ -1,10 +1,11 @@
 Ext.namespace("GDC");
 GDC.structureStore = Ext.create('Ext.data.TreeStore');
+GDC.dataCenters = new Array();
+GDC.machinesUnderDs = {};
 structureService.getDataCenters(function(dcs) {
 	var root = {};
 	root.expanded = true;
 	root.children = new Array();
-	debugger;
 	for ( var dcCount = 0; dcCount < dcs.length; dcCount++) {
 		var dc = dcs[dcCount];
 		var dcNode = {
@@ -13,11 +14,13 @@ structureService.getDataCenters(function(dcs) {
 			leaf : dc.batteries.length === 0 && dc.powerSource === undefined,
 			children : new Array()
 		};
-		if (dc.powerSource !== undefined) {
+		GDC.dataCenters.push(dcNode);
+		GDC.machinesUnderDs[dcNode.id] = new Array();
+		if (dc.powerSource != null) {
 			var powerNode = {
 				text : dc.powerSource.name,
 				id : dc.powerSource.id,
-				left : true
+				leaf : true
 			};
 			dcNode.children.push(powerNode);
 		}
@@ -37,15 +40,8 @@ structureService.getDataCenters(function(dcs) {
 					leaf : mc.vms.length === 0,
 					children : new Array()
 				};
-				for ( var vmCount = 0; vmCount < mc.vms.length; vmCount++) {
-					var vm = mc.vms[vmCount];
-					var vmNode = {
-						text : vm.name,
-						id : vm.id,
-						leaf : true
-					};
-					mcNode.children.push(vmNode);
-				}
+				GDC.machinesUnderDs[dcNode.id].push(mcNode);
+
 				btyNode.children.push(mcNode);
 			}
 			dcNode.children.push(btyNode);
@@ -59,6 +55,21 @@ function updateId(existed, dataid, newid) {
 	existed.id = newid;
 	existed.dataId = dataid;
 	Ext.ComponentManager.register(existed);
+}
+
+function refreshNode(id) {
+	nodeService.getData(id, {
+		callback : function(reply) {
+			var data = JSON.parse(reply);
+			var newid = "tab" + data.id;
+			var tab = Ext.getCmp(newid);
+			data.image = data.STATUS ? 'green_light.png' : 'red_light.png';
+			tab.loadData(data);
+		},
+		errorHandler : function(errorString, exception) {
+			console.log(errorString);
+		}
+	});
 }
 
 function displayNode(id) {
@@ -97,10 +108,14 @@ function displayNode(id) {
 		// Preprocess data
 		data.image = data.STATUS ? 'green_light.png' : 'red_light.png';
 		existed.loadData(data);
-		// Set it as the active one
-		mainTabPanel.setActiveTab(newid);
-	});
 
+		// Set it as the active one
+		// disable the listener
+		var tabchangelistener = mainTabPanel.events.tabchange;
+		mainTabPanel.events.tabchange = true;
+		mainTabPanel.setActiveTab(newid);
+		mainTabPanel.events.tabchange = tabchangelistener;
+	});
 }
 
 Ext.define("GDC.StructurePanel", {
@@ -113,6 +128,23 @@ Ext.define("GDC.StructurePanel", {
 	listeners : {
 		select : function(tree, record, row, opt) {
 			displayNode(record.raw.id);
+		},
+		afterrender : function() {
+			Ext.TaskManager.start({
+				run : updateData,
+				interval : 5000
+			});
 		}
 	}
 });
+
+function updateData() {
+	var mainTabPanel = Ext.getCmp('maintab');
+	var activeTab = mainTabPanel.getActiveTab();
+	if (activeTab.id.substring(0, 7) == 'summary') {
+		// TODO refresh summary?
+	} else {
+		var id = activeTab.id.substring(3);
+		refreshNode(id);
+	}
+}

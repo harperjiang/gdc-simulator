@@ -1,9 +1,12 @@
 package edu.clarkson.gdc.dashboard.service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.springframework.util.CollectionUtils;
 
 import com.google.gson.Gson;
 
@@ -63,7 +66,11 @@ public class DefaultNodeService implements NodeService {
 			for (HistoryType type : HistoryType.values()) {
 				List<NodeHistory> histories = historyDao.getHistories(node,
 						type.name(), 50);
-				history.put(type.name(), histories);
+				if (!CollectionUtils.isEmpty(histories)) {
+					// Reverse it
+					Collections.reverse(histories);
+					history.put(type.name(), histories);
+				}
 			}
 			data.put("history", history);
 		}

@@ -26,17 +26,17 @@ public class DefaultStructureService implements StructureService {
 		List<Alert> result = getAlertDao().getAlerts(null);
 		for (Alert alert : result) {
 			Node node = nodeDao.getNode(alert.getNodeId());
-			alert.setNodeType(node.getType());
+			alert.setNodeName(node.getName());
 		}
 		return result;
 	}
 
 	@Override
 	public Summary getSystemSummary() {
-		// TODO Dummy Impl
+		List<DataCenter> dss = getNodeDao().getNodesByType(DataCenter.class);
 		Summary summary = new Summary();
-		summary.setDcCount(5);
-		summary.setDcRunning(2);
+		summary.setDcCount(dss.size());
+		summary.setDcRunning(dss.size());
 		summary.setMtbm(230);
 		summary.setUtilization(new BigDecimal("79"));
 		summary.setUsage(90);

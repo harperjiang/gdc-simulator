@@ -27,7 +27,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 				xtype : 'panel',
 				title : 'Overview',
 				collapsible : true,
-				width : 550,
+				width : 650,
 				height : 300,
 				items : [
 						{
@@ -47,7 +47,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 							html : "<div class='labeled_text'>" + "<label>"
 									+ "Green Data Center Under Managed:"
 									+ "</label>"
-									+ "<a id='summary.gdcCount' href='#'></a>"
+									+ "<span id='summary.gdcCount'/>"
 									+ "</div>" + "<div class='labeled_text'>"
 									+ "<label>" + "Green Data Center Running:"
 									+ "</label>"
@@ -68,17 +68,8 @@ Ext.define('GDC.summary.SummaryPanel', {
 						}, {
 							xtype : 'gdcGaugeChart2',
 							id : 'summary.usageChart',
-							width : 210,
+							width : 180,
 							height : 120,
-							store : Ext.create('Ext.data.ArrayStore', {
-								// store configs
-								storeId : 'summary.usageStore',
-								// reader configs
-								fields : [ {
-									name : 'data1',
-									type : 'float'
-								} ]
-							}),
 							axes : [ {
 								type : 'gauge',
 								position : 'gauge',
@@ -93,15 +84,6 @@ Ext.define('GDC.summary.SummaryPanel', {
 							id : 'summary.capacityChart',
 							width : 210,
 							height : 120,
-							store : Ext.create('Ext.data.ArrayStore', {
-								// store configs
-								storeId : 'summary.capacityStore',
-								// reader configs
-								fields : [ {
-									name : 'data1',
-									type : 'float'
-								} ]
-							}),
 							axes : [ {
 								type : 'gauge',
 								position : 'gauge',
@@ -111,11 +93,25 @@ Ext.define('GDC.summary.SummaryPanel', {
 								steps : 4,
 								margin : 7
 							} ]
+						}, {
+							xtype : 'gdcGaugeChart2',
+							id : 'summary.utilizationChart',
+							width : 210,
+							height : 120,
+							axes : [ {
+								type : 'gauge',
+								position : 'gauge',
+								title : 'Green Power\nUtilization',
+								minimum : 0,
+								maximum : 100,
+								steps : 4,
+								margin : 7
+							} ]
 						} ]
 			}, {
 				xtype : 'panel',
 				rowspan : 2,
-				width : 350,
+				width : 250,
 				height : 470,
 				collapsible : true,
 				bodyStyle : 'padding:10px;',
@@ -124,7 +120,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 			}, {
 				xtype : 'alertGrid',
 				id : 'summary.alertGrid',
-				width : 550,
+				width : 650,
 				height : 150
 			}, {
 				xtype : 'gdcMapPanel',
@@ -134,7 +130,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 			} ],
 	listeners : {
 		afterrender : function(val, eopt) {
-			// TODO Load Data
+			// Load Data
 			structureService.getSystemSummary(function(summary) {
 				Ext.get("summary.gdcCount").setHTML(summary.dcCount);
 				Ext.get("summary.gdcRunning").setHTML(summary.dcRunning);
@@ -144,24 +140,17 @@ Ext.define('GDC.summary.SummaryPanel', {
 						.loadData([ [ summary.usage ] ]);
 				Ext.getCmp('summary.capacityChart').store
 						.loadData([ [ summary.capacity ] ]);
+				Ext.getCmp('summary.utilizationChart').store
+						.loadData([ [ summary.utilization ] ]);
 			});
 
-			structureService.getAlerts(function(alerts) {
-				var datas = new Array();
-				for ( var i = 0; i < alerts.length; i++) {
-					var alert = alerts[i];
-					var data = {
-						id : alert.id,
-						level : alert.level,
-						date : alert.time,
-						type : alert.nodeType,
-						nodeId : alert.nodeId,
-						description : alert.description
-					};
-					datas.push(data);
-				}
-				Ext.getCmp('summary.alertGrid').store.loadData(datas);
-			});
+			this.refreshAlert();
 		}
+	},
+	refreshAlert : function() {
+		structureService.getAlerts(function(alerts) {
+			debugger;
+			Ext.getCmp('summary.alertGrid').store.loadData(alerts);
+		});
 	}
 });

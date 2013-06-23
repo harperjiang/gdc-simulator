@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.clarkson.gdc.common.ApplicationContextHolder;
+import edu.clarkson.gdc.dashboard.domain.entity.Alert;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
 import edu.clarkson.gdc.dashboard.service.InterfaceService;
@@ -73,9 +74,12 @@ public class UpdateStatusServlet extends HttpServlet {
 							interfaceService.updateNodeHistory(parts[0],
 									parts[1], pair[1], new Date());
 						}
+						if (Alert.isAlert(parts[1])) {
+							interfaceService.updateAlert(parts[0], parts[1],
+									pair[1]);
+						}
 					}
 				}
-				// Iwind=34.02,Ibat=23.69,Iinv=31.88,Vbat=44.66,SOC=42.05,
 			}
 		} catch (Exception e) {
 			logger.error("Exception occurred in Interface", e);

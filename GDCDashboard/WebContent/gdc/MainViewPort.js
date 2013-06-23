@@ -18,7 +18,7 @@ Ext.define("GDC.MainViewPort", {
 		listeners : {
 			tabchange : function(tabPanel, newTab, oldTab, index) {
 				if (newTab.id.substring(0, 7) === 'summary') {
-
+					newTab.refreshAlert();
 				} else {
 					var id = newTab.id.substring(3);
 					refreshNode(id);

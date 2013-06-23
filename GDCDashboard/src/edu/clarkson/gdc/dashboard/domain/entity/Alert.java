@@ -32,14 +32,14 @@ public class Alert {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date time;
 
-	@Column(name = "title")
-	private String title;
+	@Column(name = "type")
+	private String type;
 
 	@Column(name = "description")
 	private String description;
 
-	@Column(name = "node_type")
-	private String nodeType;
+	@Column(name = "node_name")
+	private String nodeName;
 
 	public long getId() {
 		return id;
@@ -73,12 +73,12 @@ public class Alert {
 		this.time = time;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getType() {
+		return type;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getDescription() {
@@ -89,12 +89,21 @@ public class Alert {
 		this.description = description;
 	}
 
-	public String getNodeType() {
-		return nodeType;
+	public String getNodeName() {
+		return nodeName;
 	}
 
-	public void setNodeType(String nodeType) {
-		this.nodeType = nodeType;
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+
+	public static boolean isAlert(String string) {
+		try {
+			AlertType.valueOf(string);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

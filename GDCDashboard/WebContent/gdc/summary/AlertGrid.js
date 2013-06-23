@@ -5,14 +5,14 @@ Ext.define('GDC.AlertGrid.AlertModel', {
 	}, {
 		name : 'level'
 	}, {
-		name : 'date',
+		name : 'time',
 		type : 'date',
-		dateFormat : 'n/j h:ia',
+		dateFormat : 'M d, Y g:i:s A',
 		defaultValue : undefined
 	}, {
 		name : 'type'
 	}, {
-		name : 'nodeId'
+		name : 'nodeName'
 	}, {
 		name : 'description'
 	} ],
@@ -30,31 +30,26 @@ Ext.define('GDC.summary.AlertGrid', {
 	multiSelect : true,
 	stateId : 'stateGrid',
 	columns : [ {
-		text : 'Id',
-		width : 60,
+		text : 'Date',
+		width : 110,
+		renderer : Ext.util.Format.dateRenderer('m/d/Y H:i'),
 		sortable : false,
-		dataIndex : 'id'
+		dataIndex : 'time'
 	}, {
 		text : 'Level',
-		width : 60,
+		width : 80,
 		sortable : false,
 		dataIndex : 'level'
 	}, {
-		text : 'Date',
-		width : 75,
-		renderer : Ext.util.Format.dateRenderer('m/d/Y'),
-		sortable : false,
-		dataIndex : 'date'
-	}, {
 		text : 'Type',
-		width : 75,
+		width : 130,
 		sortable : false,
 		dataIndex : 'type'
 	}, {
-		text : 'Node Id',
-		width : 75,
+		text : 'Node',
+		width : 160,
 		sortable : false,
-		dataIndex : 'nodeId'
+		dataIndex : 'nodeName'
 	}, {
 		text : 'Description',
 		flex : 1,

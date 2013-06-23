@@ -2,12 +2,15 @@ package edu.clarkson.gdc.dashboard.service;
 
 import java.util.Date;
 
+import edu.clarkson.gdc.dashboard.domain.dao.AlertDao;
 import edu.clarkson.gdc.dashboard.domain.dao.HistoryDao;
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.dao.StatusDao;
+import edu.clarkson.gdc.dashboard.domain.entity.Alert;
+import edu.clarkson.gdc.dashboard.domain.entity.AlertType;
+import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
-import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 
 public class DefaultInterfaceService implements InterfaceService {
 
@@ -16,6 +19,8 @@ public class DefaultInterfaceService implements InterfaceService {
 	private StatusDao statusDao;
 
 	private HistoryDao historyDao;
+
+	private AlertDao alertDao;
 
 	@Override
 	public void updateNodeStatus(String nodeId, String type, String value) {
@@ -35,6 +40,22 @@ public class DefaultInterfaceService implements InterfaceService {
 		history.setDataType(type);
 		history.setValue(value);
 		getHistoryDao().addHistory(history);
+	}
+
+	@Override
+	public void updateAlert(String nodeId, String type, String value) {
+		Node node = getNodeDao().getNode(nodeId);
+
+		AlertType t = AlertType.valueOf(type);
+
+		Alert alert = new Alert();
+		alert.setNodeId(nodeId);
+		alert.setNodeName(node.getName());
+		alert.setTime(new Date());
+		alert.setType(type);
+		alert.setLevel(t.level());
+
+		getAlertDao().save(alert);
 	}
 
 	public NodeDao getNodeDao() {
@@ -59,6 +80,14 @@ public class DefaultInterfaceService implements InterfaceService {
 
 	public void setHistoryDao(HistoryDao historyDao) {
 		this.historyDao = historyDao;
+	}
+
+	public AlertDao getAlertDao() {
+		return alertDao;
+	}
+
+	public void setAlertDao(AlertDao alertDao) {
+		this.alertDao = alertDao;
 	}
 
 }

@@ -40,6 +40,7 @@ public class DefaultAIService implements AIService {
 	@Override
 	public void handleAlert(Alert alert) {
 		
+		return;
 	}
 
 	@Override

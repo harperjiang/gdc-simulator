@@ -15,10 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.clarkson.gdc.common.ApplicationContextHolder;
-import edu.clarkson.gdc.dashboard.domain.entity.Alert;
-import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
-import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
-import edu.clarkson.gdc.dashboard.service.InterfaceService;
+import edu.clarkson.gdc.workflow.Workflow;
 
 /**
  * Servlet that receive status updates
@@ -52,9 +49,9 @@ public class UpdateStatusServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		try {
-			InterfaceService interfaceService = ApplicationContextHolder
-					.getInstance().getApplicationContext()
-					.getBean("interfaceService", InterfaceService.class);
+			Workflow interfaceWorkflow = ApplicationContextHolder.getInstance()
+					.getApplicationContext()
+					.getBean("interfaceWorkflow", Workflow.class);
 			// Parse input data
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					request.getInputStream()));
@@ -66,18 +63,8 @@ public class UpdateStatusServlet extends HttpServlet {
 					if (StringUtils.isNotEmpty(data)) {
 						String[] pair = data.split("=");
 						String[] parts = pair[0].split("\\.");
-						if (NodeStatus.isStatus(parts[1])) {
-							interfaceService.updateNodeStatus(parts[0],
-									parts[1], pair[1]);
-						}
-						if (NodeHistory.isHistory(parts[1])) {
-							interfaceService.updateNodeHistory(parts[0],
-									parts[1], pair[1], new Date());
-						}
-						if (Alert.isAlert(parts[1])) {
-							interfaceService.updateAlert(parts[0], parts[1],
-									pair[1]);
-						}
+						interfaceWorkflow.execute(parts[0], parts[1], pair[1],
+								new Date());
 					}
 				}
 			}

@@ -11,6 +11,7 @@ import edu.clarkson.gdc.dashboard.domain.entity.AlertType;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
+import edu.clarkson.gdc.workflow.WorkflowContext;
 
 public class DefaultInterfaceService implements InterfaceService {
 
@@ -24,6 +25,8 @@ public class DefaultInterfaceService implements InterfaceService {
 
 	@Override
 	public void updateNodeStatus(String nodeId, String type, String value) {
+		if (!NodeStatus.isStatus(type))
+			return;
 		NodeStatus status = new NodeStatus();
 		status.setNodeId(nodeId);
 		status.setDataType(type);
@@ -34,6 +37,8 @@ public class DefaultInterfaceService implements InterfaceService {
 	@Override
 	public void updateNodeHistory(String nodeId, String type, String value,
 			Date timestamp) {
+		if (!NodeHistory.isHistory(type))
+			return;
 		NodeHistory history = new NodeHistory();
 		history.setNodeId(nodeId);
 		history.setTime(timestamp);
@@ -44,6 +49,8 @@ public class DefaultInterfaceService implements InterfaceService {
 
 	@Override
 	public void updateAlert(String nodeId, String type, String value) {
+		if (!Alert.isAlert(type))
+			return;
 		Node node = getNodeDao().getNode(nodeId);
 
 		AlertType t = AlertType.valueOf(type);
@@ -56,6 +63,8 @@ public class DefaultInterfaceService implements InterfaceService {
 		alert.setLevel(t.level());
 
 		getAlertDao().save(alert);
+
+		WorkflowContext.get().getContext().put("alert", alert);
 	}
 
 	public NodeDao getNodeDao() {

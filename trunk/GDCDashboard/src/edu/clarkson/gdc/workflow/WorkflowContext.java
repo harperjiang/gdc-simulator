@@ -3,22 +3,22 @@ package edu.clarkson.gdc.workflow;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorkFlowContext {
+public class WorkflowContext {
 
-	public static WorkFlowContext get() {
+	public static WorkflowContext get() {
 		return holder.get();
 	}
 
-	static ThreadLocal<WorkFlowContext> holder = new ThreadLocal<WorkFlowContext>() {
+	static ThreadLocal<WorkflowContext> holder = new ThreadLocal<WorkflowContext>() {
 		@Override
-		protected WorkFlowContext initialValue() {
-			return new WorkFlowContext();
+		protected WorkflowContext initialValue() {
+			return new WorkflowContext();
 		}
 	};
 
 	private Map<String, Object> context;
 
-	public WorkFlowContext() {
+	public WorkflowContext() {
 		super();
 		context = new HashMap<String, Object>();
 	}

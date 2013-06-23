@@ -59,6 +59,44 @@
 		<property name="latency" value="40000" />
 	</bean>
 
+	<bean id="interfaceWorkflow" class="edu.clarkson.gdc.workflow.BasicWorkflow">
+		<property name="units">
+			<list>
+				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
+					<property name="bean" ref="interfaceService" />
+					<property name="beanClass"
+						value="edu.clarkson.gdc.dashboard.service.InterfaceService" />
+					<property name="method" value="updateNodeStatus" />
+					<property name="params" value="input:0,input:1,input:2" />
+				</bean>
+
+				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
+					<property name="bean" ref="interfaceService" />
+					<property name="beanClass"
+						value="edu.clarkson.gdc.dashboard.service.InterfaceService" />
+					<property name="method" value="updateNodeHistory" />
+					<property name="params" value="input:0,input:1,input:2,input:3" />
+				</bean>
+
+				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
+					<property name="bean" ref="interfaceService" />
+					<property name="beanClass"
+						value="edu.clarkson.gdc.dashboard.service.InterfaceService" />
+					<property name="method" value="updateAlert" />
+					<property name="params" value="input:0,input:1,input:2" />
+				</bean>
+
+				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
+					<property name="bean" ref="aiService" />
+					<property name="beanClass"
+						value="edu.clarkson.gdc.dashboard.service.AIService" />
+					<property name="method" value="handleAlert" />
+					<property name="params" value="context:alert" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
 	<task:scheduled-tasks scheduler="myScheduler">
 		<task:scheduled ref="aiService" method="updateStatus"
 			cron="30 */1 * * * *" />

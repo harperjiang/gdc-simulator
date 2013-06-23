@@ -4,7 +4,7 @@ import http.client, urllib.parse
 
 #Configurations
 machine_id="dc1-bty1-mc1"
-host="localhost"
+host="localhost:8080"
 url="/GDCDashboard/update"
 
 #CPU Usage

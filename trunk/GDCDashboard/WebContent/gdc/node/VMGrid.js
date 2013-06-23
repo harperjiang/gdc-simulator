@@ -19,13 +19,15 @@ Ext.define('GDC.node.VMGrid', {
 	xtype : 'gdcVmGrid',
 	listeners : {
 		'selectionchange' : function(view, records) {
-			if (undefined == records || null == records || records.length == 0)
-				return;
-			var data = records[0].data;
-			if (undefined == data || null == data)
-				return;
-			var running = (data.status == 'running');
-			var shutdown = (data.status == 'shut off');
+			var running = false;
+			var shutdown = false;
+			if (records.length != 0) {
+				var data = records[0].data;
+				if (!(undefined == data || null == data)) {
+					running = (data.status == 'running');
+					shutdown = (data.status == 'shut off');		
+				}
+			}
 			this.down('#migrateButton').setDisabled(!running);
 			this.down('#restartButton').setDisabled(!running);
 			this.down('#startButton').setDisabled(!shutdown);
@@ -49,8 +51,17 @@ Ext.define('GDC.node.VMGrid', {
 				var destId = this.machineId;
 				if (destId == undefined || destId == null || srcId == destId)
 					return;
+				Ext.MessageBox.show({
+					msg : 'Scheduling migration...',
+					width : 300,
+					wait : true,
+					waitConfig : {
+						interval : 200
+					}
+				});
 				vmService.migrate(vmName, srcId, destId, {
 					callback : function() {
+						Ext.MessageBox.hide();
 						Ext.Msg
 						.alert(
 								'Migration in progress',

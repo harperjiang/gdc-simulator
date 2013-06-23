@@ -24,7 +24,9 @@
 			<include method="list" />
 			<include method="operate" />
 		</create>
-
+		
+		<convert converter="enum"
+			match="edu.clarkson.gdc.dashboard.domain.entity.AlertLevel" />
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.Summary" />
 		<convert converter="bean"

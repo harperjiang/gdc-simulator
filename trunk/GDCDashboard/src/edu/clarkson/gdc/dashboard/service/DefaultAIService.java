@@ -3,6 +3,7 @@ package edu.clarkson.gdc.dashboard.service;
 import edu.clarkson.gdc.dashboard.domain.dao.HistoryDao;
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.dao.StatusDao;
+import edu.clarkson.gdc.dashboard.domain.entity.Alert;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
@@ -34,6 +35,11 @@ public class DefaultAIService implements AIService {
 			status.setNodeId(machine.getId());
 			statusDao.updateStatus(status);
 		}
+	}
+	
+	@Override
+	public void handleAlert(Alert alert) {
+		
 	}
 
 	@Override

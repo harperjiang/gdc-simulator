@@ -142,7 +142,8 @@ function updateData() {
 	var mainTabPanel = Ext.getCmp('maintab');
 	var activeTab = mainTabPanel.getActiveTab();
 	if (activeTab.id.substring(0, 7) == 'summary') {
-		// TODO refresh summary?
+		// Refresh summary
+		activeTab.refreshAlert();
 	} else {
 		var id = activeTab.id.substring(3);
 		refreshNode(id);

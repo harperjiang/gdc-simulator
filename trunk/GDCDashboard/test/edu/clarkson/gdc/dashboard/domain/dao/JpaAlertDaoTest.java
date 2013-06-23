@@ -15,6 +15,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import edu.clarkson.gdc.dashboard.domain.entity.Alert;
 import edu.clarkson.gdc.dashboard.domain.entity.AlertLevel;
+import edu.clarkson.gdc.dashboard.domain.entity.AlertType;
 
 @ContextConfiguration(locations = { "/application-context.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -28,8 +29,8 @@ public class JpaAlertDaoTest extends
 	public void prepare() {
 		Alert alert = new Alert();
 		alert.setNodeId("node1");
-		alert.setNodeType("type");
-		alert.setTitle("Alert Title");
+		alert.setNodeName("type");
+		alert.setType(AlertType.POWER_EXHAUST.name());
 		alert.setTime(new Date());
 		alert.setLevel(AlertLevel.SEVERE);
 

@@ -109,9 +109,9 @@
 		<copy todir="${war}">
 			<fileset dir="WebContent" />
 		</copy>
-		<copy todir="${war}/WEB-INF/lib" flatten="true">
+		<!--copy todir="${war}/WEB-INF/lib" flatten="true">
 			<path refid="GDCDashboard.classpath" />
-		</copy>
+		</copy-->
 		<jar destfile="GDCDashboard.war" basedir="${war}" compress="false" />
 		<exec executable="resource/deploy/copy_war.sh" />
 		<delete dir="${root}" />

@@ -49,6 +49,7 @@
 		<property name="nodeDao" ref="nodeDao" />
 		<property name="historyDao" ref="historyDao" />
 		<property name="statusDao" ref="statusDao" />
+		<property name="alertDao" ref="alertDao" />
 	</bean>
 
 	<bean id="aiService" class="edu.clarkson.gdc.dashboard.service.DefaultAIService">

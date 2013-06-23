@@ -8,4 +8,6 @@ public interface InterfaceService {
 
 	public void updateNodeHistory(String nodeId, String type, String value,
 			Date timestamp);
+
+	public void updateAlert(String nodeId, String type, String value);
 }

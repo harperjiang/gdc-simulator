@@ -6,7 +6,7 @@ public interface AIService {
 
 	public void updateStatus();
 	
-	public void makeMigrationDecision();
-	
+	public void relocateVM();
+
 	public void handleAlert(Alert alert);
 }

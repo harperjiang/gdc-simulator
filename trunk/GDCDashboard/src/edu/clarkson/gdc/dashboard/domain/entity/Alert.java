@@ -73,12 +73,12 @@ public class Alert {
 		this.time = time;
 	}
 
-	public String getType() {
-		return type;
+	public AlertType getType() {
+		return AlertType.valueOf(type);
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setType(AlertType type) {
+		this.type = type.name();
 	}
 
 	public String getDescription() {

@@ -142,11 +142,13 @@ public class XMLNodeDao implements NodeDao {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends Node> T getNode(String id) {
 		return (T) nodes.get(id);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends Node> List<T> getNodesByType(Class<T> clazz) {
 		PriorityQueue<T> pq = new PriorityQueue<T>(10, new Comparator<T>() {
@@ -162,5 +164,82 @@ public class XMLNodeDao implements NodeDao {
 		List<T> result = new ArrayList<T>();
 		result.addAll(pq);
 		return result;
+	}
+
+	protected static interface NodeAccess {
+		public void access(Node node);
+	}
+
+	protected void iterate(Node start, NodeAccess access) {
+		if (null == start)
+			return;
+		access.access(start);
+
+		if (start instanceof DataCenter) {
+			iterate(((DataCenter) start).getPowerSource(), access);
+			for (Battery bty : ((DataCenter) start).getBatteries()) {
+				iterate(bty, access);
+			}
+		}
+		if (start instanceof PowerSource) {
+		}
+		if (start instanceof Battery) {
+			for (Machine machine : ((Battery) start).getMachines())
+				iterate(machine, access);
+		}
+		if (start instanceof Machine) {
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends Node> List<T> down(Node parent, Class<T> filter) {
+		NodeCollector collector = new NodeCollector(filter);
+		iterate(parent, collector);
+		return (List<T>) collector.getNodes();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T extends Node> T up(Node child, Class<T> filter) {
+		try {
+			if (DataCenter.class == filter) {
+				String dcid = child.getId().substring(0,
+						child.getId().indexOf('-'));
+				return getNode(dcid);
+			}
+			if (Battery.class == filter) {
+				String btyid = child.getId().substring(0,
+						child.getId().indexOf('-', child.getId().indexOf('-')));
+				return getNode(btyid);
+			}
+			if (Machine.class == filter && child instanceof Machine) {
+				return (T) child;
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	protected final class NodeCollector implements NodeAccess {
+		private List<Node> nodes;
+		private Class<? extends Node> clazz;
+
+		public NodeCollector(Class<? extends Node> clazz) {
+			nodes = new ArrayList<Node>();
+			this.clazz = clazz;
+		}
+
+		@Override
+		public void access(Node node) {
+			if (clazz.isInstance(node)) {
+				nodes.add(node);
+			}
+		}
+
+		public List<Node> getNodes() {
+			return nodes;
+		}
 	}
 }

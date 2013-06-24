@@ -14,7 +14,7 @@ public abstract class Node {
 	private Map<String, String> attributes;
 
 	public abstract String getType();
-	
+
 	public Node() {
 		super();
 		attributes = new HashMap<String, String>();
@@ -48,4 +48,7 @@ public abstract class Node {
 		return attributes;
 	}
 
+	public boolean belongs(Node parent) {
+		return this.getId().startsWith(parent.getId());
+	}
 }

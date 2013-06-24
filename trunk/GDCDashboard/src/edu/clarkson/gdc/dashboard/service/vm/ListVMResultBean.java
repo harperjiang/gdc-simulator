@@ -1,4 +1,4 @@
-package edu.clarkson.gdc.dashboard.service.bean;
+package edu.clarkson.gdc.dashboard.service.vm;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.dao.VMDao;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
-import edu.clarkson.gdc.dashboard.service.bean.ListVMResultBean;
+import edu.clarkson.gdc.dashboard.service.vm.ListVMResultBean;
 
 public class DefaultVMService implements VMService {
 

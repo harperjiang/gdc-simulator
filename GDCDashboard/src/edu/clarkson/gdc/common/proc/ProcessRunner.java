@@ -43,13 +43,15 @@ public class ProcessRunner {
 		return result;
 	}
 
-	public void runLater() {
+	public void runLater(final Callback callback) {
 		new Thread() {
 			public void run() {
 				try {
 					ProcessRunner.this.runAndWait();
+					callback.done();
 				} catch (Exception e) {
 					logger.error("Exception occurred on asynchronuous task", e);
+					callback.exception(e);
 				}
 			}
 		}.start();
@@ -67,4 +69,9 @@ public class ProcessRunner {
 		this.handler = handler;
 	}
 
+	public static interface Callback {
+		public void done();
+
+		public void exception(Exception e);
+	}
 }

@@ -59,7 +59,7 @@ public class DefaultInterfaceService implements InterfaceService {
 		alert.setNodeId(nodeId);
 		alert.setNodeName(node.getName());
 		alert.setTime(new Date());
-		alert.setType(type);
+		alert.setType(t);
 		alert.setLevel(t.level());
 
 		getAlertDao().save(alert);

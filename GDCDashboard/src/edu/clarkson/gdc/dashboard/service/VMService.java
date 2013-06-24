@@ -1,7 +1,7 @@
 package edu.clarkson.gdc.dashboard.service;
 
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
-import edu.clarkson.gdc.dashboard.service.bean.ListVMResultBean;
+import edu.clarkson.gdc.dashboard.service.vm.ListVMResultBean;
 
 public interface VMService {
 

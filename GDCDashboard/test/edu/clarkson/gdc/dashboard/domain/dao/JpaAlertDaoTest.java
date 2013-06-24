@@ -30,7 +30,7 @@ public class JpaAlertDaoTest extends
 		Alert alert = new Alert();
 		alert.setNodeId("node1");
 		alert.setNodeName("type");
-		alert.setType(AlertType.POWER_EXHAUST.name());
+		alert.setType(AlertType.POWER_EXHAUST);
 		alert.setTime(new Date());
 		alert.setLevel(AlertLevel.SEVERE);
 

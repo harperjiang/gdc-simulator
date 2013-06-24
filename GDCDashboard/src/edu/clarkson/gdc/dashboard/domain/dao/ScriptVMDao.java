@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.clarkson.gdc.common.proc.OutputHandler;
 import edu.clarkson.gdc.common.proc.ProcessRunner;
+import edu.clarkson.gdc.common.proc.ProcessRunner.Callback;
 import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
@@ -43,6 +46,8 @@ public class ScriptVMDao implements VMDao {
 		super();
 		vms = new ConcurrentHashMap<String, Map<String, VirtualMachine>>();
 		lastRefresh = new HashMap<String, Long>();
+
+		mutex = new HashSet<MigrationMutex>();
 	}
 
 	protected void refresh(Machine owner, boolean force) {
@@ -85,22 +90,80 @@ public class ScriptVMDao implements VMDao {
 		throw new RuntimeException("Not implemented");
 	}
 
+	private static final class MigrationMutex {
+		String sourceId;
+		String destId;
+		String vmName;
+
+		public MigrationMutex(String s, String d, String v) {
+			this.sourceId = s;
+			this.destId = d;
+			this.vmName = v;
+		}
+
+		@Override
+		public int hashCode() {
+			return (sourceId + ":" + destId + ":" + vmName).hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof MigrationMutex) {
+				MigrationMutex mm = (MigrationMutex) obj;
+				return mm.getSourceId().equals(sourceId)
+						&& mm.getDestId().equals(getDestId())
+						&& mm.getVmName().equals(getVmName());
+			}
+			return super.equals(obj);
+		}
+
+		public String getSourceId() {
+			return sourceId;
+		}
+
+		public String getDestId() {
+			return destId;
+		}
+
+		public String getVmName() {
+			return vmName;
+		}
+
+	}
+
+	private Set<MigrationMutex> mutex;
+
 	@Override
-	public void migrate(VirtualMachine vm, Machine source, Machine dest) {
-		synchronized (source) {
-			refresh(source, true);
-			synchronized (dest) {
-				if (!vms.get(source.getId()).containsKey(vm.getName()))
-					return;
-				String ip = Attributes.MACHINE_IP.attrName();
-				ProcessRunner pr = new ProcessRunner(migrateScript, source
-						.getAttributes().get(ip), dest.getAttributes().get(ip),
-						vm.getName());
-				pr.setHandler(new MigrationHandler());
-				pr.runLater();
+	public void migrate(VirtualMachine vm, Machine source, final Machine dest) {
+		// TODO Migration is currently done asynchronously. Should do something
+		// to prevent duplicated operation. Current solution is only valid for
+		// single machine
+		synchronized (mutex) {
+			MigrationMutex mm = new MigrationMutex(source.getId(),
+					dest.getId(), vm.getName());
+			if (mutex.contains(mm))
+				throw new IllegalStateException(MessageFormat.format(
+						"Already in migration:{0}--{2}->{1}", source.getId(),
+						vm.getName(), dest.getId()));
+			mutex.add(mm);
+		}
+		String ip = Attributes.MACHINE_IP.attrName();
+		ProcessRunner pr = new ProcessRunner(migrateScript, source
+				.getAttributes().get(ip), dest.getAttributes().get(ip),
+				vm.getName());
+		pr.setHandler(new MigrationHandler());
+		pr.runLater(new Callback() {
+			@Override
+			public void done() {
 				refresh(dest, true);
 			}
-		}
+
+			@Override
+			public void exception(Exception e) {
+				LoggerFactory.getLogger(getClass()).warn(
+						"Failed to do migration", e);
+			}
+		});
 	}
 
 	@Override
@@ -128,9 +191,6 @@ public class ScriptVMDao implements VMDao {
 	@Override
 	public void operate(Machine owner, VirtualMachine vm,
 			VMService.Operation operation) {
-		// refresh(owner, true);
-		// if (null == find(owner, vm.getName()))
-		// return;
 		try {
 			ProcessRunner runner = new ProcessRunner(getOperateScript(), owner
 					.getAttributes().get(Attributes.MACHINE_IP.attrName()),
@@ -233,7 +293,6 @@ public class ScriptVMDao implements VMDao {
 
 		@Override
 		public void output(String input) {
-
 			// There should be no output
 			this.logger
 					.error("Exception while doing script migration:" + input);

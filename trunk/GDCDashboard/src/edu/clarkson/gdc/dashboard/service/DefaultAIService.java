@@ -15,14 +15,16 @@ import edu.clarkson.gdc.dashboard.domain.dao.StatusDao;
 import edu.clarkson.gdc.dashboard.domain.dao.VMDao;
 import edu.clarkson.gdc.dashboard.domain.entity.Alert;
 import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
+import edu.clarkson.gdc.dashboard.domain.entity.Battery;
 import edu.clarkson.gdc.dashboard.domain.entity.DataCenter;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
+import edu.clarkson.gdc.dashboard.domain.entity.PowerSource;
 import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
-import edu.clarkson.gdc.dashboard.service.ai.MachineScore;
+import edu.clarkson.gdc.dashboard.service.ai.NodeScore;
 
 public class DefaultAIService implements AIService {
 
@@ -39,9 +41,13 @@ public class DefaultAIService implements AIService {
 	@Override
 	public void updateStatus() {
 		long current = System.currentTimeMillis();
+		List<Node> nodes = new ArrayList<Node>();
+		nodes.addAll(nodeDao.getNodesByType(Machine.class));
+		nodes.addAll(nodeDao.getNodesByType(Battery.class));
+		nodes.addAll(nodeDao.getNodesByType(PowerSource.class));
 		// Update Running Status
-		for (Machine machine : nodeDao.getNodesByType(Machine.class)) {
-			NodeHistory latest = historyDao.getLatest(machine, null);
+		for (Node node : nodes) {
+			NodeHistory latest = historyDao.getLatest(node, null);
 			NodeStatus status = new NodeStatus();
 			status.setDataType(StatusType.STATUS.name());
 			if (latest == null)
@@ -49,9 +55,16 @@ public class DefaultAIService implements AIService {
 			else
 				status.setValue(Boolean.toString(current
 						- latest.getTime().getTime() <= latency));
-			status.setNodeId(machine.getId());
+			status.setNodeId(node.getId());
 			statusDao.updateStatus(status);
 		}
+	}
+
+	@Override
+	public void relocateVM() {
+		List<DataCenter> dsList = getNodeDao().getNodesByType(DataCenter.class);
+		for (DataCenter ds : dsList)
+			migrateOut(ds);
 	}
 
 	@Override
@@ -61,8 +74,9 @@ public class DefaultAIService implements AIService {
 		}
 		switch (alert.getType()) {
 		case POWER_EXHAUST:
-			// Migrate all vms under the Data Center
-			Node node = getNodeDao().getNode(alert.getNodeId());
+			// Migrate all vms under the Data Center out
+			Node node = getNodeDao().up(
+					getNodeDao().getNode(alert.getNodeId()), DataCenter.class);
 			migrateOut(node);
 			break;
 		default:
@@ -82,15 +96,24 @@ public class DefaultAIService implements AIService {
 		}
 	}
 
-	protected Map<String, String[]> makeMigrateDecision(Node node) {
+	protected Map<String, String[]> makeMigrateDecision(DataCenter node) {
 		List<Machine> machines = getNodeDao().down(node, Machine.class);
-		List<Machine> available = getNodeDao().getNodesByType(Machine.class);
-		available.removeAll(machines);
-		List<MachineScore> scores = new ArrayList<MachineScore>();
+		NodeScore baseScore = score(node);
+
+		// Find potential target data centers
+		List<Machine> available = new ArrayList<Machine>();
+		for (DataCenter ds : getNodeDao().getNodesByType(DataCenter.class)) {
+			NodeScore dsScore = score(ds);
+			if (dsScore.getScore() > baseScore.getScore()) {
+				available.addAll(getNodeDao().down(ds, Machine.class));
+			}
+		}
+		// Randomly choose between them
+		List<NodeScore> scores = new ArrayList<NodeScore>();
 		Random random = new Random(System.currentTimeMillis());
 		int total = 0;
 		for (Machine avail : available) {
-			MachineScore score = score(avail, node);
+			NodeScore score = score(avail, node);
 			if (score.getAvail() == 0) {
 				continue;
 			}
@@ -104,10 +127,10 @@ public class DefaultAIService implements AIService {
 				// Determine where to migrate
 				int pos = random.nextInt(total);
 				for (int i = 0; i < scores.size(); i++) {
-					MachineScore score = scores.get(i);
+					NodeScore score = scores.get(i);
 					if (pos < score.getScore()) {
 						result.put(vm.getName(), new String[] { out.getId(),
-								score.getMachine().getId() });
+								score.getNode().getId() });
 						score.setAvail(score.getAvail() - 1);
 						if (score.getAvail() == 0) {
 							scores.remove(score);
@@ -123,10 +146,9 @@ public class DefaultAIService implements AIService {
 		return result;
 	}
 
-	protected MachineScore score(Machine machine, Node against) {
-		// TODO Update Score Algorithm
-		MachineScore score = new MachineScore();
-		score.setMachine(machine);
+	protected NodeScore score(Machine machine, Node against) {
+		NodeScore score = new NodeScore();
+		score.setNode(machine);
 
 		int vmCount = Integer.valueOf(getStatusDao().getStatus(machine,
 				StatusType.MACHINE_VMCOUNT.name()).getValue());
@@ -137,13 +159,16 @@ public class DefaultAIService implements AIService {
 			total = Integer.valueOf(totalStr);
 		}
 		score.setAvail(total - vmCount);
+		// TODO Update Score Algorithm
+		score.setScore(10);
 		return score;
 	}
 
-	@Override
-	public void relocateVM() {
-		// TODO Auto-generated method stub
-
+	protected NodeScore score(DataCenter ds) {
+		NodeScore score = new NodeScore();
+		score.setNode(ds);
+		score.setScore(ds.getPowerSource() == null ? 0 : 100);
+		return score;
 	}
 
 	public HistoryDao getHistoryDao() {

@@ -141,7 +141,7 @@ Ext.define('GDC.node.PowerViewPanel', {
 				maximum : 100,
 				steps : 4,
 				margin : 7,
-				title : 'Inverter\nCurrent'
+				title : 'Battery\nVoltage'
 			} ]
 		}, {
 			xtype : 'gdcGaugeChart2',

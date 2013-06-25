@@ -52,6 +52,8 @@ public class ProcessRunner {
 				} catch (Exception e) {
 					logger.error("Exception occurred on asynchronuous task", e);
 					callback.exception(e);
+				} finally {
+					callback.clean();
 				}
 			}
 		}.start();
@@ -73,5 +75,7 @@ public class ProcessRunner {
 		public void done();
 
 		public void exception(Exception e);
+		
+		public void clean();
 	}
 }

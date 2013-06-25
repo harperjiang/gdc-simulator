@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import edu.clarkson.gdc.common.proc.OutputHandler;
 import edu.clarkson.gdc.common.proc.ProcessRunner;
 import edu.clarkson.gdc.common.proc.ProcessRunner.Callback;
+import edu.clarkson.gdc.dashboard.domain.dao.vm.MigrationMutex;
 import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
@@ -90,51 +91,11 @@ public class ScriptVMDao implements VMDao {
 		throw new RuntimeException("Not implemented");
 	}
 
-	private static final class MigrationMutex {
-		String sourceId;
-		String destId;
-		String vmName;
-
-		public MigrationMutex(String s, String d, String v) {
-			this.sourceId = s;
-			this.destId = d;
-			this.vmName = v;
-		}
-
-		@Override
-		public int hashCode() {
-			return (sourceId + ":" + destId + ":" + vmName).hashCode();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj instanceof MigrationMutex) {
-				MigrationMutex mm = (MigrationMutex) obj;
-				return mm.getSourceId().equals(sourceId)
-						&& mm.getDestId().equals(getDestId())
-						&& mm.getVmName().equals(getVmName());
-			}
-			return super.equals(obj);
-		}
-
-		public String getSourceId() {
-			return sourceId;
-		}
-
-		public String getDestId() {
-			return destId;
-		}
-
-		public String getVmName() {
-			return vmName;
-		}
-
-	}
-
-	private Set<MigrationMutex> mutex;
+	final private Set<MigrationMutex> mutex;
 
 	@Override
-	public void migrate(VirtualMachine vm, Machine source, final Machine dest) {
+	public void migrate(final VirtualMachine vm, final Machine source,
+			final Machine dest) {
 		// TODO Migration is currently done asynchronously. Should do something
 		// to prevent duplicated operation. Current solution is only valid for
 		// single machine
@@ -155,6 +116,7 @@ public class ScriptVMDao implements VMDao {
 		pr.runLater(new Callback() {
 			@Override
 			public void done() {
+				refresh(source, true);
 				refresh(dest, true);
 			}
 
@@ -162,6 +124,14 @@ public class ScriptVMDao implements VMDao {
 			public void exception(Exception e) {
 				LoggerFactory.getLogger(getClass()).warn(
 						"Failed to do migration", e);
+			}
+
+			@Override
+			public void clean() {
+				synchronized (mutex) {
+					mutex.remove(new MigrationMutex(source.getId(), dest
+							.getId(), vm.getName()));
+				}
 			}
 		});
 	}

@@ -1,21 +1,22 @@
 package edu.clarkson.gdc.dashboard.service.ai;
 
-import edu.clarkson.gdc.dashboard.domain.entity.Machine;
+import edu.clarkson.gdc.dashboard.domain.entity.Node;
 
-public class MachineScore {
+public class NodeScore {
 
-	private Machine machine;
+	private Node node;
 
 	private int score;
 
 	private int avail;
 
-	public Machine getMachine() {
-		return machine;
+	@SuppressWarnings("unchecked")
+	public <T extends Node> T getNode() {
+		return (T) node;
 	}
 
-	public void setMachine(Machine machine) {
-		this.machine = machine;
+	public void setNode(Node node) {
+		this.node = node;
 	}
 
 	public int getScore() {

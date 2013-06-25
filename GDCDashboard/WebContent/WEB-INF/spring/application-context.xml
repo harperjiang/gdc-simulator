@@ -9,7 +9,7 @@
 	<bean id="nodeDao" class="edu.clarkson.gdc.dashboard.domain.dao.XMLNodeDao" />
 
 	<bean id="vmDao" class="edu.clarkson.gdc.dashboard.domain.dao.ScriptVMDao">
-		<property name="refreshInterval" value="30000" />
+		<property name="refreshInterval" value="5000" />
 		<property name="listScript" value="/home/gdc/deploy/GDCDashboard/display.sh" />
 		<property name="migrateScript" value="/home/gdc/deploy/GDCDashboard/migrate.sh" />
 		<property name="operateScript" value="/home/gdc/deploy/GDCDashboard/operate.sh" />
@@ -57,7 +57,7 @@
 		<property name="historyDao" ref="historyDao" />
 		<property name="statusDao" ref="statusDao" />
 		<property name="vmDao" ref="vmDao" />
-		<property name="latency" value="40000" />
+		<property name="latency" value="60000" />
 	</bean>
 
 	<bean id="interfaceWorkflow" class="edu.clarkson.gdc.workflow.BasicWorkflow">

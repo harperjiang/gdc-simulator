@@ -7,14 +7,16 @@ create table event_log (id int(10) auto_increment primary key,
 delimiter |
 create trigger event_node_status after insert on node_status for each row
 begin
-	insert into event_log (node_id, data_type, old_value, new_value, time) values(new.node_id, new.data_type, null,new.value,now());
+if(new.data_type = 'STATUS') then
+insert into event_log (node_id, data_type, old_value, new_value, time) values(new.node_id, new.data_type, null,new.value,now());
+end if;
 end;
 |
 create trigger event_node_status2 after update on node_status for each row
 begin
-	if(new.value != old.value) then
-		insert into event_log (node_id, data_type, old_value, new_value, time) values(new.node_id, new.data_type, old.value,new.value,now());
-	end if;
+if(new.data_type = 'STATUS' and new.value != old.value) then
+insert into event_log (node_id, data_type, old_value, new_value, time) values(new.node_id, new.data_type, old.value,new.value,now());
+end if;
 end;
 |
 delimiter ;	

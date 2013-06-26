@@ -5,6 +5,7 @@
 						http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 	<import resource="env.xml" />
+	<import resource="workflow.xml" />
 
 	<bean id="nodeDao" class="edu.clarkson.gdc.dashboard.domain.dao.XMLNodeDao" />
 
@@ -60,42 +61,11 @@
 		<property name="latency" value="60000" />
 	</bean>
 
-	<bean id="interfaceWorkflow" class="edu.clarkson.gdc.workflow.BasicWorkflow">
-		<property name="units">
-			<list>
-				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
-					<property name="bean" ref="interfaceService" />
-					<property name="beanClass"
-						value="edu.clarkson.gdc.dashboard.service.InterfaceService" />
-					<property name="method" value="updateNodeStatus" />
-					<property name="params" value="input:0,input:1,input:2" />
-				</bean>
-
-				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
-					<property name="bean" ref="interfaceService" />
-					<property name="beanClass"
-						value="edu.clarkson.gdc.dashboard.service.InterfaceService" />
-					<property name="method" value="updateNodeHistory" />
-					<property name="params" value="input:0,input:1,input:2,input:3" />
-				</bean>
-
-				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
-					<property name="bean" ref="interfaceService" />
-					<property name="beanClass"
-						value="edu.clarkson.gdc.dashboard.service.InterfaceService" />
-					<property name="method" value="updateAlert" />
-					<property name="params" value="input:0,input:1,input:2" />
-				</bean>
-
-				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
-					<property name="bean" ref="aiService" />
-					<property name="beanClass"
-						value="edu.clarkson.gdc.dashboard.service.AIService" />
-					<property name="method" value="handleAlert" />
-					<property name="params" value="context:alert" />
-				</bean>
-			</list>
-		</property>
+	<bean id="thresholdService"
+		class="edu.clarkson.gdc.dashboard.service.DefaultThresholdService">
+		<property name="nodeDao" ref="nodeDao" />
+		<property name="alertDao" ref="alertDao" />
+		<property name="powerThreshold" value="40" />
 	</bean>
 
 	<task:scheduled-tasks scheduler="myScheduler">

@@ -34,6 +34,7 @@ public class DefaultThresholdService implements ThresholdService {
 				alert.setType(AlertType.POWER_EXHAUST);
 				alert.setLevel(AlertType.POWER_EXHAUST.level());
 				alert.setNodeId(node.getId());
+				alert.setNodeName(node.getName());
 				getAlertDao().save(alert);
 				alerts.add(alert);
 			}

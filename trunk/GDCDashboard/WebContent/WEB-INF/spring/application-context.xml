@@ -65,7 +65,7 @@
 		class="edu.clarkson.gdc.dashboard.service.DefaultThresholdService">
 		<property name="nodeDao" ref="nodeDao" />
 		<property name="alertDao" ref="alertDao" />
-		<property name="powerThreshold" value="40" />
+		<property name="powerThreshold" value="47" />
 	</bean>
 
 	<task:scheduled-tasks scheduler="myScheduler">

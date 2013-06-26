@@ -26,6 +26,16 @@
 				</attributes>
 			</machine>
 			<machine id="dc1-bty1-mc2" name="GDC-Watertown" />
+			<machine id="dc1-bty1-mc3" name="GDC-Core">
+				<attributes>
+					<attribute key="ip" value="128.153.145.177" />
+				</attributes>
+			</machine>
+			<machine id="dc1-bty1-mc4" name="GDC-Core2">
+				<attributes>
+					<attribute key="ip" value="128.153.145.223" />
+				</attributes>
+			</machine>
 		</battery>
 		<description>This is a description to the data center 1</description>
 	</data-center>
@@ -42,7 +52,7 @@
 			</machine>
 		</battery>
 		<power id="dc2-power" name="Green Power in CAMP">
-			
+
 		</power>
 		<description>This is a description to the data center 2</description>
 	</data-center>

@@ -146,6 +146,7 @@ Ext.define('GDC.node.VMGrid', {
 		var machinePanel = this.up('nodeMachinePanel');
 		var srcId = machinePanel.datas.id;
 		vmService.list(srcId, function(vmBean) {
+			debugger;
 			var ownerId = vmBean.ownerId;
 			var vmGrid = Ext.getCmp('tab' + ownerId).down('gdcVmGrid');
 			var dataArray = new Array();

@@ -43,14 +43,10 @@
 					<property name="params" value="input:0,input:1,input:2" />
 				</bean>
 
-				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
-					<property name="id" value="handleAlert" />
-					<property name="params" value="context:alerts" />
-					<property name="bean" ref="aiService" />
-					<property name="beanClass"
-						value="edu.clarkson.gdc.dashboard.service.AIService" />
-					<property name="method" value="handleAlert" />
-				</bean>
+				<!-- bean class="edu.clarkson.gdc.workflow.ExecutionUnit"> <property 
+					name="id" value="handleAlert" /> <property name="params" value="context:alerts" 
+					/> <property name="bean" ref="aiService" /> <property name="beanClass" value="edu.clarkson.gdc.dashboard.service.AIService" 
+					/> <property name="method" value="handleAlert" /> </bean -->
 
 			</list>
 		</property>

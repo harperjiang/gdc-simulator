@@ -102,7 +102,7 @@ Ext.define('GDC.node.PowerViewPanel', {
 				type : 'gauge',
 				position : 'gauge',
 				minimum : 0,
-				maximum : 100,
+				maximum : 72,
 				steps : 4,
 				margin : 7,
 				title : 'Input\nCurrent'
@@ -113,8 +113,8 @@ Ext.define('GDC.node.PowerViewPanel', {
 			axes : [ {
 				type : 'gauge',
 				position : 'gauge',
-				minimum : 0,
-				maximum : 100,
+				minimum : -72,
+				maximum : 72,
 				steps : 4,
 				margin : 7,
 				title : 'Battery\nCurrent'
@@ -126,7 +126,7 @@ Ext.define('GDC.node.PowerViewPanel', {
 				type : 'gauge',
 				position : 'gauge',
 				minimum : 0,
-				maximum : 100,
+				maximum : 72,
 				steps : 4,
 				margin : 7,
 				title : 'Inverter\nCurrent'
@@ -151,7 +151,7 @@ Ext.define('GDC.node.PowerViewPanel', {
 				type : 'gauge',
 				position : 'gauge',
 				minimum : 0,
-				maximum : 100,
+				maximum : 110,
 				steps : 4,
 				margin : 7,
 				title : 'Charge\nStatus'

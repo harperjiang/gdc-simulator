@@ -1,6 +1,8 @@
 package edu.clarkson.gdc.dashboard.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import edu.clarkson.gdc.dashboard.domain.dao.AlertDao;
 import edu.clarkson.gdc.dashboard.domain.dao.HistoryDao;
@@ -24,33 +26,35 @@ public class DefaultInterfaceService implements InterfaceService {
 	private AlertDao alertDao;
 
 	@Override
-	public void updateNodeStatus(String nodeId, String type, String value) {
+	public NodeStatus updateNodeStatus(String nodeId, String type, String value) {
 		if (!NodeStatus.isStatus(type))
-			return;
+			return null;
 		NodeStatus status = new NodeStatus();
 		status.setNodeId(nodeId);
 		status.setDataType(type);
 		status.setValue(value);
 		getStatusDao().updateStatus(status);
+		return status;
 	}
 
 	@Override
-	public void updateNodeHistory(String nodeId, String type, String value,
-			Date timestamp) {
+	public NodeHistory updateNodeHistory(String nodeId, String type,
+			String value, Date timestamp) {
 		if (!NodeHistory.isHistory(type))
-			return;
+			return null;
 		NodeHistory history = new NodeHistory();
 		history.setNodeId(nodeId);
 		history.setTime(timestamp);
 		history.setDataType(type);
 		history.setValue(value);
 		getHistoryDao().addHistory(history);
+		return history;
 	}
 
 	@Override
-	public void updateAlert(String nodeId, String type, String value) {
+	public Alert updateAlert(String nodeId, String type, String value) {
 		if (!Alert.isAlert(type))
-			return;
+			return null;
 		Node node = getNodeDao().getNode(nodeId);
 
 		AlertType t = AlertType.valueOf(type);
@@ -64,7 +68,12 @@ public class DefaultInterfaceService implements InterfaceService {
 
 		getAlertDao().save(alert);
 
-		WorkflowContext.get().getContext().put("alert", alert);
+		// Add List to context
+		List<Alert> alerts = WorkflowContext.get().get("alerts",
+				new ArrayList<Alert>());
+		alerts.add(alert);
+
+		return alert;
 	}
 
 	public NodeDao getNodeDao() {

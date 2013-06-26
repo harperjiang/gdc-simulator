@@ -2,12 +2,16 @@ package edu.clarkson.gdc.dashboard.service;
 
 import java.util.Date;
 
+import edu.clarkson.gdc.dashboard.domain.entity.Alert;
+import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
+import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
+
 public interface InterfaceService {
 
-	public void updateNodeStatus(String nodeId, String type, String value);
+	public NodeStatus updateNodeStatus(String nodeId, String type, String value);
 
-	public void updateNodeHistory(String nodeId, String type, String value,
+	public NodeHistory updateNodeHistory(String nodeId, String type, String value,
 			Date timestamp);
 
-	public void updateAlert(String nodeId, String type, String value);
+	public Alert updateAlert(String nodeId, String type, String value);
 }

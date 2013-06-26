@@ -13,6 +13,10 @@ public class ExecutionUnit {
 
 	static final String CONTEXT = "context";
 
+	static final String RETURN = "return";
+
+	private String id;
+
 	private Object bean;
 
 	private Class<?> beanClass;
@@ -31,6 +35,17 @@ public class ExecutionUnit {
 		Validate.notNull(bean);
 		Validate.notEmpty(method);
 
+		List<Object> paramList = getParameters(inputs);
+
+		if (null == methodStub) {
+			methodStub = findMethod(paramList);
+		}
+		Object returnval = methodStub.invoke(bean, paramList.toArray());
+		String key = getId();
+		WorkflowContext.get().getReturnContext().put(key, returnval);
+	}
+
+	protected List<Object> getParameters(Object[] inputs) {
 		// Parse parameters
 		List<Object> paramList = new ArrayList<Object>();
 		if (!StringUtils.isEmpty(params)) {
@@ -44,13 +59,14 @@ public class ExecutionUnit {
 					String key = parts[1];
 					paramList.add(WorkflowContext.get().getContext().get(key));
 				}
+				if (RETURN.equals(parts[0])) {
+					String key = parts[1];
+					paramList.add(WorkflowContext.get().getReturnContext()
+							.get(key));
+				}
 			}
 		}
-
-		if (null == methodStub) {
-			methodStub = findMethod(paramList);
-		}
-		methodStub.invoke(bean, paramList.toArray());
+		return paramList;
 	}
 
 	protected Method findMethod(List<Object> paramList) throws Exception {
@@ -74,6 +90,14 @@ public class ExecutionUnit {
 			}
 			return null;
 		}
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public Object getBean() {

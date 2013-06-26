@@ -27,6 +27,8 @@
 		
 		<convert converter="enum"
 			match="edu.clarkson.gdc.dashboard.domain.entity.AlertLevel" />
+		<convert converter="enum"
+			match="edu.clarkson.gdc.dashboard.domain.entity.AlertType" />
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.Summary" />
 		<convert converter="bean"

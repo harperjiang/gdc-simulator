@@ -1,6 +1,7 @@
 package edu.clarkson.gdc.dashboard.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.clarkson.gdc.dashboard.domain.dao.AlertDao;
@@ -23,6 +24,8 @@ public class DefaultThresholdService implements ThresholdService {
 
 	@Override
 	public void checkThreshold(NodeStatus status) {
+		if(null == status)
+			return;
 		List<Alert> alerts = WorkflowContext.get().get("alerts",
 				new ArrayList<Alert>());
 		Node node = nodeDao.getNode(status.getNodeId());
@@ -34,6 +37,7 @@ public class DefaultThresholdService implements ThresholdService {
 				alert.setType(AlertType.POWER_EXHAUST);
 				alert.setLevel(AlertType.POWER_EXHAUST.level());
 				alert.setNodeId(node.getId());
+				alert.setTime(new Date());
 				alert.setNodeName(node.getName());
 				getAlertDao().save(alert);
 				alerts.add(alert);

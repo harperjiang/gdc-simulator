@@ -2,7 +2,7 @@ package edu.clarkson.gdc.dashboard.domain.entity;
 
 public enum AlertType {
 
-	POWER_EXHAUST(AlertLevel.SEVERE);
+	POWER_EXHAUST(AlertLevel.SEVERE), BTY_LOW_LEVEL(AlertLevel.SEVERE);
 
 	private AlertLevel level;
 

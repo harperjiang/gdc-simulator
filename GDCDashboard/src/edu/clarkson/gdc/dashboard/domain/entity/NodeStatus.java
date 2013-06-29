@@ -16,6 +16,11 @@ import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus.NodeStatusId;
 public class NodeStatus {
 
 	public static class NodeStatusId implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6701631894968903963L;
+
 		private String nodeId;
 
 		private String dataType;

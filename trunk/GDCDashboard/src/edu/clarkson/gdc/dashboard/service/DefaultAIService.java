@@ -64,7 +64,7 @@ public class DefaultAIService implements AIService {
 	public void relocateVM() {
 		List<DataCenter> dsList = getNodeDao().getNodesByType(DataCenter.class);
 		for (DataCenter ds : dsList)
-			migrateOut(ds);
+			migrateOut(ds, false);
 	}
 
 	@Override
@@ -73,11 +73,11 @@ public class DefaultAIService implements AIService {
 			return;
 		}
 		switch (alert.getType()) {
-		case POWER_EXHAUST:
+		case BTY_LOW_LEVEL:
 			// Migrate all vms under the Data Center out
 			Node node = getNodeDao().up(
 					getNodeDao().getNode(alert.getNodeId()), DataCenter.class);
-			migrateOut(node);
+			migrateOut(node, true);
 			break;
 		default:
 			break;
@@ -85,7 +85,7 @@ public class DefaultAIService implements AIService {
 		return;
 	}
 
-	protected void migrateOut(Node node) {
+	protected void migrateOut(Node node, boolean force) {
 		Map<String, String[]> migration = makeMigrateDecision(nodeDao.up(node,
 				DataCenter.class));
 		for (Entry<String, String[]> entry : migration.entrySet()) {

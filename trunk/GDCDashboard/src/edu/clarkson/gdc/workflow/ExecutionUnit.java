@@ -69,7 +69,12 @@ public class ExecutionUnit {
 	}
 
 	protected Method findMethod(List<Object> paramList) throws Exception {
-		Class<?> beanClass = ((TargetClassAware) bean).getTargetClass();
+		Class<?> beanClass = null;
+		if (bean instanceof TargetClassAware)
+			beanClass = ((TargetClassAware) bean).getTargetClass();
+		else
+			beanClass = bean.getClass();
+		Class<?>[] interfaces = beanClass.getInterfaces();
 		Class<?>[] paramTypes = new Class<?>[paramList.size()];
 		boolean byType = true;
 		for (int i = 0; i < paramList.size(); i++) {
@@ -81,15 +86,21 @@ public class ExecutionUnit {
 			}
 		}
 		if (byType) {
-			return beanClass.getMethod(method, paramTypes);
-		} else {
-			for (Method m : beanClass.getMethods()) {
+			for (Class<?> interf : interfaces) {
+				try {
+					return interf.getMethod(method, paramTypes);
+				} catch (NoSuchMethodException e) {
+				}
+			}
+		}
+		for (Class<?> interf : interfaces) {
+			for (Method m : interf.getMethods()) {
 				if (this.method.equals(m.getName())
 						&& m.getParameterTypes().length == paramList.size())
 					return m;
 			}
-			return null;
 		}
+		return null;
 	}
 
 	public String getId() {

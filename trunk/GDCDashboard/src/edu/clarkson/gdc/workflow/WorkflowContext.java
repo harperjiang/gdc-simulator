@@ -19,6 +19,7 @@ public class WorkflowContext {
 	};
 
 	public <T extends Object> T get(String key, T defaultVal) {
+		@SuppressWarnings("unchecked")
 		T t = (T) getContext().get(key);
 		if (null == t) {
 			getContext().put(key, defaultVal);
@@ -38,11 +39,11 @@ public class WorkflowContext {
 		return context;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getReturnContext() {
 		if (!context.containsKey(RETURN_CONTEXT)) {
 			context.put(RETURN_CONTEXT, new HashMap<String, Object>());
 		}
 		return (Map<String, Object>) context.get(RETURN_CONTEXT);
-
 	}
 }

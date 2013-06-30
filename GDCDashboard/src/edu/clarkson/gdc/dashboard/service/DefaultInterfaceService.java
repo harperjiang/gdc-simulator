@@ -1,8 +1,6 @@
 package edu.clarkson.gdc.dashboard.service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import edu.clarkson.gdc.dashboard.domain.dao.AlertDao;
 import edu.clarkson.gdc.dashboard.domain.dao.HistoryDao;
@@ -13,7 +11,7 @@ import edu.clarkson.gdc.dashboard.domain.entity.AlertType;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
-import edu.clarkson.gdc.workflow.WorkflowContext;
+import edu.clarkson.gdc.event.EventSender;
 
 public class DefaultInterfaceService implements InterfaceService {
 
@@ -24,6 +22,8 @@ public class DefaultInterfaceService implements InterfaceService {
 	private HistoryDao historyDao;
 
 	private AlertDao alertDao;
+
+	private EventSender sender;
 
 	@Override
 	public NodeStatus updateNodeStatus(String nodeId, String type, String value) {
@@ -68,11 +68,6 @@ public class DefaultInterfaceService implements InterfaceService {
 
 		getAlertDao().save(alert);
 
-		// Add List to context
-		List<Alert> alerts = WorkflowContext.get().get("alerts",
-				new ArrayList<Alert>());
-		alerts.add(alert);
-
 		return alert;
 	}
 
@@ -106,6 +101,14 @@ public class DefaultInterfaceService implements InterfaceService {
 
 	public void setAlertDao(AlertDao alertDao) {
 		this.alertDao = alertDao;
+	}
+
+	public EventSender getSender() {
+		return sender;
+	}
+
+	public void setSender(EventSender sender) {
+		this.sender = sender;
 	}
 
 }

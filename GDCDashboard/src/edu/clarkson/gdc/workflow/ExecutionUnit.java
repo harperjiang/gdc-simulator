@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.springframework.aop.TargetClassAware;
 
 public class ExecutionUnit {
 
@@ -18,8 +19,6 @@ public class ExecutionUnit {
 	private String id;
 
 	private Object bean;
-
-	private Class<?> beanClass;
 
 	private String method;
 
@@ -70,6 +69,7 @@ public class ExecutionUnit {
 	}
 
 	protected Method findMethod(List<Object> paramList) throws Exception {
+		Class<?> beanClass = ((TargetClassAware) bean).getTargetClass();
 		Class<?>[] paramTypes = new Class<?>[paramList.size()];
 		boolean byType = true;
 		for (int i = 0; i < paramList.size(); i++) {
@@ -122,13 +122,5 @@ public class ExecutionUnit {
 
 	public void setParams(String params) {
 		this.params = params;
-	}
-
-	public Class<?> getBeanClass() {
-		return beanClass;
-	}
-
-	public void setBeanClass(Class<?> beanClass) {
-		this.beanClass = beanClass;
 	}
 }

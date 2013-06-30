@@ -1,5 +1,6 @@
 package edu.clarkson.gdc.dashboard.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
 import edu.clarkson.gdc.dashboard.domain.entity.PowerSource;
+import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 
 public class DefaultNodeService implements NodeService {
 
@@ -29,6 +31,8 @@ public class DefaultNodeService implements NodeService {
 	private HistoryDao historyDao;
 
 	private StatusDao statusDao;
+
+	private long latency = 60000;
 
 	@Override
 	public String getData(String id) {
@@ -75,6 +79,28 @@ public class DefaultNodeService implements NodeService {
 			data.put("history", history);
 		}
 		return new Gson().toJson(data);
+	}
+
+	@Override
+	public void updateStatus() {
+		long current = System.currentTimeMillis();
+		List<Node> nodes = new ArrayList<Node>();
+		nodes.addAll(nodeDao.getNodesByType(Machine.class));
+		nodes.addAll(nodeDao.getNodesByType(Battery.class));
+		nodes.addAll(nodeDao.getNodesByType(PowerSource.class));
+		// Update Running Status
+		for (Node node : nodes) {
+			NodeHistory latest = historyDao.getLatest(node, null);
+			NodeStatus status = new NodeStatus();
+			status.setDataType(StatusType.STATUS.name());
+			if (latest == null)
+				status.setValue("false");
+			else
+				status.setValue(Boolean.toString(current
+						- latest.getTime().getTime() <= latency));
+			status.setNodeId(node.getId());
+			statusDao.updateStatus(status);
+		}
 	}
 
 	public NodeDao getNodeDao() {

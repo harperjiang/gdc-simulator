@@ -15,13 +15,9 @@ import edu.clarkson.gdc.dashboard.domain.dao.StatusDao;
 import edu.clarkson.gdc.dashboard.domain.dao.VMDao;
 import edu.clarkson.gdc.dashboard.domain.entity.Alert;
 import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
-import edu.clarkson.gdc.dashboard.domain.entity.Battery;
 import edu.clarkson.gdc.dashboard.domain.entity.DataCenter;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
-import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
-import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
-import edu.clarkson.gdc.dashboard.domain.entity.PowerSource;
 import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 import edu.clarkson.gdc.dashboard.service.ai.NodeScore;
@@ -37,28 +33,6 @@ public class DefaultAIService implements AIService {
 	private VMDao vmDao;
 
 	private long latency = 30000;
-
-	@Override
-	public void updateStatus() {
-		long current = System.currentTimeMillis();
-		List<Node> nodes = new ArrayList<Node>();
-		nodes.addAll(nodeDao.getNodesByType(Machine.class));
-		nodes.addAll(nodeDao.getNodesByType(Battery.class));
-		nodes.addAll(nodeDao.getNodesByType(PowerSource.class));
-		// Update Running Status
-		for (Node node : nodes) {
-			NodeHistory latest = historyDao.getLatest(node, null);
-			NodeStatus status = new NodeStatus();
-			status.setDataType(StatusType.STATUS.name());
-			if (latest == null)
-				status.setValue("false");
-			else
-				status.setValue(Boolean.toString(current
-						- latest.getTime().getTime() <= latency));
-			status.setNodeId(node.getId());
-			statusDao.updateStatus(status);
-		}
-	}
 
 	@Override
 	public void relocateVM() {
@@ -86,8 +60,8 @@ public class DefaultAIService implements AIService {
 	}
 
 	protected void migrateOut(Node node, boolean force) {
-		Map<String, String[]> migration = makeMigrateDecision(nodeDao.up(node,
-				DataCenter.class));
+		Map<String, String[]> migration = makeMigrateDecision(
+				nodeDao.up(node, DataCenter.class), force);
 		for (Entry<String, String[]> entry : migration.entrySet()) {
 			VirtualMachine vm = getNodeDao().getNode(entry.getKey());
 			Machine source = getNodeDao().getNode(entry.getValue()[0]);
@@ -96,7 +70,8 @@ public class DefaultAIService implements AIService {
 		}
 	}
 
-	protected Map<String, String[]> makeMigrateDecision(DataCenter node) {
+	protected Map<String, String[]> makeMigrateDecision(DataCenter node,
+			boolean force) {
 		List<Machine> machines = getNodeDao().down(node, Machine.class);
 		NodeScore baseScore = score(node);
 

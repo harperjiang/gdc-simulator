@@ -22,6 +22,7 @@ public class LoopUnit extends ExecutionUnit {
 		Object param = paramList.get(0);
 		if (!(param instanceof List))
 			throw new IllegalArgumentException(param.getClass().getSimpleName());
+		@SuppressWarnings("unchecked")
 		List<Object> pList = (List<Object>) param;
 		String varKey = MessageFormat.format("{0}_{1}", getId(), VAR);
 		String countKey = MessageFormat.format("{0}_{1}", getId(), COUNT);

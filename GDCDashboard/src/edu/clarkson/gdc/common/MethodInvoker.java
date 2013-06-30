@@ -27,10 +27,18 @@ public class MethodInvoker {
 	}
 
 	protected Method findMethod() {
-		Class<?> beanClass = ((TargetClassAware) bean).getTargetClass();
-		for (Method m : beanClass.getMethods()) {
-			if (this.method.equals(m.getName()))
-				return m;
+		Class<?> beanClass = null;
+		if (bean instanceof TargetClassAware) {
+			beanClass = ((TargetClassAware) bean).getTargetClass();
+		} else {
+			beanClass = bean.getClass();
+		}
+		Class<?>[] interfaces = beanClass.getInterfaces();
+		for (Class<?> interf : interfaces) {
+			for (Method m : interf.getMethods()) {
+				if (this.method.equals(m.getName()))
+					return m;
+			}
 		}
 		return null;
 	}

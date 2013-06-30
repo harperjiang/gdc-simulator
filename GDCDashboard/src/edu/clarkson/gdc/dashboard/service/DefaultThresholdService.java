@@ -24,7 +24,7 @@ public class DefaultThresholdService implements ThresholdService {
 
 	@Override
 	public void checkThreshold(NodeStatus status) {
-		if(null == status)
+		if (null == status)
 			return;
 		List<Alert> alerts = WorkflowContext.get().get("alerts",
 				new ArrayList<Alert>());
@@ -34,8 +34,8 @@ public class DefaultThresholdService implements ThresholdService {
 			Double value = Double.valueOf(status.getValue());
 			if (value < getPowerThreshold()) {
 				Alert alert = new Alert();
-				alert.setType(AlertType.POWER_EXHAUST);
-				alert.setLevel(AlertType.POWER_EXHAUST.level());
+				alert.setType(AlertType.BTY_LOW_LEVEL);
+				alert.setLevel(AlertType.BTY_LOW_LEVEL.level());
 				alert.setNodeId(node.getId());
 				alert.setTime(new Date());
 				alert.setNodeName(node.getName());

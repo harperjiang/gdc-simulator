@@ -5,7 +5,9 @@
 						http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 	<import resource="env.xml" />
+	<import resource="event.xml" />
 	<import resource="workflow.xml" />
+	<import resource="scheduler.xml" />
 
 	<bean id="nodeDao" class="edu.clarkson.gdc.dashboard.domain.dao.XMLNodeDao" />
 
@@ -25,8 +27,7 @@
 	<bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaStatusDao">
 		<property name="entityManager" ref="entityManager" />
 	</bean>
-	<!-- bean id="statusDao" class="edu.clarkson.gdc.dashboard.domain.dao.DummyStatusDao" 
-		/ -->
+	<bean id="lockDao" class="edu.clarkson.gdc.dashboard.domain.dao.MemoryLockDao" />
 
 	<bean id="structureService"
 		class="edu.clarkson.gdc.dashboard.service.DefaultStructureService">
@@ -51,6 +52,7 @@
 		<property name="historyDao" ref="historyDao" />
 		<property name="statusDao" ref="statusDao" />
 		<property name="alertDao" ref="alertDao" />
+		<property name="sender" ref="mediator" />
 	</bean>
 
 	<bean id="aiService" class="edu.clarkson.gdc.dashboard.service.DefaultAIService">
@@ -67,13 +69,6 @@
 		<property name="alertDao" ref="alertDao" />
 		<property name="powerThreshold" value="0" />
 	</bean>
-
-	<task:scheduled-tasks scheduler="myScheduler">
-		<task:scheduled ref="aiService" method="updateStatus"
-			cron="30 */1 * * * *" />
-	</task:scheduled-tasks>
-
-	<task:scheduler id="myScheduler" pool-size="5" />
 
 	<bean id="adapter"
 		class="edu.clarkson.gdc.common.ApplicationContextHolder.Adaptor" />

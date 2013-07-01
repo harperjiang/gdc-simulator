@@ -13,7 +13,7 @@
 	</bean>
 
 	<bean id="memoryVmDao" class="edu.clarkson.gdc.dashboard.domain.dao.MemoryVMDao" />
-
+	<bean id="dummyStatusDao" class="edu.clarkson.gdc.dashboard.domain.dao.DummyStatusDao" />
 	<bean id="alertDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaAlertDao">
 		<property name="entityManager" ref="entityManager" />
 	</bean>
@@ -53,9 +53,8 @@
 	<bean id="aiService" class="edu.clarkson.gdc.dashboard.service.DefaultAIService">
 		<property name="nodeDao" ref="nodeDao" />
 		<property name="historyDao" ref="historyDao" />
-		<property name="statusDao" ref="statusDao" />
+		<property name="statusDao" ref="dummyStatusDao" />
 		<property name="vmDao" ref="memoryVmDao" />
-		<property name="latency" value="60000" />
 	</bean>
 
 	<bean id="adapter"

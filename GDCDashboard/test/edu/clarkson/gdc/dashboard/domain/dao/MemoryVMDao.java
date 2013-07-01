@@ -1,5 +1,6 @@
 package edu.clarkson.gdc.dashboard.domain.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
@@ -22,8 +23,11 @@ public class MemoryVMDao implements VMDao {
 
 	@Override
 	public List<VirtualMachine> list(Machine owner) {
-		// TODO Auto-generated method stub
-		return null;
+		VirtualMachine vm = new VirtualMachine();
+		vm.setName("Good VM");
+		List<VirtualMachine> vms = new ArrayList<VirtualMachine>();
+		vms.add(vm);
+		return vms;
 	}
 
 	@Override

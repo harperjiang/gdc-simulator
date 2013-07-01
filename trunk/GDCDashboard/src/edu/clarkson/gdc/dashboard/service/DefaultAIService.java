@@ -2,12 +2,14 @@ package edu.clarkson.gdc.dashboard.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 
 import edu.clarkson.gdc.dashboard.domain.dao.HistoryDao;
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
@@ -18,6 +20,7 @@ import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
 import edu.clarkson.gdc.dashboard.domain.entity.DataCenter;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
+import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
 import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 import edu.clarkson.gdc.dashboard.service.ai.NodeScore;
@@ -31,8 +34,6 @@ public class DefaultAIService implements AIService {
 	private StatusDao statusDao;
 
 	private VMDao vmDao;
-
-	private long latency = 30000;
 
 	@Override
 	public void relocateVM() {
@@ -60,6 +61,8 @@ public class DefaultAIService implements AIService {
 	}
 
 	protected void migrateOut(Node node, boolean force) {
+		if (null == node)
+			return;
 		Map<String, String[]> migration = makeMigrateDecision(
 				nodeDao.up(node, DataCenter.class), force);
 		for (Entry<String, String[]> entry : migration.entrySet()) {
@@ -72,16 +75,30 @@ public class DefaultAIService implements AIService {
 
 	protected Map<String, String[]> makeMigrateDecision(DataCenter node,
 			boolean force) {
+		Validate.notNull(node);
 		List<Machine> machines = getNodeDao().down(node, Machine.class);
 		NodeScore baseScore = score(node);
 
 		// Find potential target data centers
 		List<Machine> available = new ArrayList<Machine>();
-		for (DataCenter ds : getNodeDao().getNodesByType(DataCenter.class)) {
+		List<DataCenter> dss = getNodeDao().getNodesByType(DataCenter.class);
+		if (force) {
+			dss.remove(node);
+		}
+		for (DataCenter ds : dss) {
 			NodeScore dsScore = score(ds);
 			if (dsScore.getScore() > baseScore.getScore()) {
 				available.addAll(getNodeDao().down(ds, Machine.class));
 			}
+		}
+		// Remove unavailable machine
+		Iterator<Machine> mi = available.iterator();
+		while (mi.hasNext()) {
+			Machine machine = mi.next();
+			NodeStatus sta = getStatusDao().getStatus(machine,
+					StatusType.STATUS.name());
+			if ("false".equals(sta.getValue()))
+				mi.remove();
 		}
 		// Randomly choose between them
 		List<NodeScore> scores = new ArrayList<NodeScore>();
@@ -114,7 +131,6 @@ public class DefaultAIService implements AIService {
 						break;
 					}
 					pos -= score.getScore();
-					i++;
 				}
 			}
 		}
@@ -142,7 +158,7 @@ public class DefaultAIService implements AIService {
 	protected NodeScore score(DataCenter ds) {
 		NodeScore score = new NodeScore();
 		score.setNode(ds);
-		score.setScore(ds.getPowerSource() == null ? 0 : 100);
+		score.setScore(ds.getPowerSource() == null ? 100 : 0);
 		return score;
 	}
 
@@ -160,14 +176,6 @@ public class DefaultAIService implements AIService {
 
 	public void setStatusDao(StatusDao statusDao) {
 		this.statusDao = statusDao;
-	}
-
-	public long getLatency() {
-		return latency;
-	}
-
-	public void setLatency(long latency) {
-		this.latency = latency;
 	}
 
 	public NodeDao getNodeDao() {

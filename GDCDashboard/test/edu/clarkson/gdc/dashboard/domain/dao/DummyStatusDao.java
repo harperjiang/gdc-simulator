@@ -1,28 +1,40 @@
 package edu.clarkson.gdc.dashboard.domain.dao;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
+import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 
 public class DummyStatusDao implements StatusDao {
 
+	private Random random = new Random(System.currentTimeMillis());
+
 	@Override
 	public NodeStatus getStatus(Node node, String dataType) {
-		// TODO Auto-generated method stub
-		return null;
+		NodeStatus ns = new NodeStatus();
+		ns.setDataType(dataType);
+		ns.setNodeId(node.getId());
+		if (StatusType.STATUS.name().equals(dataType)) {
+			ns.setValue("true");
+		} else {
+			ns.setValue(String.valueOf(random.nextInt(100)));
+		}
+		return ns;
 	}
 
 	@Override
 	public Map<String, NodeStatus> getStatus(Node node) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, NodeStatus> map = new HashMap<String, NodeStatus>();
+		for (StatusType st : StatusType.values()) {
+			map.put(st.name(), getStatus(node, st.name()));
+		}
+		return map;
 	}
 
 	@Override
 	public void updateStatus(NodeStatus status) {
-		// TODO Auto-generated method stub
-
 	}
-
 }

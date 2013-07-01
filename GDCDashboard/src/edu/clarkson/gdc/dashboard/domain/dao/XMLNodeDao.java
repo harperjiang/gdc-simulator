@@ -202,6 +202,8 @@ public class XMLNodeDao implements NodeDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Node> T up(Node child, Class<T> filter) {
+		if(filter.isInstance(child))
+			return (T)child;
 		try {
 			if (DataCenter.class == filter) {
 				String dcid = child.getId().substring(0,

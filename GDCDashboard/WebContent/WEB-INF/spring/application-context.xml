@@ -39,6 +39,7 @@
 		<property name="nodeDao" ref="nodeDao" />
 		<property name="historyDao" ref="historyDao" />
 		<property name="statusDao" ref="statusDao" />
+		<property name="latency" value="60000" />
 	</bean>
 
 	<bean id="vmService" class="edu.clarkson.gdc.dashboard.service.DefaultVMService">
@@ -60,7 +61,6 @@
 		<property name="historyDao" ref="historyDao" />
 		<property name="statusDao" ref="statusDao" />
 		<property name="vmDao" ref="vmDao" />
-		<property name="latency" value="60000" />
 	</bean>
 
 	<bean id="thresholdService"

@@ -78,7 +78,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 								maximum : 100,
 								steps : 4,
 								margin : 7
-							} ],
+							} ]
 						}, {
 							xtype : 'gdcGaugeChart',
 							id : 'summary.capacityChart',

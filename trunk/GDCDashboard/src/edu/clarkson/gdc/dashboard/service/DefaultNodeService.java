@@ -127,4 +127,12 @@ public class DefaultNodeService implements NodeService {
 		this.statusDao = statusDao;
 	}
 
+	public long getLatency() {
+		return latency;
+	}
+
+	public void setLatency(long latency) {
+		this.latency = latency;
+	}
+
 }

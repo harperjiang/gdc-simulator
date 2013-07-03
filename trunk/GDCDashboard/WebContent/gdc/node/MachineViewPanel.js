@@ -163,6 +163,7 @@ Ext.define('GDC.node.MachineViewPanel', {
 		this.callParent();
 	},
 	loadData : function(datas) {
+		debugger;
 		this.datas = datas;
 		this.getComponent('performance').getComponent('cpu').store
 				.loadData([ [ datas.MACHINE_CPU ] ]);

@@ -18,7 +18,7 @@
 			<bean class="edu.clarkson.gdc.event.impl.TypeSelector">
 				<property name="clazz"
 					value="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
-				<proeprty name="type" value="Alert-BTY_LOW_LEVEL" />
+				<property name="type" value="Alert-BTY_LOW_LEVEL" />
 			</bean>
 		</property>
 		<property name="handler">

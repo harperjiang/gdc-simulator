@@ -180,7 +180,7 @@ CREATE TABLE `seq_table` (
 
 LOCK TABLES `seq_table` WRITE;
 /*!40000 ALTER TABLE `seq_table` DISABLE KEYS */;
-INSERT INTO `seq_table` VALUES ('alert',200),('node_history',150);
+INSERT INTO `seq_table` VALUES ('alert',0),('node_history',0);
 /*!40000 ALTER TABLE `seq_table` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -16,8 +16,6 @@
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/gdc_dashboard" />
 			<property name="javax.persistence.jdbc.user" value="gdc" />
 			<property name="javax.persistence.jdbc.password" value="GDCscript" />
-			<!-- property name="eclipselink.logging.level" value="INFO"/>
-			<property name="eclipselink.logging.level.sql" value="ALL"/ -->
 		</properties>
 	</persistence-unit>
 </persistence>

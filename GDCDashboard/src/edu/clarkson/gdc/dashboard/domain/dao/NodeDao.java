@@ -6,6 +6,8 @@ import edu.clarkson.gdc.dashboard.domain.entity.Node;
 
 public interface NodeDao {
 
+	String summaryNodeId = "summary";
+
 	public <T extends Node> T getNode(String id);
 
 	public <T extends Node> List<T> getNodesByType(Class<T> clazz);

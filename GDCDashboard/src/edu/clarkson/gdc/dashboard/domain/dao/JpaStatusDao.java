@@ -10,18 +10,22 @@ import org.springframework.orm.jpa.support.JpaDaoSupport;
 
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
+import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 
 public class JpaStatusDao extends JpaDaoSupport implements StatusDao {
 
 	@Override
-	public NodeStatus getStatus(Node node, String dataType) {
+	public NodeStatus getStatus(Node node, StatusType dataType) {
+		String nodeId = NodeDao.summaryNodeId;
+		if (node != null)
+			nodeId = node.getId();
 		try {
 			return getJpaTemplate()
 					.getEntityManager()
 					.createQuery(
 							"select s from NodeStatus s where s.nodeId = :id and s.dataType = :dt",
-							NodeStatus.class).setParameter("id", node.getId())
-					.setParameter("dt", dataType).getSingleResult();
+							NodeStatus.class).setParameter("id", nodeId)
+					.setParameter("dt", dataType.name()).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
@@ -29,10 +33,13 @@ public class JpaStatusDao extends JpaDaoSupport implements StatusDao {
 
 	@Override
 	public Map<String, NodeStatus> getStatus(Node node) {
+		String nodeId = NodeDao.summaryNodeId;
+		if (node != null)
+			nodeId = node.getId();
 		List<NodeStatus> resultList = getJpaTemplate()
 				.getEntityManager()
 				.createQuery("select s from NodeStatus s where s.nodeId = :id",
-						NodeStatus.class).setParameter("id", node.getId())
+						NodeStatus.class).setParameter("id", nodeId)
 				.getResultList();
 		Map<String, NodeStatus> result = new HashMap<String, NodeStatus>();
 		for (NodeStatus ns : resultList) {

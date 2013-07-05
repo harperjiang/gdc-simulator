@@ -6,7 +6,7 @@ public class Summary {
 
 	private int dcCount;
 
-	private int dcRunning;
+	private int vmRunning;
 
 	private BigDecimal utilization;
 
@@ -24,12 +24,12 @@ public class Summary {
 		this.dcCount = dcCount;
 	}
 
-	public int getDcRunning() {
-		return dcRunning;
+	public int getVmRunning() {
+		return vmRunning;
 	}
 
-	public void setDcRunning(int dcRunning) {
-		this.dcRunning = dcRunning;
+	public void setVmRunning(int vmRunning) {
+		this.vmRunning = vmRunning;
 	}
 
 	public BigDecimal getUtilization() {

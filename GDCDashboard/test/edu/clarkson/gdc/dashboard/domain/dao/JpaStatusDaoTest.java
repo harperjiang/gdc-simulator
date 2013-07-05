@@ -13,6 +13,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import edu.clarkson.gdc.dashboard.domain.entity.Battery;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
+import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 
 @ContextConfiguration(locations = { "/application-context.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -26,7 +27,7 @@ public class JpaStatusDaoTest extends
 	public void prepare() {
 		NodeStatus status = new NodeStatus();
 		status.setNodeId("aak");
-		status.setDataType("ddt");
+		status.setDataType(StatusType.MACHINE_CPU.name());
 		status.setValue("apa");
 
 		statusDao.updateStatus(status);
@@ -36,7 +37,7 @@ public class JpaStatusDaoTest extends
 	public void test() {
 		Node node = new Battery();
 		node.setId("aak");
-		NodeStatus status = statusDao.getStatus(node, "ddt");
+		NodeStatus status = statusDao.getStatus(node, StatusType.MACHINE_CPU);
 		assertEquals("apa", status.getValue());
 	}
 

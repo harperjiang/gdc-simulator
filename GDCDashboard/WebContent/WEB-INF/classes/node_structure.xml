@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://gdc.clarkson.edu/node_structure node_structure.xsd ">
 	<data-center id="dc1" name="Lab in Science Center">
 		<attributes>
-			<attribute key="power_source" value="Wind &amp; Solar" />
+			<attribute key="power_source" value="Grid" />
 			<attribute key="designed_capacity" value="200MW" />
 			<attribute key="peak_capacity" value="850MW" />
 		</attributes>
@@ -43,20 +43,19 @@
 					<attribute key="ip" value="128.153.145.188" />
 				</attributes>
 			</machine>
-			<machine id="dc1-bty1-mc3" name="GDC-Core">
-				<attributes>
-					<attribute key="ip" value="128.153.145.177" />
-				</attributes>
-			</machine>
-			<machine id="dc1-bty1-mc4" name="GDC-Core2">
-				<attributes>
-					<attribute key="ip" value="128.153.145.223" />
-				</attributes>
-			</machine>
+			<!-- machine id="dc1-bty1-mc3" name="GDC-Core"> <attributes> <attribute 
+				key="ip" value="128.153.145.177" /> </attributes> </machine> <machine id="dc1-bty1-mc4" 
+				name="GDC-Core2"> <attributes> <attribute key="ip" value="128.153.145.223" 
+				/> </attributes> </machine -->
 		</battery>
 		<description>This is a description to the data center 1</description>
 	</data-center>
 	<data-center id="dc2" name="Lab in CAMP">
+		<attributes>
+			<attribute key="power_source" value="Wind &amp; Solar" />
+			<attribute key="designed_capacity" value="300MW" />
+			<attribute key="peak_capacity" value="450MW" />
+		</attributes>
 		<battery id="dc2-bty1" name="CyberPower UPS">
 			<machine id="dc2-bty1-mc1" name="CAMP Machine 1">
 				<attributes>

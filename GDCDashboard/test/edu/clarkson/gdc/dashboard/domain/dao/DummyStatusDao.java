@@ -13,11 +13,11 @@ public class DummyStatusDao implements StatusDao {
 	private Random random = new Random(System.currentTimeMillis());
 
 	@Override
-	public NodeStatus getStatus(Node node, String dataType) {
+	public NodeStatus getStatus(Node node, StatusType dataType) {
 		NodeStatus ns = new NodeStatus();
-		ns.setDataType(dataType);
+		ns.setDataType(dataType.name());
 		ns.setNodeId(node.getId());
-		if (StatusType.STATUS.name().equals(dataType)) {
+		if (StatusType.STATUS.equals(dataType)) {
 			ns.setValue("true");
 		} else {
 			ns.setValue(String.valueOf(random.nextInt(100)));
@@ -29,7 +29,7 @@ public class DummyStatusDao implements StatusDao {
 	public Map<String, NodeStatus> getStatus(Node node) {
 		Map<String, NodeStatus> map = new HashMap<String, NodeStatus>();
 		for (StatusType st : StatusType.values()) {
-			map.put(st.name(), getStatus(node, st.name()));
+			map.put(st.name(), getStatus(node, st));
 		}
 		return map;
 	}

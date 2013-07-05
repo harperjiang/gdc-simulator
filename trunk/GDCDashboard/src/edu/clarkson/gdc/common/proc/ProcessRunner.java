@@ -27,6 +27,8 @@ public class ProcessRunner {
 	 * @throws InterruptedException
 	 */
 	public int runAndWait() throws InterruptedException, IOException {
+		Logger logger = LoggerFactory.getLogger(getClass());
+
 		ProcessBuilder builder = new ProcessBuilder(commands);
 		builder.redirectErrorStream(true);
 
@@ -37,6 +39,9 @@ public class ProcessRunner {
 					process.getInputStream()));
 			String line = null;
 			while (null != (line = br.readLine())) {
+				if (logger.isDebugEnabled()) {
+					logger.debug(line);
+				}
 				handler.output(line);
 			}
 		}
@@ -75,7 +80,7 @@ public class ProcessRunner {
 		public void done();
 
 		public void exception(Exception e);
-		
+
 		public void clean();
 	}
 }

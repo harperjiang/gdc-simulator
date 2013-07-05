@@ -138,7 +138,7 @@ Ext.define('GDC.node.DCViewPanel', {
 			} ]
 		}, {
 			xtype : 'gdcGaugeChart',
-			itemId : 'capacityChart',
+			itemId : 'consumptionChart',
 			style : 'background:#fff',
 			store : Ext.create('Ext.data.ArrayStore', {
 				// reader configs
@@ -154,7 +154,7 @@ Ext.define('GDC.node.DCViewPanel', {
 				maximum : 100,
 				steps : 4,
 				margin : 7,
-				title : 'Capacity'
+				title : 'Consumption'
 			} ]
 		} ]
 	}, {
@@ -171,19 +171,12 @@ Ext.define('GDC.node.DCViewPanel', {
 			width : 650,
 			height : 250,
 			itemId : 'powerHistory',
-			store : Ext.create('Ext.data.ArrayStore', {
-				// reader configs
-				fields : [ 'time', {
-					name : 'value',
-					type : 'float'
-				} ]
-			}),
 			axes : [ {
 				type : 'Numeric',
 				minimum : 0,
 				position : 'left',
 				fields : [ 'value' ],
-				title : 'Power(MW)',
+				title : 'Power Consumption(kW)',
 				minorTickSteps : 1,
 				grid : {
 					odd : {
@@ -198,22 +191,6 @@ Ext.define('GDC.node.DCViewPanel', {
 				position : 'bottom',
 				fields : [ 'time' ],
 				title : 'Time'
-			} ],
-			series : [ {
-				type : 'line',
-				highlight : {
-					size : 7,
-					radius : 7
-				},
-				axis : 'left',
-				xField : 'time',
-				yField : 'value',
-				markerConfig : {
-					type : 'cross',
-					size : 4,
-					radius : 4,
-					'stroke-width' : 0
-				}
 			} ]
 		} ]
 	}, {
@@ -227,13 +204,13 @@ Ext.define('GDC.node.DCViewPanel', {
 				.getComponent('status'), datas);
 		this.getComponent('performance').getComponent('healthChart').store
 				.loadData([ [ datas.DC_HEALTH ] ]);
-		this.getComponent('performance').getComponent('capacityChart').store
-				.loadData([ [ datas.DC_CAPACITY ] ]);
+		this.getComponent('performance').getComponent('consumptionChart').store
+				.loadData([ [ datas.DC_CONSUMPTION ] ]);
 		this.getComponent('performance').getComponent('powerChart').store
-				.loadData([ [ datas.DC_POWER ] ]);
+				.loadData([ [ datas.DC_GENERATION ] ]);
 
-		// this.getComponent('history').getComponent('powerHistory').store
-		// .loadData(data);
+		this.getComponent('history').getComponent('powerHistory').store
+				.loadData(datas.history.DC_CONSUMPTION);
 
 		var data2 = [ {
 			name : 'Stablity',

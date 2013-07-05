@@ -96,7 +96,7 @@ public class DefaultAIService implements AIService {
 		while (mi.hasNext()) {
 			Machine machine = mi.next();
 			NodeStatus sta = getStatusDao().getStatus(machine,
-					StatusType.STATUS.name());
+					StatusType.STATUS);
 			if ("false".equals(sta.getValue()))
 				mi.remove();
 		}
@@ -142,7 +142,7 @@ public class DefaultAIService implements AIService {
 		score.setNode(machine);
 
 		int vmCount = Integer.valueOf(getStatusDao().getStatus(machine,
-				StatusType.MACHINE_VMCOUNT.name()).getValue());
+				StatusType.MACHINE_VMCOUNT).getValue());
 		int total = -1;
 		String totalStr = machine.getAttributes().get(
 				Attributes.MACHINE_VMSIZE.attrName());

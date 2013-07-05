@@ -5,11 +5,12 @@ import edu.clarkson.gdc.common.Converter;
 
 public enum StatusType {
 
-	STATUS(new BooleanConverter()), DC_HEALTH(null), DC_CAPACITY(null), DC_POWER(
-			null), UPS_POWER(null), UPS_VOLTAGE(null), UPS_TEMPERATURE(null), POWER_INPUT_I(
-			null), POWER_BTY_I(null), POWER_INVRT_I(null), POWER_BTY_V(null), POWER_CHARGE(
-			null), MACHINE_CPU(null), MACHINE_MEMORY(null), MACHINE_VMCOUNT(
-			null);
+	STATUS(new BooleanConverter()), 
+	SUMMARY_HEALTH(null), SUMMARY_UTIL(null), SUMMARY_VMRUNNING(null),
+	DC_HEALTH(null), DC_GENERATION(null), DC_CONSUMPTION(null), 
+	UPS_POWER(null), UPS_VOLTAGE(null), UPS_TEMPERATURE(null), 
+	POWER_INPUT_I(null), POWER_BTY_I(null), POWER_INVRT_I(null), POWER_BTY_V(null), POWER_CHARGE(null), 
+	MACHINE_CPU(null), MACHINE_MEMORY(null), MACHINE_VMCOUNT(null);
 
 	private Converter<?> converter;
 

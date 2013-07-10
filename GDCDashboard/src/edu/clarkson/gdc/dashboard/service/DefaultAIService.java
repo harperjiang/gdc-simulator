@@ -47,12 +47,18 @@ public class DefaultAIService implements AIService {
 		if (null == alert) {
 			return;
 		}
+		Node node = null;
 		switch (alert.getType()) {
 		case BTY_LOW_LEVEL:
 			// Migrate all vms under the Data Center out
-			Node node = getNodeDao().up(
-					getNodeDao().getNode(alert.getNodeId()), DataCenter.class);
+			node = getNodeDao().up(getNodeDao().getNode(alert.getNodeId()),
+					DataCenter.class);
 			migrateOut(node, true);
+			break;
+		case BTY_HIGH_LEVEL:
+			node = getNodeDao().up(getNodeDao().getNode(alert.getNodeId()),
+					DataCenter.class);
+			migrateIn(node);
 			break;
 		default:
 			break;
@@ -70,6 +76,22 @@ public class DefaultAIService implements AIService {
 			Machine source = getNodeDao().getNode(entry.getValue()[0]);
 			Machine dest = getNodeDao().getNode(entry.getValue()[1]);
 			getVmDao().migrate(vm, source, dest);
+		}
+	}
+
+	protected void migrateIn(Node node) {
+		if (null == node)
+			return;
+		List<DataCenter> alldss = nodeDao.getNodesByType(DataCenter.class);
+		alldss.remove(nodeDao.up(node, DataCenter.class));
+		for (DataCenter ds : alldss) {
+			Map<String, String[]> migration = makeMigrateDecision(ds, false);
+			for (Entry<String, String[]> entry : migration.entrySet()) {
+				VirtualMachine vm = getNodeDao().getNode(entry.getKey());
+				Machine source = getNodeDao().getNode(entry.getValue()[0]);
+				Machine dest = getNodeDao().getNode(entry.getValue()[1]);
+				getVmDao().migrate(vm, source, dest);
+			}
 		}
 	}
 

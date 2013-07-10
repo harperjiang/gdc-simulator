@@ -263,9 +263,9 @@ public class ScriptVMDao implements VMDao {
 
 		@Override
 		public void output(String input) {
-			// There should be no output
-			this.logger
-					.error("Exception while doing script migration:" + input);
+			if (logger.isDebugEnabled()) {
+				logger.debug(input);
+			}
 		}
 	}
 

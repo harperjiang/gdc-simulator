@@ -1,16 +1,12 @@
 package edu.clarkson.gdc.simulator.module.network.impl;
 
-public class GeoRegionConnection {
+public class RegionConnection {
 
 	private GeoRegion source;
 
 	private GeoRegion destination;
 
-	private RandomHop hop;
-
-	public GeoRegionConnection() {
-		hop = new RandomHop();
-	}
+	private Cable connection;
 
 	public GeoRegion getSource() {
 		return source;
@@ -28,12 +24,12 @@ public class GeoRegionConnection {
 		this.destination = destination;
 	}
 
-	public RandomHop getHop() {
-		return hop;
+	public Cable getConnection() {
+		return connection;
 	}
 
-	public void setHop(RandomHop hop) {
-		this.hop = hop;
+	public void setConnection(Cable connection) {
+		this.connection = connection;
 	}
 
 }

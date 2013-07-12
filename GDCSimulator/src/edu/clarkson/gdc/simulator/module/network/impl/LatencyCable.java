@@ -2,7 +2,7 @@ package edu.clarkson.gdc.simulator.module.network.impl;
 
 import java.util.Random;
 
-public class RandomHop implements Hop {
+public class LatencyCable implements Cable {
 
 	private int minLatency;
 

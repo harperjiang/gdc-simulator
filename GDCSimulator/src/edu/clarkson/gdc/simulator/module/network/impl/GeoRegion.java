@@ -8,11 +8,11 @@ public class GeoRegion implements Region {
 
 	private String name;
 
-	private RandomHop hop;
+	private LatencyCable hop;
 
 	public GeoRegion() {
 		super();
-		hop = new RandomHop();
+		hop = new LatencyCable();
 	}
 
 	public String getId() {
@@ -31,11 +31,11 @@ public class GeoRegion implements Region {
 		this.name = name;
 	}
 
-	public RandomHop getHop() {
+	public LatencyCable getHop() {
 		return hop;
 	}
 
-	public void setHop(RandomHop hop) {
+	public void setHop(LatencyCable hop) {
 		this.hop = hop;
 	}
 

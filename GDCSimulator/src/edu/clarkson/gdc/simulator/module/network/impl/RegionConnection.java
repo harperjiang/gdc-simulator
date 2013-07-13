@@ -6,7 +6,7 @@ public class RegionConnection {
 
 	private GeoRegion destination;
 
-	private Cable connection;
+	private Cable cable;
 
 	public GeoRegion getSource() {
 		return source;
@@ -24,12 +24,12 @@ public class RegionConnection {
 		this.destination = destination;
 	}
 
-	public Cable getConnection() {
-		return connection;
+	public Cable getCable() {
+		return cable;
 	}
 
-	public void setConnection(Cable connection) {
-		this.connection = connection;
+	public void setCable(Cable cable) {
+		this.cable = cable;
 	}
 
 }

@@ -8,11 +8,10 @@ public class GeoRegion implements Region {
 
 	private String name;
 
-	private LatencyCable hop;
+	private Cable cable;
 
 	public GeoRegion() {
 		super();
-		hop = new LatencyCable();
 	}
 
 	public String getId() {
@@ -31,12 +30,12 @@ public class GeoRegion implements Region {
 		this.name = name;
 	}
 
-	public LatencyCable getHop() {
-		return hop;
+	public Cable getCable() {
+		return cable;
 	}
 
-	public void setHop(LatencyCable hop) {
-		this.hop = hop;
+	public void setCable(Cable cable) {
+		this.cable = cable;
 	}
 
 }

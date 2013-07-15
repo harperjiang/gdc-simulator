@@ -2,7 +2,9 @@ package edu.clarkson.gdc.dashboard.service;
 
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.dao.VMDao;
+import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
+import edu.clarkson.gdc.dashboard.domain.entity.VMStatus;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 import edu.clarkson.gdc.dashboard.service.vm.ListVMResultBean;
 
@@ -35,6 +37,19 @@ public class DefaultVMService implements VMService {
 		Machine srcMachine = getNodeDao().getNode(srcId);
 		VirtualMachine vm = getVmDao().find(srcMachine, vmName);
 		vmDao.operate(srcMachine, vm, VMService.Operation.valueOf(operation));
+	}
+
+	@Override
+	public Machine find(String vmName) {
+		for (Machine machine : nodeDao.getNodesByType(Machine.class)) {
+			VirtualMachine vm = vmDao.find(machine, vmName);
+			if (vm != null
+					&& VMStatus.RUNNING.name().equals(
+							vm.getAttributes().get(
+									Attributes.VM_STATUS.attrName())))
+				return machine;
+		}
+		return null;
 	}
 
 	@Override

@@ -8,6 +8,12 @@ public class RegionConnection {
 
 	private Cable cable;
 
+	public RegionConnection(GeoRegion s, GeoRegion d, Cable cable) {
+		this.source = s;
+		this.destination = d;
+		this.cable = cable;
+	}
+
 	public GeoRegion getSource() {
 		return source;
 	}

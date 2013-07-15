@@ -6,12 +6,16 @@ public class GeoRegion implements Region {
 
 	private String id;
 
-	private String name;
-
 	private Cable cable;
 
 	public GeoRegion() {
 		super();
+	}
+
+	public GeoRegion(String id, Cable cable) {
+		this();
+		setId(id);
+		setCable(cable);
 	}
 
 	public String getId() {
@@ -20,14 +24,6 @@ public class GeoRegion implements Region {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public Cable getCable() {

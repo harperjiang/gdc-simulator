@@ -10,6 +10,11 @@ public class LatencyCable implements Cable {
 
 	private transient Random random;
 
+	public LatencyCable(int min, int max) {
+		minLatency = min;
+		maxLatency = max;
+	}
+
 	protected Random getRandom() {
 		if (null == random)
 			random = new Random(System.currentTimeMillis());

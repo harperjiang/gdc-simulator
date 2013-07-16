@@ -2,7 +2,7 @@ package edu.clarkson.gdc.workflow.param;
 
 public class InputParam implements Param {
 
-	private int index;
+	protected int index;
 
 	public InputParam(int index) {
 		this.index = index;

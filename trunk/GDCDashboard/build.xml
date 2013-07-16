@@ -9,9 +9,6 @@
 	<property name="dest.path" value="/home/gdc" />
 	<property name="dest.scriptpath" value="/home/gdc/deploy/GDCDashboard" />
 
-	<path id="DWR.userclasspath">
-		<pathelement location="../kooobao-shared-libs/dwr/dwr.jar" />
-	</path>
 	<path id="Apache Commons.userclasspath">
 		<pathelement location="../kooobao-shared-libs/apache-commons/commons-beanutils-1.8.2.jar" />
 		<pathelement location="../kooobao-shared-libs/apache-commons/commons-codec-1.3.jar" />
@@ -59,6 +56,9 @@
 	<path id="JSON.userclasspath">
 		<pathelement location="../kooobao-shared-libs/json/gson-2.2.2.jar" />
 	</path>
+	<path id="DWR.userclasspath">
+		<pathelement location="../kooobao-shared-libs/dwr/dwr.jar" />
+	</path>
 	<path id="EclipseLink_2.1.2.userclasspath">
 		<pathelement location="../kooobao-shared-libs/jpa/eclipse212/eclipselink.jar" />
 		<pathelement location="../kooobao-shared-libs/jpa/eclipse212/javax.persistence_2.0.0.jar" />
@@ -67,22 +67,22 @@
 		<pathelement location="../kooobao-shared-libs/jdbc/mysql-connector-java-5.1.17-bin.jar" />
 	</path>
 	<path id="Apache Tomcat v6.0 [Apache Tomcat v6.0].libraryclasspath">
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/jasper-el.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/tomcat-dbcp.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/jasper.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/catalina-ant.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/catalina.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/ecj-4.2.2.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/jsp-api.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/tomcat-i18n-es.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/tomcat-i18n-fr.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/catalina-ha.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/tomcat-i18n-ja.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/tomcat-coyote.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/servlet-api.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/annotations-api.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/el-api.jar" />
-		<pathelement location="../../Libraries/apache-tomcat-6.0.35/lib/catalina-tribes.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/tomcat-i18n-ja.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/catalina-ha.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/annotations-api.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/tomcat-i18n-es.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/jsp-api.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/catalina.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/tomcat-dbcp.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/catalina-ant.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/jasper.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/jasper-el.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/tomcat-i18n-fr.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/catalina-tribes.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/tomcat-coyote.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/servlet-api.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/el-api.jar" />
+		<pathelement location="../../Libraries/apache-tomcat-6.0.37/lib/ecj-4.2.2.jar" />
 	</path>
 	<path id="GDCDashboard.classpath">
 		<path refid="DWR.userclasspath" />

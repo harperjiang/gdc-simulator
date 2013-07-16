@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>GDC Dashboard</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="gdc/loadService.js"></script>
+<script type="text/javascript">
+function reload() {
+	vmService.find("media", function(result) {
+		document.getElementById("vmInfo").innerHTML = result.name;
+	});
+}
+window.setInterval("reload" , 5000);
+</script>
+</head>
+<body onload="javascript:reload()">
+	<span id="vmInfo"></span>
+
+</body>
+</html>

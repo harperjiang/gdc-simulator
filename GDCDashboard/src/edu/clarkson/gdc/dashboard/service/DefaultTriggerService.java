@@ -1,8 +1,6 @@
 package edu.clarkson.gdc.dashboard.service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import edu.clarkson.gdc.dashboard.domain.dao.AlertDao;
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
@@ -12,7 +10,6 @@ import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
 import edu.clarkson.gdc.dashboard.domain.entity.PowerSource;
 import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
-import edu.clarkson.gdc.workflow.WorkflowContext;
 
 public class DefaultTriggerService implements TriggerService {
 
@@ -20,27 +17,43 @@ public class DefaultTriggerService implements TriggerService {
 
 	private AlertDao alertDao;
 
+	private static final String BTY_LOW_LEVEL = "BTY_LOW_LEVEL";
+
+	private static final String BTY_NORMAL_LEVEL = "BTY_NORMAL_LEVEL";
+
+	private static final String BTY_HIGH_LEVEL = "BTY_HIGH_LEVEL";
+
 	@Override
 	public Alert trigger(NodeStatus oldsta, NodeStatus newsta) {
 		if (null == oldsta || null == newsta)
-			return;
-		List<Alert> alerts = WorkflowContext.get().get("alerts",
-				new ArrayList<Alert>());
-		Node node = nodeDao.getNode(status.getNodeId());
+			return null;
+		Node node = nodeDao.getNode(newsta.getNodeId());
 		if (node instanceof PowerSource
-				&& StatusType.POWER_INPUT_I.name().equals(status.getDataType())) {
-			Double value = Double.valueOf(status.getValue());
-			if (value < getPowerThreshold()) {
+				&& StatusType.BTY_LEVEL.name().equals(newsta.getDataType())) {
+			String oldval = oldsta.getValue();
+			String newval = newsta.getValue();
+			if (BTY_NORMAL_LEVEL.equals(oldval) && BTY_LOW_LEVEL.equals(newval)) {
 				Alert alert = new Alert();
-				alert.setType(AlertType.BTY_LOW_LEVEL);
-				alert.setLevel(AlertType.BTY_LOW_LEVEL.level());
+				alert.setType(AlertType.BTY_TOO_LOW);
+				alert.setLevel(AlertType.BTY_TOO_LOW.level());
 				alert.setNodeId(node.getId());
 				alert.setTime(new Date());
 				alert.setNodeName(node.getName());
 				getAlertDao().save(alert);
-				alerts.add(alert);
+				return alert;
+			}
+			if (BTY_NORMAL_LEVEL.equals(oldval) && BTY_HIGH_LEVEL.equals(newval)) {
+				Alert alert = new Alert();
+				alert.setType(AlertType.BTY_IS_HIGH);
+				alert.setLevel(AlertType.BTY_IS_HIGH.level());
+				alert.setNodeId(node.getId());
+				alert.setTime(new Date());
+				alert.setNodeName(node.getName());
+				getAlertDao().save(alert);
+				return alert;
 			}
 		}
+		return null;
 	}
 
 	public NodeDao getNodeDao() {

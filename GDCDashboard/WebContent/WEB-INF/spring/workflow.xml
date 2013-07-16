@@ -17,7 +17,7 @@
 				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
 					<property name="id" value="trigger" />
 					<property name="bean" ref="triggerService" />
-					<property name="method" value="checkThreshold" />
+					<property name="method" value="trigger" />
 					<property name="params" value="context:oldstatus,return:status" />
 				</bean>
 

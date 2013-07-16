@@ -117,6 +117,14 @@ public class DefaultAIService implements AIService {
 		Iterator<Machine> mi = available.iterator();
 		while (mi.hasNext()) {
 			Machine machine = mi.next();
+			if (machine.getAttributes().containsKey("automig")) {
+				String automig = machine.getAttributes().get("automig");
+				if ("false".equals(automig)) {
+					mi.remove();
+					continue;
+				}
+			}
+
 			NodeStatus sta = getStatusDao().getStatus(machine,
 					StatusType.STATUS);
 			if ("false".equals(sta.getValue()))

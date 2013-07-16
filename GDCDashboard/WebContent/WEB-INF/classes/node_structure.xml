@@ -32,6 +32,7 @@
 					<attribute key="cpu" value="Spark-II" />
 					<attribute key="memory" value="20G" />
 					<attribute key="ip" value="128.153.145.175" />
+					<attribute key="automig" value="false" />
 				</attributes>
 			</machine>
 			<machine id="dc1-bty1-mc5" name="GDC-Malone2">
@@ -41,6 +42,7 @@
 					<attribute key="cpu" value="Spark-II" />
 					<attribute key="memory" value="20G" />
 					<attribute key="ip" value="128.153.145.188" />
+					<attribute key="automig" value="false" />
 				</attributes>
 			</machine>
 			<!-- machine id="dc1-bty1-mc3" name="GDC-Core"> <attributes> <attribute 

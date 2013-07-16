@@ -11,7 +11,7 @@ public enum StatusType {
 	UPS_POWER(null), UPS_VOLTAGE(null), UPS_TEMPERATURE(null), 
 	POWER_INPUT_I(null), POWER_BTY_I(null), POWER_INVRT_I(null), POWER_BTY_V(null), POWER_CHARGE(null), 
 	MACHINE_CPU(null), MACHINE_MEMORY(null), MACHINE_VMCOUNT(null),
-	BTY_HIGH_LEVEL(null),BTY_NORMAL_LEVEL(null),BTY_LOW_LEVEL(null);
+	BTY_LEVEL(null);
 	
 	private Converter<?> converter;
 

@@ -1,12 +1,16 @@
 package edu.clarkson.gdc.workflow;
 
+import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.springframework.aop.TargetClassAware;
+
+import edu.clarkson.gdc.workflow.param.Param;
+import edu.clarkson.gdc.workflow.param.ParamParser;
+import edu.clarkson.gdc.workflow.param.ParseException;
 
 public class ExecutionUnit {
 
@@ -45,27 +49,20 @@ public class ExecutionUnit {
 	}
 
 	protected List<Object> getParameters(Object[] inputs) {
+		List<Object> results = new ArrayList<Object>();
 		// Parse parameters
-		List<Object> paramList = new ArrayList<Object>();
-		if (!StringUtils.isEmpty(params)) {
-			for (String param : params.split(",")) {
-				String[] parts = param.split(":");
-				if (INPUT.equals(parts[0])) {
-					int index = Integer.valueOf(parts[1]);
-					paramList.add(inputs[index]);
-				}
-				if (CONTEXT.equals(parts[0])) {
-					String key = parts[1];
-					paramList.add(WorkflowContext.get().getContext().get(key));
-				}
-				if (RETURN.equals(parts[0])) {
-					String key = parts[1];
-					paramList.add(WorkflowContext.get().getReturnContext()
-							.get(key));
-				}
+		try {
+			List<Param> paramList = new ParamParser(new StringReader(
+					getParams())).paramList();
+			for (Param param : paramList) {
+				results.add(param.getValue(inputs));
 			}
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-		return paramList;
+
+		return results;
 	}
 
 	protected Method findMethod(List<Object> paramList) throws Exception {

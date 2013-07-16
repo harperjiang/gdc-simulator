@@ -26,8 +26,8 @@ public class DefaultAIServiceTest extends AbstractJUnit4SpringContextTests {
 	public void testHandleAlert() {
 		Alert alert = new Alert();
 		alert.setNodeId("dc2-power");
-		alert.setType(AlertType.BTY_LOW_LEVEL);
-		alert.setLevel(AlertType.BTY_LOW_LEVEL.level());
+		alert.setType(AlertType.BTY_TOO_LOW);
+		alert.setLevel(AlertType.BTY_TOO_LOW.level());
 		aiService.handleAlert(alert);
 	}
 

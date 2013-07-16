@@ -13,7 +13,7 @@ import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus.NodeStatusId;
 @Entity
 @Table(name = "node_status")
 @IdClass(NodeStatusId.class)
-public class NodeStatus {
+public class NodeStatus implements Cloneable {
 
 	public static class NodeStatusId implements Serializable {
 		/**
@@ -103,6 +103,15 @@ public class NodeStatus {
 			return true;
 		} catch (IllegalArgumentException e) {
 			return false;
+		}
+	}
+
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

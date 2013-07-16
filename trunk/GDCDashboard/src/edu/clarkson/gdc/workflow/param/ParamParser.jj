@@ -1,0 +1,115 @@
+options {
+  STATIC = false;
+}
+PARSER_BEGIN(ParamParser)
+
+package edu.clarkson.gdc.workflow.param;
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class ParamParser {
+
+  /** Main entry point. */
+  public static void main(String args[]) throws ParseException {
+    ParamParser parser = new ParamParser(System.in);
+    parser.paramList();
+  }
+
+}
+
+PARSER_END(ParamParser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN : 
+{
+	< CONTEXT: "context" >
+|	< INPUT: "input" >
+|	< RETURN: "return" >
+|	< ID: ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* >
+|	< NUM: (["0"-"9"])+ >
+}
+
+List<Param> paramList() :
+{
+	Param p;
+	List<Param> pl;
+}
+{
+	p = singleParam() pl = paramSection()
+	{
+		pl.add(0,p);
+		return pl;
+	}    
+}
+
+List<Param> paramSection() :
+{
+	Param p;
+	List<Param> pl;
+}
+{
+	"," p = singleParam() pl = paramSection()
+	{
+		pl.add(0,p);
+		return pl;
+	}
+|	<EOF> 
+	{
+		pl = new ArrayList<Param>();
+		return pl;
+	}
+}
+
+Param param() :
+{
+	Param p,first,second;	
+}
+{
+	LOOKAHEAD(3)
+	p = singleParam() 
+	{
+		return p;
+	}
+|	LOOKAHEAD(3)
+	first=singleParam() "|" second=singleParam() {
+		return new OrParam(first,second);
+	}
+}
+
+Param singleParam() :
+{
+	String id; 
+	int num;
+	Param first,second;
+} 
+{
+	<CONTEXT> ":" id=id() {
+		return new ContextParam(id);
+	}
+|	<INPUT> ":" num=number() {
+		return new InputParam(num);
+	}
+|	<RETURN> ":" id=id() {
+		return new ReturnParam(id);
+	}
+}
+
+String id() :
+{Token id;}
+{
+	id = <ID> {return id.image;}
+}
+
+int number() : 
+{Token value;}
+{
+	value = <NUM> {return Integer.valueOf(value.image);}	
+}

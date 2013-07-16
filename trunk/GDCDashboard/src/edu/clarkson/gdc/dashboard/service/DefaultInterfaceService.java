@@ -37,7 +37,8 @@ public class DefaultInterfaceService implements InterfaceService {
 		Node node = getNodeDao().getNode(nodeId);
 		NodeStatus old = getStatusDao().getStatus(node,
 				StatusType.valueOf(type));
-		WorkflowContext.get().getContext().put(OLD_STATUS, old);
+		if (old != null)
+			WorkflowContext.get().getContext().put(OLD_STATUS, old.clone());
 
 		NodeStatus status = new NodeStatus();
 		status.setNodeId(nodeId);

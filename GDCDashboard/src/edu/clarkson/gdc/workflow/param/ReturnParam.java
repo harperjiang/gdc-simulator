@@ -4,7 +4,7 @@ import edu.clarkson.gdc.workflow.WorkflowContext;
 
 public class ReturnParam implements Param {
 
-	private String key;
+	protected String key;
 
 	public ReturnParam(String key) {
 		super();

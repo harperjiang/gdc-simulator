@@ -43,7 +43,7 @@ List<Param> paramList() :
 	List<Param> pl;
 }
 {
-	p = singleParam() pl = paramSection()
+	p = param() pl = paramSection()
 	{
 		pl.add(0,p);
 		return pl;
@@ -56,7 +56,7 @@ List<Param> paramSection() :
 	List<Param> pl;
 }
 {
-	"," p = singleParam() pl = paramSection()
+	"," p = param() pl = paramSection()
 	{
 		pl.add(0,p);
 		return pl;
@@ -70,17 +70,30 @@ List<Param> paramSection() :
 
 Param param() :
 {
-	Param p,first,second;	
+	Param p;
+	OperandParam op;	
 }
 {
-	LOOKAHEAD(3)
-	p = singleParam() 
+	p = singleParam() op = paramPart() 
 	{
-		return p;
+		op.setFirst(p);
+		return op;
 	}
-|	LOOKAHEAD(3)
-	first=singleParam() "|" second=singleParam() {
-		return new OrParam(first,second);
+}
+
+OperandParam paramPart() :
+{
+	OperandParam op = null;
+	Param p = null;
+}
+{
+	"|" p = singleParam() [ op = paramPart() ] {
+		if(null == op) {
+			return new OrParam(null,p);
+		} else {
+			op.setFirst(p);
+			return new OrParam(null, op);
+		}
 	}
 }
 
@@ -103,13 +116,17 @@ Param singleParam() :
 }
 
 String id() :
-{Token id;}
+{
+	Token id;
+}
 {
 	id = <ID> {return id.image;}
 }
 
 int number() : 
-{Token value;}
+{
+	Token value;
+}
 {
 	value = <NUM> {return Integer.valueOf(value.image);}	
 }

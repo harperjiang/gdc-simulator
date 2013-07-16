@@ -9,6 +9,11 @@ import edu.clarkson.gdc.dashboard.service.VMService.Operation;
 
 public class MemoryVMDao implements VMDao {
 
+	public MemoryVMDao() {
+		super();
+		migrationHistory = new ArrayList<Object[]>();
+	}
+	
 	@Override
 	public void create(VirtualMachine vm) {
 		// TODO Auto-generated method stub
@@ -29,6 +34,8 @@ public class MemoryVMDao implements VMDao {
 		vms.add(vm);
 		return vms;
 	}
+	
+	private List<Object[]> migrationHistory;
 
 	@Override
 	public void migrate(VirtualMachine vm, Machine source, Machine dest) {

@@ -21,7 +21,7 @@ public class DefaultTriggerService implements TriggerService {
 	private AlertDao alertDao;
 
 	@Override
-	public void trigger(NodeStatus oldsta, NodeStatus newsta) {
+	public Alert trigger(NodeStatus oldsta, NodeStatus newsta) {
 		if (null == oldsta || null == newsta)
 			return;
 		List<Alert> alerts = WorkflowContext.get().get("alerts",

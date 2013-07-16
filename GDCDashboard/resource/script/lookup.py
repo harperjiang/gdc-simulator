@@ -12,6 +12,6 @@ for host in hosts:
 	lines = re.split('[\r\n]+',output);
 	for line in lines:
 		section = line.split()
-		if len(section) == 3 and section[1] == sys.argv[1]:
+		if len(section) == 3 and section[1] == sys.argv[1] and section[2] == 'running':
 			print(host) 
 	

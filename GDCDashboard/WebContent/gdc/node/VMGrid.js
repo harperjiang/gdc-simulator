@@ -145,19 +145,23 @@ Ext.define('GDC.node.VMGrid', {
 			return;
 		var machinePanel = this.up('nodeMachinePanel');
 		var srcId = machinePanel.datas.id;
-		vmService.list(srcId, function(vmBean) {
-			debugger;
-			var ownerId = vmBean.ownerId;
-			var vmGrid = Ext.getCmp('tab' + ownerId).down('gdcVmGrid');
-			var dataArray = new Array();
-			for ( var i = 0; i < vmBean.vms.length; i++) {
-				dataArray[i] = new Array();
-				dataArray[i][0] = false;
-				dataArray[i][1] = vmBean.vms[i].name;
-				dataArray[i][2] = vmBean.vms[i].attributes.status;
-				dataArray[i][3] = ' ';
+		vmService.list(srcId, {
+			callback:function(vmBean) {
+				debugger;
+				var ownerId = vmBean.ownerId;
+				var vmGrid = Ext.getCmp('tab' + ownerId).down('gdcVmGrid');
+				var dataArray = new Array();
+				for ( var i = 0; i < vmBean.vms.length; i++) {
+					dataArray[i] = new Array();
+					dataArray[i][0] = false;
+					dataArray[i][1] = vmBean.vms[i].name;
+					dataArray[i][2] = vmBean.vms[i].attributes.status;
+					dataArray[i][3] = ' ';
+				}
+				vmGrid.store.loadData(dataArray);
+			},errorHandler:function(errorString, exception) {
+				console.log(errorString);
 			}
-			vmGrid.store.loadData(dataArray);
 		});
 	},
 	operate : function(operation) {

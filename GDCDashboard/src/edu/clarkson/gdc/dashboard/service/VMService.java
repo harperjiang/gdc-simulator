@@ -1,5 +1,6 @@
 package edu.clarkson.gdc.dashboard.service;
 
+import edu.clarkson.gdc.dashboard.domain.entity.Machine;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 import edu.clarkson.gdc.dashboard.service.vm.ListVMResultBean;
 
@@ -26,4 +27,6 @@ public interface VMService {
 	public VirtualMachine create();
 
 	public void operate(String srcMachine, String vmName, String operation);
+
+	public Machine find(String vm);
 }

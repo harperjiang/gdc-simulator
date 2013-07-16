@@ -14,11 +14,12 @@
 					<property name="params" value="input:0,input:1,input:2" />
 				</bean>
 
-				<!-- bean class="edu.clarkson.gdc.workflow.ExecutionUnit"> <property 
-					name="id" value="powerThreshold" /> <property name="bean" ref="thresholdService" 
-					/> <property name="beanClass" value="edu.clarkson.gdc.dashboard.service.ThresholdService" 
-					/> <property name="method" value="checkThreshold" /> <property name="params" 
-					value="return:status" /> </bean -->
+				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
+					<property name="id" value="trigger" />
+					<property name="bean" ref="triggerService" />
+					<property name="method" value="checkThreshold" />
+					<property name="params" value="context:oldstatus,return:status" />
+				</bean>
 
 				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
 					<property name="id" value="history" />
@@ -36,7 +37,7 @@
 
 				<bean class="edu.clarkson.gdc.workflow.ExecutionUnit">
 					<property name="id" value="sendAlert" />
-					<property name="params" value="return:alert" />
+					<property name="params" value="return:alert|return:trigger" />
 					<property name="bean" ref="mediator" />
 					<property name="method" value="send" />
 				</bean>

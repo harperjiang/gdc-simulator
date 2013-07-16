@@ -44,10 +44,11 @@ public class DefaultVMService implements VMService {
 		for (Machine machine : nodeDao.getNodesByType(Machine.class)) {
 			VirtualMachine vm = vmDao.find(machine, vmName);
 			if (vm != null
-					&& VMStatus.RUNNING.name().equals(
+					&& VMStatus.RUNNING.value().equals(
 							vm.getAttributes().get(
-									Attributes.VM_STATUS.attrName())))
+									Attributes.VM_STATUS.attrName()))) {
 				return machine;
+			}
 		}
 		return null;
 	}

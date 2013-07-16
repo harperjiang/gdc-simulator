@@ -11,7 +11,9 @@ import edu.clarkson.gdc.dashboard.domain.entity.AlertType;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
+import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 import edu.clarkson.gdc.event.EventSender;
+import edu.clarkson.gdc.workflow.WorkflowContext;
 
 public class DefaultInterfaceService implements InterfaceService {
 
@@ -25,10 +27,18 @@ public class DefaultInterfaceService implements InterfaceService {
 
 	private EventSender sender;
 
+	static final String OLD_STATUS = "oldstatus";
+
 	@Override
 	public NodeStatus updateNodeStatus(String nodeId, String type, String value) {
 		if (!NodeStatus.isStatus(type))
 			return null;
+		// Read the old status and put to the workflow context
+		Node node = getNodeDao().getNode(nodeId);
+		NodeStatus old = getStatusDao().getStatus(node,
+				StatusType.valueOf(type));
+		WorkflowContext.get().getContext().put(OLD_STATUS, old);
+
 		NodeStatus status = new NodeStatus();
 		status.setNodeId(nodeId);
 		status.setDataType(type);

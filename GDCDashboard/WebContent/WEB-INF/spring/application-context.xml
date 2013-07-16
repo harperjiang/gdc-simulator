@@ -65,11 +65,10 @@
 		<property name="vmDao" ref="vmDao" />
 	</bean>
 
-	<bean id="thresholdService"
-		class="edu.clarkson.gdc.dashboard.service.DefaultThresholdService">
+	<bean id="triggerService"
+		class="edu.clarkson.gdc.dashboard.service.DefaultTriggerService">
 		<property name="nodeDao" ref="nodeDao" />
 		<property name="alertDao" ref="alertDao" />
-		<property name="powerThreshold" value="0" />
 	</bean>
 
 	<bean id="adapter"

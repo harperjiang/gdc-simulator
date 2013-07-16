@@ -14,17 +14,15 @@ import edu.clarkson.gdc.dashboard.domain.entity.PowerSource;
 import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
 import edu.clarkson.gdc.workflow.WorkflowContext;
 
-public class DefaultThresholdService implements ThresholdService {
-
-	private int powerThreshold = 0;
+public class DefaultTriggerService implements TriggerService {
 
 	private NodeDao nodeDao;
 
 	private AlertDao alertDao;
 
 	@Override
-	public void checkThreshold(NodeStatus status) {
-		if (null == status)
+	public void trigger(NodeStatus oldsta, NodeStatus newsta) {
+		if (null == oldsta || null == newsta)
 			return;
 		List<Alert> alerts = WorkflowContext.get().get("alerts",
 				new ArrayList<Alert>());
@@ -60,13 +58,4 @@ public class DefaultThresholdService implements ThresholdService {
 	public void setAlertDao(AlertDao alertDao) {
 		this.alertDao = alertDao;
 	}
-
-	public int getPowerThreshold() {
-		return powerThreshold;
-	}
-
-	public void setPowerThreshold(int powerThreshold) {
-		this.powerThreshold = powerThreshold;
-	}
-
 }

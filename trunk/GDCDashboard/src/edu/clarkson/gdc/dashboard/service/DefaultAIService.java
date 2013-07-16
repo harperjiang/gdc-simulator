@@ -72,9 +72,9 @@ public class DefaultAIService implements AIService {
 		Map<String, String[]> migration = makeMigrateDecision(
 				nodeDao.up(node, DataCenter.class), force);
 		for (Entry<String, String[]> entry : migration.entrySet()) {
-			VirtualMachine vm = getNodeDao().getNode(entry.getKey());
 			Machine source = getNodeDao().getNode(entry.getValue()[0]);
 			Machine dest = getNodeDao().getNode(entry.getValue()[1]);
+			VirtualMachine vm = getVmDao().find(source, entry.getKey());
 			getVmDao().migrate(vm, source, dest);
 		}
 	}
@@ -87,9 +87,9 @@ public class DefaultAIService implements AIService {
 		for (DataCenter ds : alldss) {
 			Map<String, String[]> migration = makeMigrateDecision(ds, false);
 			for (Entry<String, String[]> entry : migration.entrySet()) {
-				VirtualMachine vm = getNodeDao().getNode(entry.getKey());
 				Machine source = getNodeDao().getNode(entry.getValue()[0]);
 				Machine dest = getNodeDao().getNode(entry.getValue()[1]);
+				VirtualMachine vm = getVmDao().find(source, entry.getKey());
 				getVmDao().migrate(vm, source, dest);
 			}
 		}
@@ -99,6 +99,18 @@ public class DefaultAIService implements AIService {
 			boolean force) {
 		Validate.notNull(node);
 		List<Machine> machines = getNodeDao().down(node, Machine.class);
+		// FIXME Remove non-automig machines
+		Iterator<Machine> smi = machines.iterator();
+		while (smi.hasNext()) {
+			Machine m = smi.next();
+			if (m.getAttributes().containsKey("automig")) {
+				String automig = m.getAttributes().get("automig");
+				if ("false".equals(automig)) {
+					smi.remove();
+				}
+			}
+		}
+
 		NodeScore baseScore = score(node);
 
 		// Find potential target data centers
@@ -109,7 +121,7 @@ public class DefaultAIService implements AIService {
 		}
 		for (DataCenter ds : dss) {
 			NodeScore dsScore = score(ds);
-			if (dsScore.getScore() > baseScore.getScore()) {
+			if (force || dsScore.getScore() > baseScore.getScore()) {
 				available.addAll(getNodeDao().down(ds, Machine.class));
 			}
 		}
@@ -117,6 +129,8 @@ public class DefaultAIService implements AIService {
 		Iterator<Machine> mi = available.iterator();
 		while (mi.hasNext()) {
 			Machine machine = mi.next();
+			// FIXME This should be removed after the virtual network issue is
+			// solved
 			if (machine.getAttributes().containsKey("automig")) {
 				String automig = machine.getAttributes().get("automig");
 				if ("false".equals(automig)) {
@@ -131,6 +145,9 @@ public class DefaultAIService implements AIService {
 				mi.remove();
 		}
 		// Randomly choose between them
+		Map<String, String[]> result = new HashMap<String, String[]>();
+		if (available.size() == 0)
+			return result;
 		List<NodeScore> scores = new ArrayList<NodeScore>();
 		Random random = new Random(System.currentTimeMillis());
 		int total = 0;
@@ -142,7 +159,6 @@ public class DefaultAIService implements AIService {
 			total += score.getScore();
 			scores.add(score);
 		}
-		Map<String, String[]> result = new HashMap<String, String[]>();
 		for (Machine out : machines) {
 			List<VirtualMachine> vms = getVmDao().list(out);
 			for (VirtualMachine vm : vms) {
@@ -173,7 +189,7 @@ public class DefaultAIService implements AIService {
 
 		int vmCount = Integer.valueOf(getStatusDao().getStatus(machine,
 				StatusType.MACHINE_VMCOUNT).getValue());
-		int total = -1;
+		int total = 100; // default value
 		String totalStr = machine.getAttributes().get(
 				Attributes.MACHINE_VMSIZE.attrName());
 		if (StringUtils.isNotEmpty(totalStr)) {
@@ -188,7 +204,7 @@ public class DefaultAIService implements AIService {
 	protected NodeScore score(DataCenter ds) {
 		NodeScore score = new NodeScore();
 		score.setNode(ds);
-		score.setScore(ds.getPowerSource() == null ? 100 : 0);
+		score.setScore(ds.getPowerSource() == null ? 0 : 100);
 		return score;
 	}
 

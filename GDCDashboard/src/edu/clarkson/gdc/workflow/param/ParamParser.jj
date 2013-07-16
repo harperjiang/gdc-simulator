@@ -70,30 +70,14 @@ List<Param> paramSection() :
 
 Param param() :
 {
-	Param p;
-	OperandParam op;	
+	Param first, second = null;
 }
 {
-	p = singleParam() op = paramPart() 
+	first = singleParam() [ "|" second = param() ] 
 	{
-		op.setFirst(p);
-		return op;
-	}
-}
-
-OperandParam paramPart() :
-{
-	OperandParam op = null;
-	Param p = null;
-}
-{
-	"|" p = singleParam() [ op = paramPart() ] {
-		if(null == op) {
-			return new OrParam(null,p);
-		} else {
-			op.setFirst(p);
-			return new OrParam(null, op);
-		}
+		if(null == second)
+			return first;
+		return new OrParam(first, second);
 	}
 }
 

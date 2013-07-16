@@ -23,6 +23,7 @@
 					<attribute key="cpu" value="Spark-II" />
 					<attribute key="memory" value="20G" />
 					<attribute key="ip" value="128.153.145.179" />
+					<attribute key="vmsize" value="20" />
 				</attributes>
 			</machine>
 			<machine id="dc1-bty1-mc2" name="GDC-Malone">
@@ -33,6 +34,7 @@
 					<attribute key="memory" value="20G" />
 					<attribute key="ip" value="128.153.145.175" />
 					<attribute key="automig" value="false" />
+					<attribute key="vmsize" value="20" />
 				</attributes>
 			</machine>
 			<machine id="dc1-bty1-mc5" name="GDC-Malone2">
@@ -43,6 +45,7 @@
 					<attribute key="memory" value="20G" />
 					<attribute key="ip" value="128.153.145.188" />
 					<attribute key="automig" value="false" />
+					<attribute key="vmsize" value="20" />
 				</attributes>
 			</machine>
 			<!-- machine id="dc1-bty1-mc3" name="GDC-Core"> <attributes> <attribute 
@@ -66,6 +69,7 @@
 					<attribute key="cpu" value="Spark-II" />
 					<attribute key="memory" value="20G" />
 					<attribute key="ip" value="128.153.15.160" />
+					<attribute key="vmsize" value="20" />
 				</attributes>
 			</machine>
 		</battery>

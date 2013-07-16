@@ -20,7 +20,7 @@ public class DummyStatusDao implements StatusDao {
 		if (StatusType.STATUS.equals(dataType)) {
 			ns.setValue("true");
 		} else {
-			ns.setValue(String.valueOf(random.nextInt(100)));
+			ns.setValue(String.valueOf(random.nextInt(10)));
 		}
 		return ns;
 	}

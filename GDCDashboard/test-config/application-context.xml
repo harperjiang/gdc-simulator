@@ -13,6 +13,7 @@
 	</bean>
 
 	<bean id="memoryVmDao" class="edu.clarkson.gdc.dashboard.domain.dao.MemoryVMDao" />
+	
 	<bean id="dummyStatusDao" class="edu.clarkson.gdc.dashboard.domain.dao.DummyStatusDao" />
 	<bean id="alertDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaAlertDao">
 		<property name="entityManager" ref="entityManager" />

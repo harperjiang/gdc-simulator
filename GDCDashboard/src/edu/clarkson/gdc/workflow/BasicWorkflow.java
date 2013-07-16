@@ -1,5 +1,6 @@
 package edu.clarkson.gdc.workflow;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,12 +13,18 @@ public class BasicWorkflow implements Workflow {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void execute(Object... params) {
-		try {
-			for (ExecutionUnit unit : units) {
+		for (ExecutionUnit unit : units) {
+			try {
 				unit.execute(params);
+			} catch (Exception e) {
+				logger.error("Exception in workflow", e);
+				logger.error(MessageFormat.format(
+						"ExecutionUnitInfo:Id:{0},Params:{1}", unit.getId(),
+						unit.getParams()));
+				if (e instanceof RuntimeException)
+					throw (RuntimeException) e;
+				throw new RuntimeException(e);
 			}
-		} catch (Exception e) {
-			logger.error("Exception in workflow", e);
 		}
 	}
 

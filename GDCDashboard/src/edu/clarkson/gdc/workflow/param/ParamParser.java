@@ -47,34 +47,21 @@ pl = new ArrayList<Param>();
     throw new Error("Missing return statement in function");
   }
 
-  final public Param param() throws ParseException {Param p;
-        OperandParam op;
-    p = singleParam();
-    op = paramPart();
-op.setFirst(p);
-                {if ("" != null) return op;}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public OperandParam paramPart() throws ParseException {OperandParam op = null;
-        Param p = null;
-    jj_consume_token(11);
-    p = singleParam();
+  final public Param param() throws ParseException {Param first, second = null;
+    first = singleParam();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case 11:{
-      op = paramPart();
+      jj_consume_token(11);
+      second = param();
       break;
       }
     default:
       jj_la1[1] = jj_gen;
       ;
     }
-if(null == op) {
-                        {if ("" != null) return new OrParam(null,p);}
-                } else {
-                        op.setFirst(p);
-                        {if ("" != null) return new OrParam(null, op);}
-                }
+if(null == second)
+                        {if ("" != null) return first;}
+                {if ("" != null) return new OrParam(first, second);}
     throw new Error("Missing return statement in function");
   }
 

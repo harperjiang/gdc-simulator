@@ -10,7 +10,6 @@ import org.springframework.aop.TargetClassAware;
 
 import edu.clarkson.gdc.workflow.param.Param;
 import edu.clarkson.gdc.workflow.param.ParamParser;
-import edu.clarkson.gdc.workflow.param.ParseException;
 
 public class ExecutionUnit {
 

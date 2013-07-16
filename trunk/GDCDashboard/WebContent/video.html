@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>GDC Dashboard</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="gdc/loadService.js"></script>
+<script type="text/javascript">
+	function reload() {
+		vmService.find("media", function(result) {
+			document.getElementById("vmInfo").innerHTML = result.name;
+		});
+	}
+	window.setInterval("reload", 5000);
+</script>
+<style type="text/css">
+.title {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+</style>
+</head>
+<body onload="javascript:reload()">
+
+	<div class="header">
+		<h1>GDC Video Stream Demo</h1>
+	</div>
+	<div class="main">
+		<h2>Demo orginal gdcdemo.mp4 with 4096 kbps, 720x480 @ 24.000000
+			fps</h2>
+		<div class='title'>
+			The video is currently running on machine:<span id="vmInfo"></span>
+		</div>
+		<OBJECT classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921"
+			codebase="http://downloads.videolan.org/pub/videolan/vlc/latest/win32/axvlc.cab"
+			width="720" height="480" id="vlc" events="True">
+			<param name="Src" value="rtsp://128.153.145.191/test.mp4" />
+			<param name="ShowDisplay" value="True" />
+			<param name="AutoLoop" value="True" />
+			<param name="AutoPlay" value="True" />
+			<embed id="vlcEmb" type="application/x-google-vlc-plugin"
+				version="VideoLAN.VLCPlugin.2" autoplay="yes" loop="yes" width="720"
+				height="480" target="rtsp://128.153.145.191/test.mp4">
+			</embed>
+		</OBJECT>
+		<h2>&nbsp</h2>
+	</div>
+</body>
+</html>

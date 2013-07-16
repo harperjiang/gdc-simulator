@@ -224,13 +224,8 @@ public class ScriptVMDao implements VMDao {
 			vms = new ArrayList<VirtualMachine>();
 		}
 
-		private Logger logger = LoggerFactory.getLogger(getClass());
-
 		@Override
 		public void output(String input) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(input);
-			}
 			try {
 				if (start.matcher(input).matches()) {
 					counter = 0;
@@ -259,25 +254,16 @@ public class ScriptVMDao implements VMDao {
 
 	protected static final class MigrationHandler implements OutputHandler {
 
-		private Logger logger = LoggerFactory.getLogger(getClass());
-
 		@Override
 		public void output(String input) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(input);
-			}
 		}
 	}
 
 	protected static final class OperateHandler implements OutputHandler {
 
-		private Logger logger = LoggerFactory.getLogger(getClass());
-
 		@Override
 		public void output(String input) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(input);
-			}
+
 		}
 	}
 

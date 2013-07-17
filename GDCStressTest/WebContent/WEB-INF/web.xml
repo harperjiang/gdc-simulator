@@ -9,4 +9,14 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>StressTestServlet</display-name>
+    <servlet-name>StressTestServlet</servlet-name>
+    <servlet-class>edu.clarkson.gdc.StressTestServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>StressTestServlet</servlet-name>
+    <url-pattern>/stress</url-pattern>
+  </servlet-mapping>
 </web-app>

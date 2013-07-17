@@ -5,6 +5,7 @@
 <script type="text/javascript" src="gdc/loadService.js"></script>
 <script type="text/javascript">
 	function reload() {
+		debugger;
 		vmService.find("media", function(result) {
 			document.getElementById("vmInfo").innerHTML = result.name;
 		});

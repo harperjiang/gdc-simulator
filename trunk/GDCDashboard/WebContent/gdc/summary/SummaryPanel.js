@@ -108,7 +108,25 @@ Ext.define('GDC.summary.SummaryPanel', {
 		xtype : 'gdcMapPanel',
 		width : 920,
 		height : 300,
-		colspan : 2
+		colspan : 2,
+		zoom : 9,
+		center : {
+			x : 44.800,
+			y : -74.500
+		},
+		markers : [ {
+			x : 44.844,
+			y : -74.290,
+			title : "Malone"
+		}, {
+			x : 44.923,
+			y : -74.877,
+			title : "Massena"
+		}, {
+			x : 44.671,
+			y : -74.985,
+			title : "Potsdam"
+		} ]
 	} ],
 	listeners : {
 		afterrender : function(val, eopt) {

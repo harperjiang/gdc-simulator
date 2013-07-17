@@ -15,10 +15,21 @@
 	<bean id="subscriber" class="edu.clarkson.gdc.event.impl.DefaultSubscriber">
 		<property name="mediator" ref="mediator" />
 		<property name="selector">
-			<bean class="edu.clarkson.gdc.event.impl.TypeSelector">
-				<property name="clazz"
-					value="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
-				<property name="type" value="Alert-BTY_LOW_LEVEL" />
+			<bean class="edu.clarkson.gdc.event.impl.OrSelector">
+				<property name="selectors">
+					<list>
+						<bean class="edu.clarkson.gdc.event.impl.TypeSelector">
+							<property name="clazz"
+								value="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
+							<property name="type" value="Alert-BTY_TOO_LOW" />
+						</bean>
+						<bean class="edu.clarkson.gdc.event.impl.TypeSelector">
+							<property name="clazz"
+								value="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
+							<property name="type" value="Alert-BTY_IS_HIGH" />
+						</bean>
+					</list>
+				</property>
 			</bean>
 		</property>
 		<property name="handler">

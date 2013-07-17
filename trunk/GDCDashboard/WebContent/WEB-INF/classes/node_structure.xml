@@ -5,8 +5,8 @@
 	<data-center id="dc1" name="Lab in Science Center">
 		<attributes>
 			<attribute key="power_source" value="Grid" />
-			<attribute key="designed_capacity" value="200MW" />
-			<attribute key="peak_capacity" value="850MW" />
+			<attribute key="designed_capacity" value="1MW" />
+			<attribute key="peak_capacity" value="1MW" />
 		</attributes>
 		<battery id="dc1-bty1" name="APC UPS">
 			<attributes>
@@ -58,10 +58,17 @@
 	<data-center id="dc2" name="Lab in CAMP">
 		<attributes>
 			<attribute key="power_source" value="Wind &amp; Solar" />
-			<attribute key="designed_capacity" value="300MW" />
-			<attribute key="peak_capacity" value="450MW" />
+			<attribute key="designed_capacity" value="1MW" />
+			<attribute key="peak_capacity" value="1.5MW" />
 		</attributes>
 		<battery id="dc2-bty1" name="CyberPower UPS">
+			<attributes>
+				<attribute key="manufacture" value="CyberPower" />
+				<attribute key="model" value="DL-650" />
+				<attribute key="designed_capacity" value="250kWh" />
+				<attribute key="designed_output" value="110Amp" />
+				<attribute key="output_voltage" value="110V" />
+			</attributes>
 			<machine id="dc2-bty1-mc1" name="CAMP Machine 1">
 				<attributes>
 					<attribute key="manufacture" value="Sun" />
@@ -74,7 +81,12 @@
 			</machine>
 		</battery>
 		<power id="dc2-power" name="Green Power in CAMP">
-
+			<attributes>
+				<attribute key="source" value="Wind" />
+				<attribute key="designed_capacity" value="20kWh" />
+				<attribute key="designed_output" value="2kW" />
+				<attribute key="output_voltage" value="48V" />
+			</attributes>
 		</power>
 		<description>This is a description to the data center 2</description>
 	</data-center>

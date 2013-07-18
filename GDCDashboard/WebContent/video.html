@@ -5,8 +5,10 @@
 <script type="text/javascript" src="gdc/loadService.js"></script>
 <script type="text/javascript">
 	function reload() {
-		debugger;
 		vmService.find("media", function(result) {
+			debugger;
+			if (null == result || result === undefined)
+				return;
 			document.getElementById("vmInfo").innerHTML = result.name;
 		});
 	}
@@ -14,9 +16,13 @@
 </script>
 <style type="text/css">
 .title {
-	font-size: 16px;
-	font-weight: bold;
+	font-size: 28px;
 	margin-bottom: 20px;
+}
+
+.strengthen {
+	color: #FF0000;
+	font-weight: bold;
 }
 </style>
 </head>
@@ -26,10 +32,9 @@
 		<h1>GDC Video Stream Demo</h1>
 	</div>
 	<div class="main">
-		<h2>Demo orginal gdcdemo.mp4 with 4096 kbps, 720x480 @ 24.000000
-			fps</h2>
 		<div class='title'>
-			The video is currently running on machine:<span id="vmInfo"></span>
+			The video is currently running on machine:<span id="vmInfo"
+				class="strengthen"></span>
 		</div>
 		<!-- OBJECT classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921"
 			codebase="http://downloads.videolan.org/pub/videolan/vlc/latest/win32/axvlc.cab"

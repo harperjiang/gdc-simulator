@@ -38,6 +38,8 @@ public class ScriptVMDao implements VMDao {
 
 	private Map<String, Long> lastRefresh;
 
+	private boolean fastMigration = true;
+
 	// Owner ID, VM name
 	private Map<String, Map<String, VirtualMachine>> vms;
 
@@ -109,9 +111,15 @@ public class ScriptVMDao implements VMDao {
 			mutex.add(mm);
 		}
 		String ip = Attributes.MACHINE_IP.attrName();
-		ProcessRunner pr = new ProcessRunner(migrateScript, source
-				.getAttributes().get(ip), dest.getAttributes().get(ip),
-				vm.getName());
+		ProcessRunner pr = null;
+		if (fastMigration) {
+			pr = new ProcessRunner(migrateScript, source.getAttributes()
+					.get(ip), dest.getAttributes().get(ip), vm.getName(),
+					"fast");
+		} else {
+			pr = new ProcessRunner(migrateScript, source.getAttributes()
+					.get(ip), dest.getAttributes().get(ip), vm.getName());
+		}
 		pr.setHandler(new MigrationHandler());
 		pr.runLater(new Callback() {
 			@Override
@@ -205,6 +213,14 @@ public class ScriptVMDao implements VMDao {
 
 	public void setOperateScript(String operateScript) {
 		this.operateScript = operateScript;
+	}
+
+	public boolean isFastMigration() {
+		return fastMigration;
+	}
+
+	public void setFastMigration(boolean fastMigration) {
+		this.fastMigration = fastMigration;
 	}
 
 	protected static final class ListVMHandler implements OutputHandler {

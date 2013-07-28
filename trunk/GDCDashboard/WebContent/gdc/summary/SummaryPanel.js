@@ -131,30 +131,32 @@ Ext.define('GDC.summary.SummaryPanel', {
 	listeners : {
 		afterrender : function(val, eopt) {
 			// Load Data
-			structureService.getSystemSummary(function(summary) {
-				var data = {};
-				data['dcCount'] = summary.dcCount;
-				data['vmRunning'] = summary.vmRunning;
-				data['gpUtil'] = summary.utilization;
-				data['mtbm'] = summary.mtbm;
-
-				GDC.common.HtmlRendererInst.updateHtml(Ext
-						.getCmp('summaryContent'), data);
-
-				Ext.getCmp('summary.usageChart').store
-						.loadData([ [ summary.usage ] ]);
-				Ext.getCmp('summary.capacityChart').store
-						.loadData([ [ summary.capacity ] ]);
-				Ext.getCmp('summary.utilizationChart').store
-						.loadData([ [ summary.utilization ] ]);
-			});
-
-			this.refreshAlert();
+			this.refresh();
 		}
+	},
+	refresh : function() {
+		structureService.getSystemSummary(function(summary) {
+			var data = {};
+			data['dcCount'] = summary.dcCount;
+			data['vmRunning'] = summary.vmRunning;
+			data['gpUtil'] = summary.utilization;
+			data['mtbm'] = summary.mtbm;
+
+			GDC.common.HtmlRendererInst.updateHtml(
+					Ext.getCmp('summaryContent'), data);
+
+			Ext.getCmp('summary.usageChart').store
+					.loadData([ [ summary.usage ] ]);
+			Ext.getCmp('summary.capacityChart').store
+					.loadData([ [ summary.capacity ] ]);
+			Ext.getCmp('summary.utilizationChart').store
+					.loadData([ [ summary.utilization ] ]);
+		});
+
+		this.refreshAlert();
 	},
 	refreshAlert : function() {
 		structureService.getAlerts(function(alerts) {
-			debugger;
 			Ext.getCmp('summary.alertGrid').store.loadData(alerts);
 		});
 	}

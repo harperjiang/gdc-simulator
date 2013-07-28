@@ -58,7 +58,6 @@ Ext.define('GDC.common.MachineChooseWindow', {
 				xtype : 'button',
 				text : 'Select',
 				handler : function() {
-					debugger;
 					var window = this.up('gdcMcWindow');
 					var machineCombo = window.down('#machineCombo');
 					window['machineId'] = machineCombo.getValue();

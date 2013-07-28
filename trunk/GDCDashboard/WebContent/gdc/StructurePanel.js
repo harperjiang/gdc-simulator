@@ -143,7 +143,7 @@ function updateData() {
 	var activeTab = mainTabPanel.getActiveTab();
 	if (activeTab.id.substring(0, 7) == 'summary') {
 		// Refresh summary
-		activeTab.refreshAlert();
+		activeTab.refresh();
 	} else {
 		var id = activeTab.id.substring(3);
 		refreshNode(id);

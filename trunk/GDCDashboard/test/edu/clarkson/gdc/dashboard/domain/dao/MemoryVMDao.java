@@ -66,4 +66,10 @@ public class MemoryVMDao implements VMDao {
 
 	}
 
+	@Override
+	public void migrationDone(int logId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

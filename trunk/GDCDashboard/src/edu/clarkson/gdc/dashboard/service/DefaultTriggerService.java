@@ -23,11 +23,23 @@ public class DefaultTriggerService implements TriggerService {
 
 	private static final String BTY_HIGH_LEVEL = "BTY_HIGH_LEVEL";
 
+	private static final String BTY_CHECK_SENSOR = "BTY_CHECK_SENSOR";
+
 	@Override
 	public Alert trigger(NodeStatus oldsta, NodeStatus newsta) {
+		Node node = nodeDao.getNode(newsta.getNodeId());
+		if (BTY_CHECK_SENSOR.equals(newsta.getValue())) {
+			Alert alert = new Alert();
+			alert.setType(AlertType.BTY_CHECK_SENSOR);
+			alert.setLevel(AlertType.BTY_CHECK_SENSOR.level());
+			alert.setNodeId(node.getId());
+			alert.setTime(new Date());
+			alert.setNodeName(node.getName());
+			getAlertDao().save(alert);
+			return alert;
+		}
 		if (null == oldsta || null == newsta)
 			return null;
-		Node node = nodeDao.getNode(newsta.getNodeId());
 		if (node instanceof PowerSource
 				&& StatusType.BTY_LEVEL.name().equals(newsta.getDataType())) {
 			String oldval = oldsta.getValue();
@@ -42,7 +54,8 @@ public class DefaultTriggerService implements TriggerService {
 				getAlertDao().save(alert);
 				return alert;
 			}
-			if (BTY_NORMAL_LEVEL.equals(oldval) && BTY_HIGH_LEVEL.equals(newval)) {
+			if (BTY_NORMAL_LEVEL.equals(oldval)
+					&& BTY_HIGH_LEVEL.equals(newval)) {
 				Alert alert = new Alert();
 				alert.setType(AlertType.BTY_IS_HIGH);
 				alert.setLevel(AlertType.BTY_IS_HIGH.level());

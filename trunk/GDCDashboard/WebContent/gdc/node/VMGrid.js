@@ -63,13 +63,15 @@ Ext.define('GDC.node.VMGrid', {
 					callback : function() {
 						Ext.MessageBox.hide();
 						Ext.Msg
-						.alert(
-								'Migration in progress',
+						.alert('Migration in progress',
 								'Migration may take'+ 
-								'some time, please wait');
+								'some time, please wait'
+								);
 					},
-					errorHandler : function() {
-
+					errorHandler : function(error) {
+						Ext.MessageBox.hide();
+						Ext.Msg
+						.alert('Error',error);
 					}
 				});
 			});

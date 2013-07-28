@@ -12,6 +12,7 @@
 	<bean id="nodeDao" class="edu.clarkson.gdc.dashboard.domain.dao.XMLNodeDao" />
 
 	<bean id="vmDao" class="edu.clarkson.gdc.dashboard.domain.dao.ScriptVMDao">
+		<property name="entityManager" ref="entityManager" />
 		<property name="refreshInterval" value="5000" />
 		<property name="listScript" value="/home/gdc/deploy/GDCDashboard/display.sh" />
 		<property name="migrateScript" value="/home/gdc/deploy/GDCDashboard/migrate.sh" />

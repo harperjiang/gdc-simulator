@@ -20,7 +20,7 @@ public class MigrationLog {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "migrationLogPk")
-	private String id;
+	private int id;
 
 	@Column(name = "from_machine")
 	private String fromMachine;
@@ -38,6 +38,14 @@ public class MigrationLog {
 	@Column(name = "end_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endTime;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getFromMachine() {
 		return fromMachine;

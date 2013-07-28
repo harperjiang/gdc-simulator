@@ -47,7 +47,6 @@ Ext.define('GDC.node.VMGrid', {
 			gridPanel.getSelectionModel().deselectAll();
 			mcWindow.show();
 			mcWindow.on('hide', function() {
-				debugger;
 				var destId = this.machineId;
 				if (destId == undefined || destId == null || srcId == destId)
 					return;
@@ -68,7 +67,8 @@ Ext.define('GDC.node.VMGrid', {
 								'some time, please wait'
 								);
 					},
-					errorHandler : function(error) {
+					errorHandler : function(error,other) {
+						debugger;
 						Ext.MessageBox.hide();
 						Ext.Msg
 						.alert('Error',error);
@@ -149,7 +149,6 @@ Ext.define('GDC.node.VMGrid', {
 		var srcId = machinePanel.datas.id;
 		vmService.list(srcId, {
 			callback:function(vmBean) {
-				debugger;
 				var ownerId = vmBean.ownerId;
 				var vmGrid = Ext.getCmp('tab' + ownerId).down('gdcVmGrid');
 				var dataArray = new Array();
@@ -167,7 +166,6 @@ Ext.define('GDC.node.VMGrid', {
 		});
 	},
 	operate : function(operation) {
-		debugger;
 		var gridPanel = this;
 		var model = gridPanel.getSelectionModel().getSelection()[0];
 		var vmName = model.get('name');

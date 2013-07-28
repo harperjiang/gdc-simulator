@@ -16,6 +16,8 @@ public interface VMDao {
 
 	void migrate(VirtualMachine vm, Machine source, Machine dest);
 
+	void migrationDone(int logId);
+	
 	void operate(Machine source, VirtualMachine vm,
 			VMService.Operation operation);
 }

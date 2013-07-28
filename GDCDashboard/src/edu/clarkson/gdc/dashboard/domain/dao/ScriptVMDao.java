@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,9 +14,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.persistence.jpa.JpaHelper;
+import org.eclipse.persistence.sessions.server.ServerSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.orm.jpa.EntityManagerFactoryInfo;
+import org.springframework.orm.jpa.support.JpaDaoSupport;
 
 import edu.clarkson.gdc.common.proc.OutputHandler;
 import edu.clarkson.gdc.common.proc.ProcessRunner;
@@ -23,10 +32,11 @@ import edu.clarkson.gdc.common.proc.ProcessRunner.Callback;
 import edu.clarkson.gdc.dashboard.domain.dao.vm.MigrationMutex;
 import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
+import edu.clarkson.gdc.dashboard.domain.entity.MigrationLog;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 import edu.clarkson.gdc.dashboard.service.VMService;
 
-public class ScriptVMDao implements VMDao {
+public class ScriptVMDao extends JpaDaoSupport implements VMDao {
 
 	private long refreshInterval = 60000;
 
@@ -110,38 +120,106 @@ public class ScriptVMDao implements VMDao {
 						vm.getName(), dest.getId()));
 			mutex.add(mm);
 		}
-		String ip = Attributes.MACHINE_IP.attrName();
-		ProcessRunner pr = null;
-		if (fastMigration) {
-			pr = new ProcessRunner(migrateScript, source.getAttributes()
-					.get(ip), dest.getAttributes().get(ip), vm.getName(),
-					"fast");
-		} else {
-			pr = new ProcessRunner(migrateScript, source.getAttributes()
-					.get(ip), dest.getAttributes().get(ip), vm.getName());
+		try {
+			String ip = Attributes.MACHINE_IP.attrName();
+			ProcessRunner pr = null;
+			if (fastMigration) {
+				pr = new ProcessRunner(migrateScript, source.getAttributes()
+						.get(ip), dest.getAttributes().get(ip), vm.getName(),
+						"fast");
+			} else {
+				pr = new ProcessRunner(migrateScript, source.getAttributes()
+						.get(ip), dest.getAttributes().get(ip), vm.getName());
+			}
+
+			MigrationLog log = new MigrationLog();
+			log.setFromMachine(source.getId());
+			log.setToMachine(dest.getId());
+			log.setVmName(vm.getName());
+			log.setBeginTime(new Date());
+			getJpaTemplate().getEntityManager().persist(log);
+			EntityManagerFactory nativeEmf = extract(getJpaTemplate()
+					.getEntityManager().getEntityManagerFactory());
+			if (log.getId() == 0 && JpaHelper.isEclipseLink(nativeEmf)) {
+				ServerSession server = (ServerSession) JpaHelper
+						.getServerSession(nativeEmf);
+				server.getActiveUnitOfWork().assignSequenceNumber(log);
+			}
+			pr.setHandler(new MigrationHandler());
+			pr.runLater(new MigrationCallback(source, dest, vm, log.getId()));
+		} catch (RuntimeException e) {
+			// Remove mutex
+			synchronized (mutex) {
+				mutex.remove(new MigrationMutex(source.getId(), dest.getId(),
+						vm.getName()));
+			}
+			throw e;
 		}
-		pr.setHandler(new MigrationHandler());
-		pr.runLater(new Callback() {
-			@Override
-			public void done() {
-				refresh(source, true);
-				refresh(dest, true);
-			}
+	}
 
-			@Override
-			public void exception(Exception e) {
-				LoggerFactory.getLogger(getClass()).warn(
-						"Failed to do migration", e);
-			}
+	private EntityManagerFactory extract(
+			EntityManagerFactory entityManagerFactory) {
+		if (entityManagerFactory instanceof EntityManagerFactoryInfo) {
+			return ((EntityManagerFactoryInfo) entityManagerFactory)
+					.getNativeEntityManagerFactory();
+		}
+		return entityManagerFactory;
+	}
 
-			@Override
-			public void clean() {
-				synchronized (mutex) {
-					mutex.remove(new MigrationMutex(source.getId(), dest
-							.getId(), vm.getName()));
-				}
+	public class MigrationCallback implements Callback {
+
+		private Machine source;
+
+		private Machine dest;
+
+		private VirtualMachine vm;
+
+		private int logId;
+
+		public MigrationCallback(Machine source, Machine dest,
+				VirtualMachine vm, int logId) {
+			this.source = source;
+			this.dest = dest;
+			this.vm = vm;
+			this.logId = logId;
+		}
+
+		@Override
+		public void done() {
+			refresh(source, true);
+			refresh(dest, true);
+		}
+
+		@Override
+		public void exception(Exception e) {
+			LoggerFactory.getLogger(getClass()).warn("Failed to do migration",
+					e);
+		}
+
+		@Override
+		public void clean() {
+			synchronized (mutex) {
+				mutex.remove(new MigrationMutex(source.getId(), dest.getId(),
+						vm.getName()));
 			}
-		});
+			migrationDone(logId);
+		}
+
+	}
+
+	public void migrationDone(int logId) {
+		try {
+			EntityManager em = getJpaTemplate().getEntityManager();
+			MigrationLog log = em
+					.createQuery(
+							"select m from MigrationLog m where m.id = :id",
+							MigrationLog.class).setParameter("id", logId)
+					.getSingleResult();
+			log.setEndTime(new Date());
+			em.merge(log);
+		} catch (NoResultException e) {
+
+		}
 	}
 
 	@Override

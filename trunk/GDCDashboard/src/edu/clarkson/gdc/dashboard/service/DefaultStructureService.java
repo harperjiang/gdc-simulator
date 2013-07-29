@@ -47,6 +47,17 @@ public class DefaultStructureService implements StructureService {
 		List<DataCenter> dss = getNodeDao().getNodesByType(DataCenter.class);
 		summary.setDcCount(dss.size());
 
+		summary.setGtDcCount(0);
+		summary.setGpDcCount(0);
+
+		for (DataCenter dc : dss) {
+			if (dc.getPowerSource() != null) {
+				summary.setGpDcCount(summary.getGpDcCount() + 1);
+			} else {
+				summary.setGtDcCount(summary.getGtDcCount() + 1);
+			}
+		}
+
 		NodeStatus vmStatus = getStatusDao().getStatus(null,
 				StatusType.SUMMARY_VMRUNNING);
 		if (vmStatus != null)
@@ -59,7 +70,6 @@ public class DefaultStructureService implements StructureService {
 
 		summary.setUsage(90);
 		summary.setCapacity(20);
-		summary.setMtbm(230);
 		return summary;
 	}
 

@@ -19,7 +19,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 		height : 45,
 		styleHtmlContent : true,
 		styleHtmlCls : 'banner',
-		html : 'Summary',
+		html : 'GDC Architecture',
 		colspan : 2
 	}, {
 		xtype : 'panel',
@@ -141,14 +141,9 @@ Ext.define('GDC.summary.SummaryPanel', {
 	},
 	refresh : function() {
 		structureService.getSystemSummary(function(summary) {
-			var data = {};
-			data['dcCount'] = summary.dcCount;
-			data['vmRunning'] = summary.vmRunning;
-			data['gpUtil'] = summary.utilization;
-			data['mtbm'] = summary.mtbm;
 
 			GDC.common.HtmlRendererInst.updateHtml(
-					Ext.getCmp('summaryContent'), data);
+					Ext.getCmp('summaryContent'), summary);
 			Ext.getCmp('summary.usageChart').store
 					.loadData([ [ summary.usage ] ]);
 			Ext.getCmp('summary.capacityChart').store

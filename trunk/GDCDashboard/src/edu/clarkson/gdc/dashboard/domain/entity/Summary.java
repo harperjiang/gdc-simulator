@@ -16,6 +16,10 @@ public class Summary {
 
 	private int capacity;
 
+	private int gtDcCount;
+
+	private int gpDcCount;
+
 	public int getDcCount() {
 		return dcCount;
 	}
@@ -62,6 +66,22 @@ public class Summary {
 
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+
+	public int getGtDcCount() {
+		return gtDcCount;
+	}
+
+	public void setGtDcCount(int gtDcCount) {
+		this.gtDcCount = gtDcCount;
+	}
+
+	public int getGpDcCount() {
+		return gpDcCount;
+	}
+
+	public void setGpDcCount(int gpDcCount) {
+		this.gpDcCount = gpDcCount;
 	}
 
 }

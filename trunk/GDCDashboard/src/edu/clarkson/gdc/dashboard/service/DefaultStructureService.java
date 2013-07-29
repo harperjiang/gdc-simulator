@@ -4,10 +4,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import edu.clarkson.gdc.dashboard.domain.dao.AlertDao;
+import edu.clarkson.gdc.dashboard.domain.dao.MigrationLogDao;
 import edu.clarkson.gdc.dashboard.domain.dao.NodeDao;
 import edu.clarkson.gdc.dashboard.domain.dao.StatusDao;
 import edu.clarkson.gdc.dashboard.domain.entity.Alert;
 import edu.clarkson.gdc.dashboard.domain.entity.DataCenter;
+import edu.clarkson.gdc.dashboard.domain.entity.MigrationLog;
 import edu.clarkson.gdc.dashboard.domain.entity.Node;
 import edu.clarkson.gdc.dashboard.domain.entity.NodeStatus;
 import edu.clarkson.gdc.dashboard.domain.entity.StatusType;
@@ -20,6 +22,8 @@ public class DefaultStructureService implements StructureService {
 	private AlertDao alertDao;
 
 	private StatusDao statusDao;
+
+	private MigrationLogDao migrationLogDao;
 
 	@Override
 	public List<DataCenter> getDataCenters() {
@@ -52,11 +56,16 @@ public class DefaultStructureService implements StructureService {
 				StatusType.SUMMARY_UTIL);
 		if (utilStatus != null)
 			summary.setUtilization(new BigDecimal(utilStatus.getValue()));
-		
+
 		summary.setUsage(90);
 		summary.setCapacity(20);
 		summary.setMtbm(230);
 		return summary;
+	}
+
+	@Override
+	public List<MigrationLog> getMigrationLogs() {
+		return getMigrationLogDao().getLatest(300000);
 	}
 
 	public NodeDao getNodeDao() {
@@ -81,6 +90,14 @@ public class DefaultStructureService implements StructureService {
 
 	public void setStatusDao(StatusDao statusDao) {
 		this.statusDao = statusDao;
+	}
+
+	public MigrationLogDao getMigrationLogDao() {
+		return migrationLogDao;
+	}
+
+	public void setMigrationLogDao(MigrationLogDao migrationLogDao) {
+		this.migrationLogDao = migrationLogDao;
 	}
 
 }

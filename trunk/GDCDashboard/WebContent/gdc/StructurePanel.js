@@ -120,6 +120,7 @@ function displayNode(id) {
 
 Ext.define("GDC.StructurePanel", {
 	extend : 'Ext.tree.Panel',
+	collapsible : true,
 	title : 'Machine List',
 	xtype : 'strutpanel',
 	store : GDC.structureStore,

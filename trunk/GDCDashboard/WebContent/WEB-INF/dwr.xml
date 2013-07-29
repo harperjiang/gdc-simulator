@@ -9,6 +9,7 @@
 			<param name="beanName" value="structureService" />
 			<include method="getDataCenters" />
 			<include method="getAlerts" />
+			<include method="getMigrationLogs" />
 			<include method="getSystemSummary" />
 		</create>
 
@@ -32,6 +33,8 @@
 			match="edu.clarkson.gdc.dashboard.domain.entity.AlertType" />
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.Summary" />
+		<convert converter="bean"
+			match="edu.clarkson.gdc.dashboard.domain.entity.MigrationLog" />
 		<convert converter="bean"
 			match="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
 		<convert converter="bean"

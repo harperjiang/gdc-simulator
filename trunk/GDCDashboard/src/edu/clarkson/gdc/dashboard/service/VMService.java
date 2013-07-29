@@ -29,4 +29,6 @@ public interface VMService {
 	public void operate(String srcMachine, String vmName, String operation);
 
 	public Machine find(String vm);
+	
+	public void migrationDone(int logId);
 }

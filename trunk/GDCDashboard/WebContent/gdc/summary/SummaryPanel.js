@@ -92,9 +92,9 @@ Ext.define('GDC.summary.SummaryPanel', {
 		} ]
 	}, {
 		xtype : 'panel',
-		rowspan : 2,
+		rowspan : 3,
 		width : 250,
-		height : 470,
+		height : 640,
 		collapsible : true,
 		bodyStyle : 'padding:10px;',
 		title : 'Introduction',
@@ -102,6 +102,11 @@ Ext.define('GDC.summary.SummaryPanel', {
 	}, {
 		xtype : 'alertGrid',
 		id : 'summary.alertGrid',
+		width : 650,
+		height : 150
+	}, {
+		xtype : 'mlogGrid',
+		id : 'summary.migrationLogGrid',
 		width : 650,
 		height : 150
 	}, {
@@ -144,7 +149,6 @@ Ext.define('GDC.summary.SummaryPanel', {
 
 			GDC.common.HtmlRendererInst.updateHtml(
 					Ext.getCmp('summaryContent'), data);
-
 			Ext.getCmp('summary.usageChart').store
 					.loadData([ [ summary.usage ] ]);
 			Ext.getCmp('summary.capacityChart').store
@@ -154,10 +158,33 @@ Ext.define('GDC.summary.SummaryPanel', {
 		});
 
 		this.refreshAlert();
+		this.refreshMigrationLog();
 	},
 	refreshAlert : function() {
-		structureService.getAlerts(function(alerts) {
-			Ext.getCmp('summary.alertGrid').store.loadData(alerts);
+		structureService.getAlerts({
+			callback : function(alerts) {
+				Ext.getCmp('summary.alertGrid').store.loadData(alerts);
+			},
+			errorHandler : function(error1, error2) {
+				debugger;
+				Ext.Msg
+						.alert("Error",
+								"Unexpected error, please contact admin");
+			}
+		});
+	},
+	refreshMigrationLog : function() {
+		structureService.getMigrationLogs({
+			callback : function(logs) {
+				debugger;
+				Ext.getCmp('summary.migrationLogGrid').store.loadData(logs);
+			},
+			errorHandler : function(error1, error2) {
+				debugger;
+				Ext.Msg
+						.alert("Error",
+								"Unexpected error, please contact admin");
+			}
 		});
 	}
 });

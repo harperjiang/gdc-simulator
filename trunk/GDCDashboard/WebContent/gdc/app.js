@@ -19,7 +19,8 @@ Ext.require('GDC.common.MachineChooseWindow');
 Ext.require([ 'GDC.common.GaugeChart', 'GDC.common.GaugeChart2',
 		'GDC.common.EvalRadarChart', 'GDC.common.LineChart' ]);
 
-Ext.require([ 'GDC.summary.AlertGrid', 'GDC.summary.SummaryPanel' ]);
+Ext.require([ 'GDC.summary.AlertGrid', 'GDC.summary.MigrationLogGrid' ]);
+Ext.require('GDC.summary.SummaryPanel');
 
 Ext.require('GDC.node.VMGrid');
 
@@ -27,7 +28,7 @@ Ext.require([ 'GDC.node.DCViewPanel', 'GDC.node.PowerViewPanel',
 		'GDC.node.MachineViewPanel', 'GDC.node.UPSViewPanel' ]);
 
 Ext.application({
-	name : 'Kooobao Ecom System',
+	name : 'GDC Dashboard',
 	launch : function() {
 		Ext.create('GDC.MainViewPort');
 	}

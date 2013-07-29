@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 
+import edu.clarkson.gdc.common.ApplicationContextHolder;
 import edu.clarkson.gdc.common.proc.OutputHandler;
 import edu.clarkson.gdc.common.proc.ProcessRunner;
 import edu.clarkson.gdc.common.proc.ProcessRunner.Callback;
@@ -148,6 +149,7 @@ public class ScriptVMDao extends JpaDaoSupport implements VMDao {
 			pr.setHandler(new MigrationHandler());
 			pr.runLater(new MigrationCallback(source, dest, vm, log.getId()));
 		} catch (RuntimeException e) {
+			logger.error("Exception during migration", e);
 			// Remove mutex
 			synchronized (mutex) {
 				mutex.remove(new MigrationMutex(source.getId(), dest.getId(),
@@ -202,7 +204,9 @@ public class ScriptVMDao extends JpaDaoSupport implements VMDao {
 				mutex.remove(new MigrationMutex(source.getId(), dest.getId(),
 						vm.getName()));
 			}
-			migrationDone(logId);
+			VMService vmService = ApplicationContextHolder.getInstance()
+					.getApplicationContext().getBean(VMService.class);
+			vmService.migrationDone(logId);
 		}
 
 	}

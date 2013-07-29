@@ -22,6 +22,11 @@
 	<bean id="alertDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaAlertDao">
 		<property name="entityManager" ref="entityManager" />
 	</bean>
+	<bean id="migrationLogDao"
+		class="edu.clarkson.gdc.dashboard.domain.dao.JpaMigrationLogDao">
+		<property name="entityManager" ref="entityManager" />
+	</bean>
+
 	<bean id="historyDao" class="edu.clarkson.gdc.dashboard.domain.dao.JpaHistoryDao">
 		<property name="entityManager" ref="entityManager" />
 	</bean>
@@ -35,6 +40,7 @@
 		<property name="nodeDao" ref="nodeDao" />
 		<property name="alertDao" ref="alertDao" />
 		<property name="statusDao" ref="statusDao" />
+		<property name="migrationLogDao" ref="migrationLogDao" />
 	</bean>
 
 	<bean id="nodeService" class="edu.clarkson.gdc.dashboard.service.DefaultNodeService">

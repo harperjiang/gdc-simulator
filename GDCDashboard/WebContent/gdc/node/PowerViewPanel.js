@@ -83,10 +83,10 @@ Ext.define('GDC.node.PowerViewPanel', {
 		xtype : 'panel',
 		itemId : 'demo',
 		width : 700,
-		height : 200,
+		bodyStyle : 'borderWidth:0px',
 		items : [ {
 			xtype : 'image',
-			src : 'image/power_demo.jpg'
+			src : 'image/power_demo.jpg',
 		} ]
 	}, {
 		itemId : 'performance',

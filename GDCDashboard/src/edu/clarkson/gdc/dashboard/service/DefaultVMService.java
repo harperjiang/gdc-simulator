@@ -75,4 +75,7 @@ public class DefaultVMService implements VMService {
 		this.vmDao = vmDao;
 	}
 
+	public void migrationDone(int logId) {
+		getVmDao().migrationDone(logId);
+	}
 }

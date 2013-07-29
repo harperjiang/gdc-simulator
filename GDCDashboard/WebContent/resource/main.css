@@ -27,12 +27,25 @@ div {
 	font-weight: bold;
 }
 
+.labeled_text li {
+	font-size: 11px;
+	margin-left: 15px;
+	margin-top: 5px;
+}
+
+.labeled_text li label {
+	float: left;
+	display: block;
+	width: 235px;
+	font-weight: bold;
+}
+
 .slabeled_text {
 	font-size: 12px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 	float: left;
-	width:270px;
+	width: 270px;
 }
 
 .slabeled_text label {

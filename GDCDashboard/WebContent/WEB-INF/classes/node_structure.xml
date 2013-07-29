@@ -16,17 +16,12 @@
 				<attribute key="designed_output" value="110Amp" />
 				<attribute key="output_voltage" value="110V" />
 			</attributes>
-			<!-- machine id="dc1-bty1-mc1" name="GDC-Massena">
-				<attributes>
-					<attribute key="manufacture" value="Sun" />
-					<attribute key="arch" value="Solaris X64" />
-					<attribute key="cpu" value="Spark-II" />
-					<attribute key="memory" value="20G" />
-					<attribute key="ip" value="128.153.145.179" />
-					<attribute key="vmsize" value="20" />
-				</attributes>
-			</machine -->
-			<machine id="dc1-bty1-mc2" name="GDC-Potsdam">
+			<!-- machine id="dc1-bty1-mc1" name="GDC-Massena"> <attributes> <attribute 
+				key="manufacture" value="Sun" /> <attribute key="arch" value="Solaris X64" 
+				/> <attribute key="cpu" value="Spark-II" /> <attribute key="memory" value="20G" 
+				/> <attribute key="ip" value="128.153.145.179" /> <attribute key="vmsize" 
+				value="20" /> </attributes> </machine -->
+			<machine id="dc1-bty1-mc2" name="GDC-Science Center">
 				<attributes>
 					<attribute key="manufacture" value="Sun" />
 					<attribute key="arch" value="Solaris X64" />
@@ -58,17 +53,12 @@
 				<attribute key="designed_output" value="110Amp" />
 				<attribute key="output_voltage" value="110V" />
 			</attributes>
-			<!-- machine id="dc2-bty1-mc1" name="CAMP Machine 1">
-				<attributes>
-					<attribute key="manufacture" value="Sun" />
-					<attribute key="arch" value="Solaris X64" />
-					<attribute key="cpu" value="Spark-II" />
-					<attribute key="memory" value="20G" />
-					<attribute key="ip" value="128.153.15.160" />
-					<attribute key="vmsize" value="20" />
-				</attributes>
-			</machine -->
-			<machine id="dc1-bty1-mc5" name="GDC-Albany">
+			<!-- machine id="dc2-bty1-mc1" name="CAMP Machine 1"> <attributes> <attribute 
+				key="manufacture" value="Sun" /> <attribute key="arch" value="Solaris X64" 
+				/> <attribute key="cpu" value="Spark-II" /> <attribute key="memory" value="20G" 
+				/> <attribute key="ip" value="128.153.15.160" /> <attribute key="vmsize" 
+				value="20" /> </attributes> </machine -->
+			<machine id="dc1-bty1-mc5" name="GDC-CAMP">
 				<attributes>
 					<attribute key="manufacture" value="Sun" />
 					<attribute key="arch" value="Solaris X64" />

@@ -1,5 +1,4 @@
 function gdcLineChartDateConvert(value, record) {
-	debugger;
 	var date = Ext.Date.parse(value, 'M j, Y g:i:s A');
 	return Ext.Date.format(date, 'H:i');
 }

@@ -55,4 +55,13 @@ public class JpaHistoryDao extends JpaDaoSupport implements HistoryDao {
 		getJpaTemplate().getEntityManager().persist(history);
 	}
 
+	@Override
+	public void cleanHistory(Date timepoint) {
+		getJpaTemplate()
+				.getEntityManager()
+				.createNativeQuery(
+						"delete from NodeHistory n where n.time <= :time")
+				.setParameter("time", timepoint).executeUpdate();
+	}
+
 }

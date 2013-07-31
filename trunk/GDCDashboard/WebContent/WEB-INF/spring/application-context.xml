@@ -78,6 +78,10 @@
 		<property name="alertDao" ref="alertDao" />
 	</bean>
 
+	<bean id="sweepService" class="edu.clarkson.gdc.dashboard.service.DefaultSweepService">
+		<property name="historyDao" ref="historyDao" />
+	</bean>
+
 	<bean id="adapter"
 		class="edu.clarkson.gdc.common.ApplicationContextHolder.Adaptor" />
 </beans>

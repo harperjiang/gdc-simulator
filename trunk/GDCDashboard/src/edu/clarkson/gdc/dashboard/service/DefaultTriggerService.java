@@ -29,6 +29,10 @@ public class DefaultTriggerService implements TriggerService {
 	public Alert trigger(NodeStatus oldsta, NodeStatus newsta) {
 		Node node = nodeDao.getNode(newsta.getNodeId());
 		if (BTY_CHECK_SENSOR.equals(newsta.getValue())) {
+			if (null != oldsta && BTY_CHECK_SENSOR.equals(oldsta.getValue())) {
+				// BTY_CHECK_SENSOR keeps happen
+				return null;
+			}
 			Alert alert = new Alert();
 			alert.setType(AlertType.BTY_CHECK_SENSOR);
 			alert.setLevel(AlertType.BTY_CHECK_SENSOR.level());

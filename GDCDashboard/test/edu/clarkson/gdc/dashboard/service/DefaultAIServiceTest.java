@@ -35,8 +35,8 @@ public class DefaultAIServiceTest extends AbstractJUnit4SpringContextTests {
 	public void testHandleAlert() {
 		Alert alert = new Alert();
 		alert.setNodeId("dc2-power");
-		alert.setType(AlertType.BTY_TOO_LOW);
-		alert.setLevel(AlertType.BTY_TOO_LOW.level());
+		alert.setType(AlertType.POWER_TOO_LOW);
+		alert.setLevel(AlertType.POWER_TOO_LOW.level());
 		aiService.handleAlert(alert);
 
 		List<Object[]> migrations = vmDao.getMigrationHistory();
@@ -49,11 +49,11 @@ public class DefaultAIServiceTest extends AbstractJUnit4SpringContextTests {
 		assertEquals("dc1-bty1-mc1", to.getId());
 
 		vmDao.getMigrationHistory().clear();
-		
+
 		alert = new Alert();
 		alert.setNodeId("dc2-power");
-		alert.setType(AlertType.BTY_IS_HIGH);
-		alert.setLevel(AlertType.BTY_IS_HIGH.level());
+		alert.setType(AlertType.POWER_IS_HIGH);
+		alert.setLevel(AlertType.POWER_IS_HIGH.level());
 		aiService.handleAlert(alert);
 
 		migrations = vmDao.getMigrationHistory();

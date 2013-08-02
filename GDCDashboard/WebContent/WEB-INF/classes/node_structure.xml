@@ -5,16 +5,16 @@
 	<data-center id="dc1" name="Grid-tied Data Center">
 		<attributes>
 			<attribute key="power_source" value="Grid" />
-			<attribute key="designed_capacity" value="1MW" />
-			<attribute key="peak_capacity" value="1MW" />
+			<attribute key="designed_capacity" value="30kW" />
+			<attribute key="peak_capacity" value="30kW" />
 		</attributes>
 		<battery id="dc1-bty1" name="APC UPS">
 			<attributes>
 				<attribute key="manufacture" value="APC" />
 				<attribute key="model" value="DL-650" />
-				<attribute key="designed_capacity" value="250kWh" />
-				<attribute key="designed_output" value="110Amp" />
-				<attribute key="output_voltage" value="110V" />
+				<attribute key="designed_capacity" value="900Wh" />
+				<attribute key="designed_output" value="20Amp" />
+				<attribute key="output_voltage" value="208V" />
 			</attributes>
 			<!-- machine id="dc1-bty1-mc1" name="GDC-Massena"> <attributes> <attribute 
 				key="manufacture" value="Sun" /> <attribute key="arch" value="Solaris X64" 
@@ -37,21 +37,21 @@
 				name="GDC-Core2"> <attributes> <attribute key="ip" value="128.153.145.223" 
 				/> </attributes> </machine -->
 		</battery>
-		<description>This is a description to the data center 1</description>
+		<description>This is a Grid-tied data center</description>
 	</data-center>
 	<data-center id="dc2" name="Green Data Center">
 		<attributes>
 			<attribute key="power_source" value="Wind &amp; Solar" />
-			<attribute key="designed_capacity" value="1MW" />
-			<attribute key="peak_capacity" value="1.5MW" />
+			<attribute key="designed_capacity" value="30kW" />
+			<attribute key="peak_capacity" value="30kW" />
 		</attributes>
 		<battery id="dc2-bty1" name="CyberPower UPS">
 			<attributes>
 				<attribute key="manufacture" value="CyberPower" />
 				<attribute key="model" value="DL-650" />
-				<attribute key="designed_capacity" value="250kWh" />
-				<attribute key="designed_output" value="110Amp" />
-				<attribute key="output_voltage" value="110V" />
+				<attribute key="designed_capacity" value="900Wh" />
+				<attribute key="designed_output" value="20Amp" />
+				<attribute key="output_voltage" value="208V" />
 			</attributes>
 			<!-- machine id="dc2-bty1-mc1" name="CAMP Machine 1"> <attributes> <attribute 
 				key="manufacture" value="Sun" /> <attribute key="arch" value="Solaris X64" 
@@ -77,7 +77,7 @@
 				<attribute key="output_voltage" value="48V" />
 			</attributes>
 		</power>
-		<description>This is a description to the data center 2</description>
+		<description>This is a green powered data center</description>
 	</data-center>
 	<!-- data-center id="dc3" name="Data Center 3"> <battery id="dc3.bty1" name="UniPower 
 		UPS"> <machine id="dc3.bty1.mc1" name="Machine D" /> </battery> <description>This 

@@ -2,7 +2,7 @@ package edu.clarkson.gdc.dashboard.domain.entity;
 
 public enum AlertType {
 
-	BTY_TOO_LOW(AlertLevel.SEVERE), BTY_IS_HIGH(AlertLevel.INFO), BTY_CHECK_SENSOR(
+	POWER_TOO_LOW(AlertLevel.SEVERE), POWER_IS_HIGH(AlertLevel.INFO), POWER_CHECK_SENSOR(
 			AlertLevel.WARNING);
 
 	private AlertLevel level;

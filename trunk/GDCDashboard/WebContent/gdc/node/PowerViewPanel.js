@@ -102,10 +102,10 @@ Ext.define('GDC.node.PowerViewPanel', {
 				type : 'gauge',
 				position : 'gauge',
 				minimum : 0,
-				maximum : 72,
-				steps : 4,
+				maximum : 40,
+				steps : 5,
 				margin : 7,
-				title : 'Input\nCurrent'
+				title : 'Input\nCurrent(A)'
 			} ]
 		}, {
 			xtype : 'gdcGaugeChart2',
@@ -113,11 +113,11 @@ Ext.define('GDC.node.PowerViewPanel', {
 			axes : [ {
 				type : 'gauge',
 				position : 'gauge',
-				minimum : -72,
-				maximum : 72,
-				steps : 4,
+				minimum : -25,
+				maximum : 25,
+				steps : 5,
 				margin : 7,
-				title : 'Battery\nCurrent'
+				title : 'Battery\nCurrent(A)'
 			} ]
 		}, {
 			xtype : 'gdcGaugeChart',
@@ -126,10 +126,10 @@ Ext.define('GDC.node.PowerViewPanel', {
 				type : 'gauge',
 				position : 'gauge',
 				minimum : 0,
-				maximum : 72,
-				steps : 4,
+				maximum : 15,
+				steps : 3,
 				margin : 7,
-				title : 'Inverter\nCurrent'
+				title : 'Inverter\nCurrent(A)'
 			} ]
 		}, {
 			xtype : 'gdcGaugeChart',
@@ -138,10 +138,10 @@ Ext.define('GDC.node.PowerViewPanel', {
 				type : 'gauge',
 				position : 'gauge',
 				minimum : 0,
-				maximum : 100,
-				steps : 4,
+				maximum : 55,
+				steps : 5,
 				margin : 7,
-				title : 'Battery\nVoltage'
+				title : 'Battery\nVoltage(V)'
 			} ]
 		}, {
 			xtype : 'gdcGaugeChart2',
@@ -154,7 +154,7 @@ Ext.define('GDC.node.PowerViewPanel', {
 				maximum : 110,
 				steps : 4,
 				margin : 7,
-				title : 'Charge\nStatus'
+				title : 'Charge\nStatus(%)'
 			} ]
 		} ]
 	} ],

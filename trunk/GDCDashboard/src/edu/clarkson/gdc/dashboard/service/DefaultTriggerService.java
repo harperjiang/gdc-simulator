@@ -34,8 +34,8 @@ public class DefaultTriggerService implements TriggerService {
 				return null;
 			}
 			Alert alert = new Alert();
-			alert.setType(AlertType.BTY_CHECK_SENSOR);
-			alert.setLevel(AlertType.BTY_CHECK_SENSOR.level());
+			alert.setType(AlertType.POWER_CHECK_SENSOR);
+			alert.setLevel(AlertType.POWER_CHECK_SENSOR.level());
 			alert.setNodeId(node.getId());
 			alert.setTime(new Date());
 			alert.setNodeName(node.getName());
@@ -50,8 +50,8 @@ public class DefaultTriggerService implements TriggerService {
 			String newval = newsta.getValue();
 			if (BTY_NORMAL_LEVEL.equals(oldval) && BTY_LOW_LEVEL.equals(newval)) {
 				Alert alert = new Alert();
-				alert.setType(AlertType.BTY_TOO_LOW);
-				alert.setLevel(AlertType.BTY_TOO_LOW.level());
+				alert.setType(AlertType.POWER_TOO_LOW);
+				alert.setLevel(AlertType.POWER_TOO_LOW.level());
 				alert.setNodeId(node.getId());
 				alert.setTime(new Date());
 				alert.setNodeName(node.getName());
@@ -61,8 +61,8 @@ public class DefaultTriggerService implements TriggerService {
 			if (BTY_NORMAL_LEVEL.equals(oldval)
 					&& BTY_HIGH_LEVEL.equals(newval)) {
 				Alert alert = new Alert();
-				alert.setType(AlertType.BTY_IS_HIGH);
-				alert.setLevel(AlertType.BTY_IS_HIGH.level());
+				alert.setType(AlertType.POWER_IS_HIGH);
+				alert.setLevel(AlertType.POWER_IS_HIGH.level());
 				alert.setNodeId(node.getId());
 				alert.setTime(new Date());
 				alert.setNodeName(node.getName());

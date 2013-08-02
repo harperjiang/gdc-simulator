@@ -98,7 +98,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 		collapsible : true,
 		bodyStyle : 'padding:10px;',
 		title : 'Introduction',
-		html : 'This is a bunch of introduction text to the system'
+		autoLoad : 'gdc/summary/summary_intro.html'
 	}, {
 		xtype : 'alertGrid',
 		id : 'summary.alertGrid',
@@ -161,24 +161,19 @@ Ext.define('GDC.summary.SummaryPanel', {
 				Ext.getCmp('summary.alertGrid').store.loadData(alerts);
 			},
 			errorHandler : function(error1, error2) {
-				debugger;
-				Ext.Msg
-						.alert("Error",
-								"Unexpected error, please contact admin");
+				Ext.Msg.alert("Error", "Unexpected error, "
+						+ "please contact admin");
 			}
 		});
 	},
 	refreshMigrationLog : function() {
 		structureService.getMigrationLogs({
 			callback : function(logs) {
-				debugger;
 				Ext.getCmp('summary.migrationLogGrid').store.loadData(logs);
 			},
 			errorHandler : function(error1, error2) {
-				debugger;
-				Ext.Msg
-						.alert("Error",
-								"Unexpected error, please contact admin");
+				Ext.Msg.alert("Error", "Unexpected error, "
+						+ "please contact admin");
 			}
 		});
 	}

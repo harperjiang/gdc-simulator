@@ -28,7 +28,7 @@ Ext.require([ 'GDC.node.DCViewPanel', 'GDC.node.PowerViewPanel',
 		'GDC.node.MachineViewPanel', 'GDC.node.UPSViewPanel' ]);
 
 Ext.application({
-	name : 'GDC Dashboard',
+	name : 'DGDC Dashboard',
 	launch : function() {
 		Ext.create('GDC.MainViewPort');
 	}

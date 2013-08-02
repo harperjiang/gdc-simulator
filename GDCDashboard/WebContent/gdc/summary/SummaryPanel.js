@@ -19,7 +19,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 		height : 45,
 		styleHtmlContent : true,
 		styleHtmlCls : 'banner',
-		html : 'GDC Architecture',
+		html : 'DGDC Architecture',
 		colspan : 2
 	}, {
 		xtype : 'panel',
@@ -69,10 +69,10 @@ Ext.define('GDC.summary.SummaryPanel', {
 			axes : [ {
 				type : 'gauge',
 				position : 'gauge',
-				title : 'System\nCapacity',
+				title : 'Active VM',
 				minimum : 0,
-				maximum : 100,
-				steps : 4,
+				maximum : 30,
+				steps : 3,
 				margin : 7
 			} ]
 		}, {
@@ -83,11 +83,11 @@ Ext.define('GDC.summary.SummaryPanel', {
 			axes : [ {
 				type : 'gauge',
 				position : 'gauge',
-				title : 'Green Power\nUtilization',
+				title : 'Green Power\nUtilization(%)',
 				minimum : 0,
 				maximum : 100,
 				steps : 4,
-				margin : 7
+				margin : 8
 			} ]
 		} ]
 	}, {

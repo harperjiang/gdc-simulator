@@ -76,7 +76,7 @@ Ext.define('GDC.node.MachineViewPanel', {
 				maximum : 100,
 				steps : 4,
 				margin : 7,
-				title : 'CPU Usage(%)'
+				title : 'CPU\nUsage(%)'
 			} ]
 		}, {
 			xtype : 'gdcGaugeChart',

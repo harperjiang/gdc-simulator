@@ -109,7 +109,7 @@ Ext.define('GDC.node.UPSViewPanel', {
 				maximum : 100,
 				steps : 4,
 				margin : 7,
-				title : 'Output\nVoltage'
+				title : 'Output\nVoltage(V)'
 			} ]
 		}, {
 			xtype : 'gdcGaugeChart',
@@ -122,7 +122,7 @@ Ext.define('GDC.node.UPSViewPanel', {
 				maximum : 100,
 				steps : 4,
 				margin : 7,
-				title : 'Temperature'
+				title : 'Temperature(°F)'
 			} ]
 		} ]
 	} ],

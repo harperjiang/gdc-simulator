@@ -23,14 +23,20 @@ Ext.define("GDC.common.GaugeChart2", {
 	series : [ {
 		type : 'gauge',
 		field : 'data1',
-		donut : 60,
-//		colorList : [ '#00ff00', '#fbf80b', '#fd8c12', '#f65007', '#f81409' ],
+		donut : 70,
+		// colorList : [ '#00ff00', '#fbf80b', '#fd8c12', '#f65007', '#f81409'
+		// ],
 		colorList : [ '#f81409', '#f65007', '#fd8c12', '#fbf80b', '#00ff00' ],
 		renderer : function(sprite, storeItem, attr, i, store) {
 			var data = storeItem.raw[0];
 			var colors = this.colorList;
+			var colorIndex = Math.floor(data / 20);
+			if (colorIndex < 0)
+				colorIndex = 0;
+			if (colorIndex > 4)
+				colorIndex = 4;
 			return Ext.apply(attr, {
-				fill : i === 0 ? colors[Math.floor(data / 20)] : '#ddd'
+				fill : i === 0 ? colors[colorIndex] : '#ddd'
 			});
 		}
 	} ],

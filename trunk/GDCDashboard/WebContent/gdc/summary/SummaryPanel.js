@@ -69,7 +69,7 @@ Ext.define('GDC.summary.SummaryPanel', {
 			axes : [ {
 				type : 'gauge',
 				position : 'gauge',
-				title : 'Active VM',
+				title : 'Active VM\nCount',
 				minimum : 0,
 				maximum : 30,
 				steps : 3,
@@ -114,23 +114,21 @@ Ext.define('GDC.summary.SummaryPanel', {
 		width : 920,
 		height : 300,
 		colspan : 2,
-		zoom : 9,
+		zoom : 17,
 		center : {
-			x : 44.800,
-			y : -74.500
+			x : 44.66195,
+			y : -74.99919
+
 		},
 		markers : [ {
-			x : 44.844,
-			y : -74.290,
-			title : "Malone"
+			x : 44.66216,
+			y : -75.00189,
+			title : "GDC-Camp"
 		}, {
-			x : 44.923,
-			y : -74.877,
-			title : "Massena"
-		}, {
-			x : 44.671,
-			y : -74.985,
-			title : "Potsdam"
+			x : 44.66150,
+			y : -74.99735,
+
+			title : "GDC-Science Center"
 		} ]
 	} ],
 	listeners : {

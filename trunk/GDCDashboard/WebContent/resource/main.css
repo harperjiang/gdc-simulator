@@ -91,3 +91,14 @@ div {
 	margin-bottom: 5px;
 	text-decoration: none;
 }
+
+.intro2 {
+	font-size: 13px;
+}
+
+.intro_title {
+	font-weight: bold;
+	font-size: 15px;
+	margin-bottom: 8px;
+	margin-top: 8px;
+}

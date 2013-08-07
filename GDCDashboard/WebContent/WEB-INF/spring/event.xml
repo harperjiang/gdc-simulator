@@ -21,12 +21,12 @@
 						<bean class="edu.clarkson.gdc.event.impl.TypeSelector">
 							<property name="clazz"
 								value="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
-							<property name="type" value="Alert-BTY_TOO_LOW" />
+							<property name="type" value="Alert-POWER_TOO_LOW" />
 						</bean>
 						<bean class="edu.clarkson.gdc.event.impl.TypeSelector">
 							<property name="clazz"
 								value="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
-							<property name="type" value="Alert-BTY_IS_HIGH" />
+							<property name="type" value="Alert-POWER_IS_HIGH" />
 						</bean>
 					</list>
 				</property>

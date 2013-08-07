@@ -10,10 +10,9 @@
 		<task:scheduled ref="sweepService" method="cleanHistory"
 			cron="0 0 1 * * *" />
 	</task:scheduled-tasks>
-
 	<task:scheduled-tasks scheduler="defaultScheduler">
 		<task:scheduled ref="nodeService" method="updatePowerUsage"
-			cron="0 */5 * * * *" />
+			cron="*/5 * * * * *" />
 	</task:scheduled-tasks>
 
 

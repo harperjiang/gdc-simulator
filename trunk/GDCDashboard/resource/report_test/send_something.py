@@ -4,8 +4,8 @@ import http.client, urllib.parse
 
 #Configurations
 machine_id="dc2-power"
-#host="localhost:8080"
-host="128.153.145.179"
+host="localhost:8080"
+#host="128.153.145.179"
 url="/GDCDashboard/update"
 
 #Send information

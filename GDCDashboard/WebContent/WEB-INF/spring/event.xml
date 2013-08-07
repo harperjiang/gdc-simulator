@@ -28,6 +28,16 @@
 								value="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
 							<property name="type" value="Alert-POWER_IS_HIGH" />
 						</bean>
+						<bean class="edu.clarkson.gdc.event.impl.TypeSelector">
+							<property name="clazz"
+								value="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
+							<property name="type" value="Alert-POWER_CHECK_SENSOR" />
+						</bean>
+						<bean class="edu.clarkson.gdc.event.impl.TypeSelector">
+							<property name="clazz"
+								value="edu.clarkson.gdc.dashboard.domain.entity.Alert" />
+							<property name="type" value="Alert-POWER_SENSOR_NORMAL" />
+						</bean>
 					</list>
 				</property>
 			</bean>

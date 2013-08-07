@@ -69,7 +69,7 @@ public class DefaultStructureService implements StructureService {
 			summary.setUtilization(new BigDecimal(utilStatus.getValue()));
 
 		summary.setUsage(90);
-		summary.setCapacity(20);
+		summary.setCapacity(summary.getVmRunning());
 		return summary;
 	}
 

@@ -45,5 +45,10 @@ public class JpaHistoryDaoTest extends
 		NodeHistory hist = hists.get(0);
 		assertTrue(hist.getId() != 0);
 	}
+	
+	@Test
+	public void testDelete() {
+		historyDao.cleanHistory(new Date());
+	}
 
 }

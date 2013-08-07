@@ -28,22 +28,10 @@ public class DefaultTriggerService implements TriggerService {
 	@Override
 	public Alert trigger(NodeStatus oldsta, NodeStatus newsta) {
 		Node node = nodeDao.getNode(newsta.getNodeId());
-		if (BTY_CHECK_SENSOR.equals(newsta.getValue())) {
-			if (null != oldsta && BTY_CHECK_SENSOR.equals(oldsta.getValue())) {
-				// BTY_CHECK_SENSOR keeps happen
-				return null;
-			}
-			Alert alert = new Alert();
-			alert.setType(AlertType.POWER_CHECK_SENSOR);
-			alert.setLevel(AlertType.POWER_CHECK_SENSOR.level());
-			alert.setNodeId(node.getId());
-			alert.setTime(new Date());
-			alert.setNodeName(node.getName());
-			getAlertDao().save(alert);
-			return alert;
-		}
+
 		if (null == oldsta || null == newsta)
 			return null;
+
 		if (node instanceof PowerSource
 				&& StatusType.BTY_LEVEL.name().equals(newsta.getDataType())) {
 			String oldval = oldsta.getValue();
@@ -63,6 +51,28 @@ public class DefaultTriggerService implements TriggerService {
 				Alert alert = new Alert();
 				alert.setType(AlertType.POWER_IS_HIGH);
 				alert.setLevel(AlertType.POWER_IS_HIGH.level());
+				alert.setNodeId(node.getId());
+				alert.setTime(new Date());
+				alert.setNodeName(node.getName());
+				getAlertDao().save(alert);
+				return alert;
+			}
+			if (BTY_CHECK_SENSOR.equals(newval)
+					&& !BTY_CHECK_SENSOR.equals(oldval)) {
+				Alert alert = new Alert();
+				alert.setType(AlertType.POWER_CHECK_SENSOR);
+				alert.setLevel(AlertType.POWER_CHECK_SENSOR.level());
+				alert.setNodeId(node.getId());
+				alert.setTime(new Date());
+				alert.setNodeName(node.getName());
+				getAlertDao().save(alert);
+				return alert;
+			}
+			if (BTY_CHECK_SENSOR.equals(oldval)
+					&& !BTY_CHECK_SENSOR.equals(newval)) {
+				Alert alert = new Alert();
+				alert.setType(AlertType.POWER_SENSOR_NORMAL);
+				alert.setLevel(AlertType.POWER_SENSOR_NORMAL.level());
 				alert.setNodeId(node.getId());
 				alert.setTime(new Date());
 				alert.setNodeName(node.getName());

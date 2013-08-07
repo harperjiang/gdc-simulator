@@ -60,8 +60,8 @@ public class JpaHistoryDao extends JpaDaoSupport implements HistoryDao {
 		getJpaTemplate()
 				.getEntityManager()
 				.createNativeQuery(
-						"delete from NodeHistory n where n.time <= :time")
-				.setParameter("time", timepoint).executeUpdate();
+						"delete from node_history where time <= ?")
+				.setParameter(1, timepoint).executeUpdate();
 	}
 
 }

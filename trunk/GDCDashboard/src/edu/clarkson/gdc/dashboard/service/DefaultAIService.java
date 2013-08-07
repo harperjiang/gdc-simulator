@@ -50,12 +50,14 @@ public class DefaultAIService implements AIService {
 		Node node = null;
 		switch (alert.getType()) {
 		case POWER_TOO_LOW:
+		case POWER_CHECK_SENSOR:
 			// Migrate all vms under the Data Center out
 			node = getNodeDao().up(getNodeDao().getNode(alert.getNodeId()),
 					DataCenter.class);
 			migrateOut(node, true);
 			break;
 		case POWER_IS_HIGH:
+		case POWER_SENSOR_NORMAL:
 			node = getNodeDao().up(getNodeDao().getNode(alert.getNodeId()),
 					DataCenter.class);
 			migrateIn(node);

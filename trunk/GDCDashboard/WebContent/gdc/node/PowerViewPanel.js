@@ -125,7 +125,7 @@ Ext.define('GDC.node.PowerViewPanel', {
 			axes : [ {
 				type : 'gauge',
 				position : 'gauge',
-				minimum : 0,
+				minimum : -15,
 				maximum : 15,
 				steps : 3,
 				margin : 7,

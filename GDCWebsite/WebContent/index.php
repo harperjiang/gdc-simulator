@@ -15,7 +15,7 @@
 			as utilities, government regulators, and electricity consumers
 			because of the significant and growing economic and environmental
 			costs associated with the increasing demand and energy consumption.</div>
-		<div class="text">Accordingly to the Lawrence Berkeley National
+		<div class="text">According to the Lawrence Berkeley National
 			Laboratory 2008 report, in 2005 the direct electricity used by
 			information technology equipment in data centers represented about
 			0.5% of total world electricity consumption. When electricity for
@@ -33,6 +33,23 @@
 			2.5% of current US electricity consumption</div>
 
 		<div id="part2" class="subtitle">Objectives</div>
+		<div class="text">The project aim is to demonstrate the feasibility of
+			deploying a network of Performance Optimized Datacenters (PODs),
+			geographically distributed to exploit the availability of renewable
+			energy for their operation. Such a distributed system has the
+			potential to significantly enhance the energy efficiency,
+			reliability, security, and overall performance of the data center by
+			several means, including optimizing the utilization of the available
+			renewable power for computing by intelligently redistributing
+			computational load depending on the availability of renewable energy
+			and minimizing losses associated with power transmission by placing
+			the PODs near the power source. This concept provides data center
+			operators the means to avoid performing expensive utility upgrades as
+			the availability of wind power through New York State and other
+			states grows, keeping the infrastructure and Transmission &
+			Distribution (T&D) costs low, thus making it possible to use the wind
+			power that is currently stranded, i.e. not-delivered to the grid due
+			to the T&D constraints.</div>
 
 		<div class="text">During this demonstration project, Clarkson
 			University in partnership with Advanced Micro Devices (AMD) will
@@ -58,7 +75,9 @@
 			(T&amp;D) costs low, thus making it possible to use the wind power
 			that is currently stranded, i.e. not-delivered to the grid due to the
 			T&amp;D constraints.</div>
-
+		<div class="text">
+			<img width="95%" src="image/intro_architecture.png" />
+		</div>
 		<div id="part3" class="subtitle">Benefits</div>
 		<div class="text">Optimizing compute load shifting in this manner has
 			the potential to generate significant efficiencies for the
@@ -73,10 +92,9 @@
 			powered from renewable energy, primarily wind, potentially consuming
 			a significant amount of constrained power that is not otherwise
 			beneficially utilized</div>
-		<div class="text">
-			<img width="95%" src="image/gdc.jpg" />
-		</div>
+
 	</div>
 	<?php include 'footer.php'?>
+
 </body>
 </html>

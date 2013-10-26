@@ -87,6 +87,11 @@ a.menu_subitem {
 	margin-bottom: 15px;
 }
 
+.caption {
+	padding-left: 30%;
+	font-weight: bold;
+}
+
 .person {
 	font-family: Sans-Serif;
 }

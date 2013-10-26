@@ -227,9 +227,12 @@
 				</tr>
 			</table>
 		</div>
-
-		<div id="part3" class="subtitle">Renewable Energy and Electricity Policy; Economic Analysis</div>
-		<div class="text">Professors Stephen Bird and Martin Heintzelman oversee analysis related to implementation, policy analysis, and economic viability for the Distributed Green Data Center Model.
+		<div id="part3" class="subtitle">Renewable Energy and Electricity
+			Policy; Economic Analysis</div>
+		<div class="text">
+			Professors Stephen Bird and Martin Heintzelman oversee analysis
+			related to implementation, policy analysis, and economic viability
+			for the Distributed Green Data Center Model.
 			<table class="prof_table">
 				<tr>
 					<td><img src="picture/Bird.png" width="120" alt="Bird" /></td>

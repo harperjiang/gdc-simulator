@@ -10,6 +10,7 @@
 	<bean id="vmDao" class="edu.clarkson.gdc.dashboard.domain.dao.ScriptVMDao">
 		<property name="listScript" value="/home/harper/GDC/display-local.sh" />
 		<property name="migrateScript" value="/home/harper/GDC/migrate.sh" />
+		<property name="entityManager" ref="entityManager" />
 	</bean>
 
 	<bean id="memoryVmDao" class="edu.clarkson.gdc.dashboard.domain.dao.MemoryVMDao" />

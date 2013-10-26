@@ -10,24 +10,39 @@
 	<?php include 'menu.php'; ?>
 	<div id="content" class="content">
 		<div class="subtitle">Meet our Sponsors</div>
-		<div class="text">New York State Energy Research and Development
-			Authority (NYSERDA) is a public benefit corporation created in 1975
-			under Article 8, Title 9 [PDF] and Title 9A [PDF] of the State Public
-			Authorities Law through the reconstitution of the New York State
-			Atomic and Space Development Authority. NYSERDA&prime;s earliest
-			efforts focused solely on research and development with the goal of
-			reducing the State&prime;s petroleum consumption. Today,
-			NYSERDA&prime;s aim is to help New York meet its energy goals:
-			reducing energy consumption, promoting the use of renewable energy
-			sources, and protecting the environment.</div>
-		<div class="text">AMD (NYSE: AMD) is a semiconductor design innovator
-			leading the next era of vivid digital experiences with its
-			groundbreaking AMD Accelerated Processing Units (APUs) that power a
-			wide range of computing devices. AMD&prime;s server computing
+		<div class="subtitle2">About NYSERDA</div>
+		<div class="text">
+			<a href="http://www.nyserda.ny.gov/">New York State Energy Research
+				and Development Authority (NYSERDA)</a> is a public benefit
+			corporation created in 1975 through the reconstitution of the New
+			York State Atomic and Space Development Authority. NYSERDA’s aim is
+			to help New York meet its energy goals: reducing energy consumption,
+			promoting the use of renewable energy sources, and protecting the
+			environment. NYSERDA strives to facilitate change through the
+			widespread development and use of innovative technologies to improve
+			the State’s energy, economic, and environmental wellbeing. NYSERDA’s
+			programs and services provide a vehicle for the State to work
+			collaboratively with businesses, academia, industry, the federal
+			government, environmental community, public interest groups, and
+			energy market participants. Through these collaborations, NYSERDA
+			seeks to develop a diversified energy supply portfolio, improve
+			market mechanisms, and facilitate the introduction and adoption of
+			advanced technologies that will help New Yorkers plan for and respond
+			to uncertainties in the energy markets. For More Information about
+			NYSERDA contact the Communications unit: NYSERDA, 17 Columbia Circle,
+			Albany, New York 12203-6399, Phone: 1-866-NYSERDA or (518) 862-1090.
+		</div>
+		<div class="text">AMD</div>
+		<div class="text">
+			<a href="http://www.amd.com/">AMD (NYSE: AMD)</a> is a semiconductor
+			design innovator leading the next era of vivid digital experiences
+			with its groundbreaking AMD Accelerated Processing Units (APUs) that
+			power a wide range of computing devices. AMD&prime;s server computing
 			products are focused on driving industry-leading cloud computing and
 			virtualization environments. AMD&prime;s superior graphics
 			technologies are found in a variety of solutions ranging from game
-			consoles, PCs to supercomputers</div>
+			consoles, PCs to supercomputers
+		</div>
 		<div class="subtitle">Meet our Partners</div>
 		<div class="text">AWST: Approaching three decades of service in the
 			industry, AWS Truepower (AWST) continues to be a leader and innovator

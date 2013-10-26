@@ -4,8 +4,10 @@
 		<a class="menu_item" href="index.php#part2">Objectives</a>
 		<a class="menu_item" href="index.php#part3">Benefits</a>
 	<a class="menu_main" href="eng_design.php">Engineering Design</a> 
-		<a class="menu_item" href="eng_design.php#part1">Engineering 1</a> 
-		<a class="menu_item" href="eng_design.php#part2">Engineering 2</a> 
+		<a class="menu_item" href="eng_design.php#part1">Components</a> 
+		<a class="menu_item" href="eng_design.php#part2">Test Bench Organization</a> 
+		<a class="menu_item" href="eng_demoarch.php">Demo Arch</a> 
+		<a class="menu_item" href="eng_emulator.php">Emulator Design</a> 
 	<a class="menu_main" href="gpower_study.php">Green Power Study</a> 
 		<a class="menu_item" href="gpower_study.php#part1">Green Power Study</a> 
 		<a class="menu_item" href="gpower_study.php#part2">Wind Power Downtime</a> 
@@ -24,7 +26,7 @@
 	<a class="menu_main" href="about.php">About us</a> 
 		<a class="menu_item" href="about.php#part1">Engineering members</a> 
 		<a class="menu_item" href="about.php#part2">CS members</a> 
-		<a class="menu_item" href="about.php#part3">Business members</a> 
+		<a class="menu_item" href="about.php#part3">Economics and Policy members</a> 
 	<a class="menu_main" href="partner.php">Partnership</a>
 	<a class="menu_main" href="resource.php">Resource</a>
 </div>

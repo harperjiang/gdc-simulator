@@ -85,6 +85,15 @@ public class ScriptVMDao extends JpaDaoSupport implements VMDao {
 					pr.setHandler(lvh);
 					pr.runAndWait();
 					List<VirtualMachine> refreshed = lvh.getVms();
+					if (logger.isDebugEnabled()) {
+						for (VirtualMachine vm : refreshed) {
+							logger.debug(MessageFormat.format(
+									"Got VM {0}:{1}",
+									vm.getName(),
+									vm.getAttributes().get(
+											Attributes.VM_STATUS.attrName())));
+						}
+					}
 					Map<String, VirtualMachine> refreshedMap = new HashMap<String, VirtualMachine>();
 					for (VirtualMachine newvm : refreshed) {
 						refreshedMap.put(newvm.getName(), newvm);

@@ -15,4 +15,4 @@ send "virsh $operation $domain\r"
 set timeout -1
 expect -re $prompt
 send "exit\r"
-interact
+expect eof

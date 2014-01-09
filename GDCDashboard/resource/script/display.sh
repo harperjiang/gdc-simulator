@@ -11,4 +11,4 @@ expect -re $prompt
 send "virsh list --all\r"
 expect -re $prompt
 send "exit\r"
-interact
+expect eof

@@ -27,24 +27,33 @@ public class ProcessRunner {
 	 * @throws InterruptedException
 	 */
 	public int runAndWait() throws InterruptedException, IOException {
-		Logger logger = LoggerFactory.getLogger(getClass());
 
 		ProcessBuilder builder = new ProcessBuilder(commands);
 		builder.redirectErrorStream(true);
 
 		process = builder.start();
-		int result = process.waitFor();
-		if (null != handler) {
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					process.getInputStream()));
-			String line = null;
-			while (null != (line = br.readLine())) {
-				if (logger.isDebugEnabled()) {
-					logger.debug(line);
+		Thread readThread = new Thread() {
+			public void run() {
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+						process.getInputStream()));
+				String line = null;
+				try {
+					while (null != (line = br.readLine())) {
+						if (logger.isDebugEnabled()) {
+							logger.debug(line);
+						}
+						if (null != handler) {
+							handler.output(line);
+						}
+					}
+				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
-				handler.output(line);
 			}
-		}
+		};
+		readThread.start();
+		int result = process.waitFor();
+		readThread.join();
 		return result;
 	}
 

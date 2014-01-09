@@ -29,7 +29,7 @@ public class ScriptVMDaoTest extends AbstractJUnit4SpringContextTests {
 
 	@Test
 	public void testMigrate() {
-		
+
 	}
 
 	@Test
@@ -56,4 +56,13 @@ public class ScriptVMDaoTest extends AbstractJUnit4SpringContextTests {
 		assertEquals("stopped", vms.get(2).getAttributes().get("status"));
 	}
 
+	@Test
+	public void testRemoteList() {
+		Machine owner = new Machine();
+		owner.setId("ABC");
+		owner.getAttributes().put("ip", "128.153.145.175");
+		vmDao.setListScript("/home/harper/GDC/display.sh");
+		List<VirtualMachine> vms = vmDao.list(owner);
+		assertEquals(1, vms.size());
+	}
 }

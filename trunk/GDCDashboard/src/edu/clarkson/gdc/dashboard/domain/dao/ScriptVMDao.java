@@ -33,6 +33,7 @@ import edu.clarkson.gdc.common.proc.ProcessRunner.Callback;
 import edu.clarkson.gdc.dashboard.domain.dao.vm.MigrationMutex;
 import edu.clarkson.gdc.dashboard.domain.entity.Attributes;
 import edu.clarkson.gdc.dashboard.domain.entity.Machine;
+import edu.clarkson.gdc.dashboard.domain.entity.MigrationHistory;
 import edu.clarkson.gdc.dashboard.domain.entity.MigrationLog;
 import edu.clarkson.gdc.dashboard.domain.entity.VirtualMachine;
 import edu.clarkson.gdc.dashboard.service.VMService;
@@ -148,6 +149,10 @@ public class ScriptVMDao extends JpaDaoSupport implements VMDao {
 			log.setVmName(vm.getName());
 			log.setBeginTime(new Date());
 			getJpaTemplate().getEntityManager().persist(log);
+			
+			MigrationHistory history = new MigrationHistory(log);
+			getJpaTemplate().getEntityManager().persist(history);
+			
 			EntityManagerFactory nativeEmf = extract(getJpaTemplate()
 					.getEntityManager().getEntityManagerFactory());
 			if (log.getId() == 0 && JpaHelper.isEclipseLink(nativeEmf)) {

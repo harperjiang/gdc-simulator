@@ -10,6 +10,7 @@
 		<class>edu.clarkson.gdc.dashboard.domain.entity.NodeHistory</class>
 		<class>edu.clarkson.gdc.dashboard.domain.entity.EventLog</class>
 		<class>edu.clarkson.gdc.dashboard.domain.entity.MigrationLog</class>
+		<class>edu.clarkson.gdc.dashboard.domain.entity.MigrationHistory</class>
 		<properties>
 			<property name="eclipselink.target-database" value="MySQL" />
 			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />

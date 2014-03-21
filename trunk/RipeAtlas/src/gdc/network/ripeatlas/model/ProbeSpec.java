@@ -6,17 +6,19 @@ public class ProbeSpec {
 		area, country, prefix, asn, probes, msm
 	}
 
-	public static final String WW = "WW";
+	public static interface Area {
+		String WW = "WW";
 
-	public static final String West = "West";
+		String West = "West";
 
-	public static final String North_Central = "North-Central";
+		String North_Central = "North-Central";
 
-	public static final String South_Central = "South-Central";
+		String South_Central = "South-Central";
 
-	public static final String North_East = "North-East";
+		String North_East = "North-East";
 
-	public static final String South_East = "South-East";
+		String South_East = "South-East";
+	}
 
 	private int requested;
 

@@ -1,5 +1,7 @@
 package gdc.network.ripeatlas.model;
 
+import gdc.network.ripeatlas.api.common.deserializer.JsonAttribute;
+
 public class MeasurementCreate {
 
 	private String description;
@@ -10,9 +12,11 @@ public class MeasurementCreate {
 
 	private boolean resolveOnProbe;
 
-	private boolean isOneoff;
+	@JsonAttribute("is_oneoff")
+	private boolean oneoff;
 
-	private boolean isPublic;
+	@JsonAttribute("is_public")
+	private boolean publicc;
 
 	public String getDescription() {
 		return description;
@@ -47,19 +51,19 @@ public class MeasurementCreate {
 	}
 
 	public boolean isOneoff() {
-		return isOneoff;
+		return oneoff;
 	}
 
-	public void setOneoff(boolean isOneoff) {
-		this.isOneoff = isOneoff;
+	public void setOneoff(boolean oneoff) {
+		this.oneoff = oneoff;
 	}
 
-	public boolean isPublic() {
-		return isPublic;
+	public boolean isPublicc() {
+		return publicc;
 	}
 
-	public void setPublic(boolean isPublic) {
-		this.isPublic = isPublic;
+	public void setPublicc(boolean publicc) {
+		this.publicc = publicc;
 	}
 
 }

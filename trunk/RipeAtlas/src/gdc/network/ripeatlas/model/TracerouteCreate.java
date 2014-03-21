@@ -8,16 +8,20 @@ public class TracerouteCreate extends MeasurementCreate {
 	}
 
 	private String target;
-	
-	private String protocol;
-	
-	private int interval;
-	
-	private int maxhops;
-	
-	private int timeout;
 
-	private int size;
+	private String protocol;
+
+	private int interval = 900;
+
+	private int paris = 1;
+
+	private int firsthop = 1;
+
+	private int maxhops = 64;
+
+	private int timeout = 100;
+
+	private int size = 40;
 
 	public String getTarget() {
 		return target;
@@ -41,6 +45,22 @@ public class TracerouteCreate extends MeasurementCreate {
 
 	public void setInterval(int interval) {
 		this.interval = interval;
+	}
+
+	public int getParis() {
+		return paris;
+	}
+
+	public void setParis(int paris) {
+		this.paris = paris;
+	}
+
+	public int getFirsthop() {
+		return firsthop;
+	}
+
+	public void setFirsthop(int firsthop) {
+		this.firsthop = firsthop;
 	}
 
 	public int getMaxhops() {

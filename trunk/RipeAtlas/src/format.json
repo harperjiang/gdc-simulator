@@ -1,0 +1,31 @@
+{
+   "af":4,
+   "all_scheduling_requests_fulfilled":true,
+   "can_visualise":true,
+   "creation_time":1394489153,
+   "description":"",
+   "dst_addr":"61.129.42.5",
+   "dst_asn":4812,
+   "dst_name":"www.fudan.edu.cn",
+   "interval":null,
+   "is_oneoff":true,
+   "is_public":true,
+   "msm_id":1576767,
+   "participant_count":1,
+   "resolve_on_probe":false,
+   "resolved_ips":[
+      "61.129.42.5"
+   ],
+   "response_timeout":4000,
+   "result":"/api/v1/measurement/1576767/result/",
+   "start_time":1394489153,
+   "status":{
+      "id":4,
+      "name":"Stopped"
+   },
+   "stop_time":1394489703,
+   "type":{
+      "id":2,
+      "name":"traceroute"
+   }
+}

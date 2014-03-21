@@ -18,8 +18,8 @@ public class ProbeDeserializer implements JsonDeserializer<Probe> {
 		Probe result = new Probe();
 		JsonObject obj = json.getAsJsonObject();
 
-		result.setPublic(obj.get("is_public").getAsBoolean());
-		if (result.isPublic()) {
+		result.setPublicc(obj.get("is_public").getAsBoolean());
+		if (result.isPublicc()) {
 			result.setAddressV4(obj.get("address_v4").getAsString());
 			result.setAddressV6(obj.get("address_v6").getAsString());
 			result.setPrefixV4(obj.get("prefix_v4").getAsString());

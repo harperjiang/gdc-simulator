@@ -1,6 +1,8 @@
-package gdc.network.ripeatlas.api.common.deserializer;
+package gdc.network.ripeatlas.api.common.serializer;
 
+import gdc.network.ripeatlas.api.common.Environment;
 import gdc.network.ripeatlas.api.common.ReflectUtils;
+import gdc.network.ripeatlas.api.common.deserializer.JsonAttribute;
 
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
@@ -12,28 +14,28 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
-public class BeanDeserializer<T> implements JsonDeserializer<T> {
+public class BeanSerializer<T> implements JsonSerializer<T> {
 
-	public T deserialize(JsonElement json, Type typeOfT,
-			JsonDeserializationContext context) throws JsonParseException {
-		JsonObject object = json.getAsJsonObject();
+	public JsonElement serialize(T src, Type typeOfT,
+			JsonSerializationContext context) throws JsonParseException {
+		JsonObject object = new JsonObject();
 		Class<?> typeClass = (Class<?>) typeOfT;
+		Gson parser = Environment.getEnvironment().getParser();
 		try {
-			Object instance = typeClass.getConstructor((Class[]) null)
-					.newInstance((Object[]) null);
 			PropertyDescriptor[] descs = PropertyUtils
 					.getPropertyDescriptors(typeClass);
 			for (PropertyDescriptor desc : descs) {
 				if (desc.getReadMethod() != null
 						&& desc.getWriteMethod() != null) {
 					String attrName = null;
-
 					JsonAttribute anno = getJsonAnnotation(ReflectUtils.find(
 							typeClass, desc.getName()));
 					if (null != anno) {
@@ -43,27 +45,23 @@ public class BeanDeserializer<T> implements JsonDeserializer<T> {
 					if (null == attrName) {
 						attrName = translate(desc.getName());
 					}
-					JsonElement value = object.get(attrName);
-					if (value != null && !value.isJsonNull()
-							&& !value.isJsonObject()) {
+					Object value = desc.getReadMethod().invoke(src,
+							(Object[]) null);
+					if (value != null) {
 						if (desc.getPropertyType() == Integer.class
 								|| desc.getPropertyType() == Integer.TYPE) {
-							desc.getWriteMethod().invoke(instance,
-									value.getAsInt());
+							object.add(attrName, parser.toJsonTree(value));
 						} else if (desc.getPropertyType() == String.class) {
-							desc.getWriteMethod().invoke(instance,
-									value.getAsString());
+							object.add(attrName, parser.toJsonTree(value));
 						} else if (desc.getPropertyType() == Date.class) {
-							desc.getWriteMethod().invoke(instance,
-									new Date(value.getAsLong() * 1000));
+							long val = ((Date) value).getTime() / 1000;
+							object.add(attrName, new JsonPrimitive(val));
 						} else if (desc.getPropertyType() == Double.class
 								|| desc.getPropertyType() == Double.TYPE) {
-							desc.getWriteMethod().invoke(instance,
-									value.getAsDouble());
+							object.add(attrName, parser.toJsonTree(value));
 						} else if (desc.getPropertyType() == Boolean.class
 								|| desc.getPropertyType() == Boolean.TYPE) {
-							desc.getWriteMethod().invoke(instance,
-									value.getAsBoolean());
+							object.add(attrName, parser.toJsonTree(value));
 						} else {
 							throw new RuntimeException("Unsupported type:"
 									+ desc.getPropertyType().toString());
@@ -71,7 +69,7 @@ public class BeanDeserializer<T> implements JsonDeserializer<T> {
 					}
 				}
 			}
-			return (T) instance;
+			return object;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

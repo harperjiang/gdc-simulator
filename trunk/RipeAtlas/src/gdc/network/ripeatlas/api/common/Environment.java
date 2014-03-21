@@ -23,12 +23,13 @@ public class Environment {
 		httpClient = HttpClients.createDefault();
 
 		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(Measurement.class,
-				new MeasurementDeserializer());
 		builder.registerTypeAdapter(MeasurementResult.class,
 				new MeasurementResultDeserializer());
 		builder.registerTypeAdapter(TracerouteOutput.class,
 				new TracerouteDeserializer());
+
+		builder.registerTypeAdapter(Measurement.class,
+				new MeasurementDeserializer());
 		builder.registerTypeAdapter(Probe.class, new BeanDeserializer<Probe>());
 
 		parser = builder.create();

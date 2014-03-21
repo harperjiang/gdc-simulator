@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="lib/fluent-hc-4.3.3.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-4.3.3.jar" sourcepath="/home/harper/Libraries/httpclient/httpcomponents-client-4.3.3-src.zip"/>
 	<classpathentry kind="lib" path="lib/httpclient-cache-4.3.3.jar"/>
-	<classpathentry kind="lib" path="lib/httpcore-4.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/httpcore-4.3.2.jar" sourcepath="/home/harper/Libraries/httpclient/httpcomponents-core-4.3.2-src.zip"/>
 	<classpathentry kind="lib" path="lib/httpmime-4.3.3.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.4.jar" sourcepath="/home/harper/Libraries/google-gson-2.2.4/gson-2.2.4-sources.jar"/>
 	<classpathentry kind="lib" path="lib/logback-access-1.0.13.jar"/>

@@ -9,6 +9,8 @@ public class Measurement {
 	@JsonAttribute("msm_id")
 	private int id;
 
+	private int af;
+
 	private String type;
 
 	private Date creationTime;
@@ -19,9 +21,11 @@ public class Measurement {
 
 	private Date stopTime;
 
-	private boolean isOneoff;
+	@JsonAttribute("is_oneoff")
+	private boolean oneoff;
 
-	private boolean isPublic;
+	@JsonAttribute("is_public")
+	private boolean publicc;
 
 	private int interval;
 
@@ -39,6 +43,14 @@ public class Measurement {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public int getAf() {
+		return af;
+	}
+
+	public void setAf(int af) {
+		this.af = af;
 	}
 
 	public String getType() {
@@ -82,19 +94,19 @@ public class Measurement {
 	}
 
 	public boolean isOneoff() {
-		return isOneoff;
+		return oneoff;
 	}
 
-	public void setOneoff(boolean isOneoff) {
-		this.isOneoff = isOneoff;
+	public void setOneoff(boolean oneoff) {
+		this.oneoff = oneoff;
 	}
 
-	public boolean isPublic() {
-		return isPublic;
+	public boolean isPublicc() {
+		return publicc;
 	}
 
-	public void setPublic(boolean isPublic) {
-		this.isPublic = isPublic;
+	public void setPublicc(boolean publicc) {
+		this.publicc = publicc;
 	}
 
 	public int getInterval() {

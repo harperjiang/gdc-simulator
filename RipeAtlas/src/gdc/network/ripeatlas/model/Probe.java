@@ -21,7 +21,8 @@ public class Probe {
 	@JsonAttribute("is_anchor")
 	private boolean anchor;
 
-	private boolean isPublic;
+	@JsonAttribute("is_public")
+	private boolean publicc;
 
 	private String resourceUri;
 
@@ -93,12 +94,12 @@ public class Probe {
 		this.anchor = anchor;
 	}
 
-	public boolean isPublic() {
-		return isPublic;
+	public boolean isPublicc() {
+		return publicc;
 	}
 
-	public void setPublic(boolean isPublic) {
-		this.isPublic = isPublic;
+	public void setPublicc(boolean publicc) {
+		this.publicc = publicc;
 	}
 
 	public String getResourceUri() {

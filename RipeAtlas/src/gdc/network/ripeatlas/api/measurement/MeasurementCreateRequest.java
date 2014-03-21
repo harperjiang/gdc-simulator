@@ -62,8 +62,7 @@ public class MeasurementCreateRequest extends
 	@Override
 	protected MeasurementCreateResponse buildResponse(HttpResponse response)
 			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return new MeasurementCreateResponse(response);
 	}
 
 	private MeasurementCreate measurement;

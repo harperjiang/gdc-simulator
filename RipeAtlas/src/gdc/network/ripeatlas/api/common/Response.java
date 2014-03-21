@@ -7,21 +7,42 @@ import java.text.MessageFormat;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public abstract class Response<T extends Object> {
+
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+
+	private ResponseError error;
 
 	protected Response(HttpResponse response) throws IOException {
 		super();
 		this.statusCode = response.getStatusLine().getStatusCode();
 
-		if (statusCode == HttpStatus.SC_OK) {
+		if (statusCode >= HttpStatus.SC_OK
+				&& statusCode < HttpStatus.SC_MULTIPLE_CHOICES) {
 			result = buildResult(response.getEntity().getContent());
 		} else {
-			throw new IllegalStateException(MessageFormat.format(
-					"{0} Http Exception", statusCode));
+			logger.warn(MessageFormat.format("{0} Http Exception", statusCode));
+			result = null;
+			error = buildError(response.getEntity().getContent());
 		}
+	}
+
+	private ResponseError buildError(InputStream content) {
+		JsonObject json = Environment.getEnvironment().getReader()
+				.parse(new InputStreamReader(content)).getAsJsonObject()
+				.get("error").getAsJsonObject();
+		ResponseError error = new ResponseError();
+		error.setCode(json.get("code").getAsInt());
+		error.setMessage(json.get("message").getAsString());
+		logger.warn("Error code:" + error.getCode());
+		logger.warn("Error message:" + error.getMessage());
+		return error;
 	}
 
 	protected T buildResult(InputStream content) {
@@ -50,6 +71,14 @@ public abstract class Response<T extends Object> {
 
 	public T getResult() {
 		return result;
+	}
+
+	public ResponseError getError() {
+		return error;
+	}
+
+	public void setError(ResponseError error) {
+		this.error = error;
 	}
 
 }

@@ -32,7 +32,8 @@ public class MeasurementResultDeserializer implements
 		mresult.setProbeId(jsonObject.get("prb_id").getAsInt());
 		mresult.setProtocol(jsonObject.get("proto").getAsString());
 		mresult.setSize(jsonObject.get("size").getAsInt());
-		mresult.setTimestamp(new Date(jsonObject.get("timestamp").getAsLong()));
+		mresult.setTimestamp(new Date(
+				jsonObject.get("timestamp").getAsLong() * 1000));
 
 		String type = jsonObject.get("type").getAsString();
 		mresult.setType(type);

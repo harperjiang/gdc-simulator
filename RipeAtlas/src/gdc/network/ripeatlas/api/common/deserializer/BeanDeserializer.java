@@ -45,7 +45,8 @@ public class BeanDeserializer<T> implements JsonDeserializer<T> {
 						attrName = translate(desc.getName());
 					}
 					JsonElement value = object.get(attrName);
-					if (value != null && !value.isJsonNull()) {
+					if (value != null && !value.isJsonNull()
+							&& !value.isJsonObject()) {
 						if (desc.getPropertyType() == Integer.class
 								|| desc.getPropertyType() == Integer.TYPE) {
 							desc.getWriteMethod().invoke(instance,

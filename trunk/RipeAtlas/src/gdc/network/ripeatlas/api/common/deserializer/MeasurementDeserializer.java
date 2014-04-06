@@ -17,6 +17,8 @@ public class MeasurementDeserializer extends BeanDeserializer<Measurement> {
 		JsonObject object = json.getAsJsonObject();
 		measurement.setType(((JsonObject) object.get("type")).get("name")
 				.getAsString());
+		measurement.setStatus(object.get("status").getAsJsonObject().get("id")
+				.getAsInt());
 		// measurement.setProbeSources(probeSources);
 
 		return measurement;

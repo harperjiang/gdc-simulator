@@ -158,4 +158,9 @@ public class Probe {
 		this.longitude = longitude;
 	}
 
+	public String getStatusText() {
+		if (getStatus() < 0 || getStatus() >= ProbeStatus.values().length)
+			return null;
+		return ProbeStatus.values()[getStatus()].name();
+	}
 }

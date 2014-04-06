@@ -5,6 +5,17 @@ import gdc.network.ripeatlas.api.common.deserializer.JsonAttribute;
 import java.util.Date;
 
 public class Measurement {
+	
+	public static interface Status {
+		int Specified = 0;
+		int Scheduled = 1;
+		int Ongoing = 2;
+		int Stopped = 4;
+		int Forced_to_stop = 5;
+		int No_suitable_probes = 6;
+		int Failed = 7;
+		int Archived = 8;
+	}
 
 	@JsonAttribute("msm_id")
 	private int id;
@@ -34,6 +45,8 @@ public class Measurement {
 	private int dstAsn;
 
 	private String dstName;
+
+	private int status;
 
 	private Probe[] probeSources;
 
@@ -139,6 +152,14 @@ public class Measurement {
 
 	public void setDstName(String dstName) {
 		this.dstName = dstName;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public Probe[] getProbeSources() {

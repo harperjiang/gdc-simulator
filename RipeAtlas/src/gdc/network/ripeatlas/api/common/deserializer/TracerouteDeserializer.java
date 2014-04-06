@@ -28,9 +28,16 @@ public class TracerouteDeserializer implements JsonDeserializer<Output> {
 		tr.setHop(elemjson.get("hop").getAsInt());
 		for (JsonElement sr : elemjson.get("result").getAsJsonArray()) {
 			JsonObject sro = sr.getAsJsonObject();
-			TracerouteData data = new TracerouteData();
-			if (sro.get("x") == null) {// If nothing is returned, the result
-										// will be like "x":"*"
+			if (sro.get("error") != null) {
+				// Error output, just ignore
+
+			} else if (sro.get("x") == null && sro.get("late") == null
+					&& sro.get("ittl") == null) {
+				TracerouteData data = new TracerouteData();
+				/*
+				 * If nothing is returned, the result will be like "x":"*". Some
+				 * strange result including "late"/"ittl" will also be ignored.
+				 */
 				data.setFrom(sro.get("from").getAsString());
 				data.setRoundTripTime(sro.get("rtt").getAsDouble());
 				data.setSize(sro.get("size").getAsInt());

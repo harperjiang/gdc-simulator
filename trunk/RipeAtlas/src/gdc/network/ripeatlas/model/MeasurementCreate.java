@@ -2,68 +2,57 @@ package gdc.network.ripeatlas.model;
 
 import gdc.network.ripeatlas.api.common.deserializer.JsonAttribute;
 
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MeasurementCreate {
 
-	private String description;
+	private Date startTime;
 
-	private int af = 4;
+	private Date stopTime;
 
-	private String type;
+	@JsonAttribute("definitions")
+	private List<MeasurementTarget> targets;
 
-	private boolean resolveOnProbe;
+	private List<ProbeSpec> probes;
 
-	@JsonAttribute("is_oneoff")
-	private boolean oneoff;
-
-	@JsonAttribute("is_public")
-	private boolean publicc;
-
-	public String getDescription() {
-		return description;
+	public MeasurementCreate() {
+		super();
+		targets = new ArrayList<MeasurementTarget>();
+		probes = new ArrayList<ProbeSpec>();
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public List<MeasurementTarget> getTargets() {
+		return targets;
 	}
 
-	public int getAf() {
-		return af;
+	public List<ProbeSpec> getProbes() {
+		return probes;
 	}
 
-	public void setAf(int af) {
-		this.af = af;
+	public Date getStartTime() {
+		return startTime;
 	}
 
-	public String getType() {
-		return type;
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public Date getStopTime() {
+		return stopTime;
 	}
 
-	public boolean isResolveOnProbe() {
-		return resolveOnProbe;
+	public void setStopTime(Date stopTime) {
+		this.stopTime = stopTime;
 	}
 
-	public void setResolveOnProbe(boolean resolveOnProbe) {
-		this.resolveOnProbe = resolveOnProbe;
+	public void setTargets(List<MeasurementTarget> targets) {
+		this.targets = targets;
 	}
 
-	public boolean isOneoff() {
-		return oneoff;
-	}
-
-	public void setOneoff(boolean oneoff) {
-		this.oneoff = oneoff;
-	}
-
-	public boolean isPublicc() {
-		return publicc;
-	}
-
-	public void setPublicc(boolean publicc) {
-		this.publicc = publicc;
+	public void setProbes(List<ProbeSpec> probes) {
+		this.probes = probes;
 	}
 
 }

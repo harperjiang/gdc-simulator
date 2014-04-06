@@ -1,7 +1,6 @@
 package gdc.network.ripeatlas.api.measurement;
 
 import gdc.network.ripeatlas.model.MeasurementCreate;
-import gdc.network.ripeatlas.model.ProbeSpec;
 
 public class MeasurementService {
 
@@ -21,12 +20,9 @@ public class MeasurementService {
 		return mrr;
 	}
 
-	public MeasurementCreateRequest create(MeasurementCreate m,
-			ProbeSpec... probes) {
+	public MeasurementCreateRequest create(MeasurementCreate m) {
 		MeasurementCreateRequest mcr = new MeasurementCreateRequest();
 		mcr.setMeasurement(m);
-		for (ProbeSpec probe : probes)
-			mcr.getProbes().add(probe);
 		return mcr;
 	}
 }

@@ -1,8 +1,8 @@
 package gdc.network.ripeatlas.model;
 
-public class TracerouteCreate extends MeasurementCreate {
+public class TracerouteTarget extends MeasurementTarget {
 
-	public TracerouteCreate() {
+	public TracerouteTarget() {
 		super();
 		setType("traceroute");
 	}

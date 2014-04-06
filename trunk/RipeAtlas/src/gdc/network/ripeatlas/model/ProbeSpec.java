@@ -24,7 +24,7 @@ public class ProbeSpec {
 
 	private String type;
 
-	private String value;
+	private Object value;
 
 	public int getRequested() {
 		return requested;
@@ -42,11 +42,11 @@ public class ProbeSpec {
 		this.type = type;
 	}
 
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 

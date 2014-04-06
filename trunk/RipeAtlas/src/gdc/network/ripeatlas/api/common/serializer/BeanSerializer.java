@@ -8,6 +8,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,22 +49,26 @@ public class BeanSerializer<T> implements JsonSerializer<T> {
 					Object value = desc.getReadMethod().invoke(src,
 							(Object[]) null);
 					if (value != null) {
-						if (desc.getPropertyType() == Integer.class
+						if (value.getClass().isArray()
+								|| value instanceof Collection) {
+							object.add(attrName, parser.toJsonTree(value));
+						} else if (value instanceof Integer
 								|| desc.getPropertyType() == Integer.TYPE) {
 							object.add(attrName, parser.toJsonTree(value));
-						} else if (desc.getPropertyType() == String.class) {
+						} else if (value instanceof String) {
 							object.add(attrName, parser.toJsonTree(value));
-						} else if (desc.getPropertyType() == Date.class) {
+						} else if (value instanceof Date) {
 							long val = ((Date) value).getTime() / 1000;
 							object.add(attrName, new JsonPrimitive(val));
-						} else if (desc.getPropertyType() == Double.class
+						} else if (value instanceof Double
 								|| desc.getPropertyType() == Double.TYPE) {
 							object.add(attrName, parser.toJsonTree(value));
-						} else if (desc.getPropertyType() == Boolean.class
+						} else if (value instanceof Boolean
 								|| desc.getPropertyType() == Boolean.TYPE) {
 							object.add(attrName, parser.toJsonTree(value));
 						} else {
 							throw new RuntimeException("Unsupported type:"
+									+ desc.getName() + ":"
 									+ desc.getPropertyType().toString());
 						}
 					}

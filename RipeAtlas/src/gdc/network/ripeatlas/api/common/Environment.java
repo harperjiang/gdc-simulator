@@ -9,8 +9,9 @@ import gdc.network.ripeatlas.model.Measurement;
 import gdc.network.ripeatlas.model.MeasurementCreate;
 import gdc.network.ripeatlas.model.MeasurementResult;
 import gdc.network.ripeatlas.model.Probe;
-import gdc.network.ripeatlas.model.TracerouteCreate;
+import gdc.network.ripeatlas.model.ProbeSpec;
 import gdc.network.ripeatlas.model.TracerouteOutput;
+import gdc.network.ripeatlas.model.TracerouteTarget;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -35,8 +36,12 @@ public class Environment {
 				new MeasurementDeserializer());
 		builder.registerTypeAdapter(Probe.class, new BeanDeserializer<Probe>());
 
-		builder.registerTypeAdapter(TracerouteCreate.class,
+		builder.registerTypeAdapter(MeasurementCreate.class,
 				new BeanSerializer<MeasurementCreate>());
+		builder.registerTypeAdapter(TracerouteTarget.class,
+				new BeanSerializer<TracerouteTarget>());
+		builder.registerTypeAdapter(ProbeSpec.class,
+				new BeanSerializer<ProbeSpec>());
 
 		parser = builder.create();
 		reader = new JsonParser();

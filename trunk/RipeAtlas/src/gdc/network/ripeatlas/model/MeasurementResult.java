@@ -10,6 +10,8 @@ public class MeasurementResult {
 
 	private String dstName;
 
+	private String from;
+
 	private int measurementId;
 
 	private String protocol;
@@ -126,4 +128,13 @@ public class MeasurementResult {
 	public List<Output> getOutputs() {
 		return outputs;
 	}
+
+	public String getFrom() {
+		return from;
+	}
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
 }

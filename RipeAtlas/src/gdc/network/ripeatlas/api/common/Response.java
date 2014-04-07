@@ -29,11 +29,17 @@ public abstract class Response<T extends Object> {
 		} else {
 			logger.warn(MessageFormat.format("{0} Http Exception", statusCode));
 			result = null;
-			error = buildError(response.getEntity().getContent());
+			try {
+				error = buildError(response.getEntity().getContent());
+			} catch (Exception e) {
+				error = new ResponseError();
+				error.setCode(statusCode);
+			}
 		}
 	}
 
 	private ResponseError buildError(InputStream content) {
+
 		JsonObject json = Environment.getEnvironment().getReader()
 				.parse(new InputStreamReader(content)).getAsJsonObject()
 				.get("error").getAsJsonObject();
@@ -43,6 +49,7 @@ public abstract class Response<T extends Object> {
 		logger.warn("Error code:" + error.getCode());
 		logger.warn("Error message:" + error.getMessage());
 		return error;
+
 	}
 
 	protected T buildResult(InputStream content) {

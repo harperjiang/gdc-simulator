@@ -23,9 +23,12 @@ public class MeasurementGetRequest extends Request<MeasurementGetResponse> {
 	protected HttpUriRequest buildRequest() {
 		Validate.isTrue(!StringUtils.isEmpty(measurementId),
 				"Measurement Id cannot be empty");
-
-		HttpGet get = new HttpGet(MessageFormat.format("{0}{1}", getUrl(),
-				measurementId));
+		String url = MessageFormat.format("{0}{1}/?key={2}", getUrl(),
+				measurementId, Configuration.KEY_GET_M);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Getting measurement:" + url);
+		}
+		HttpGet get = new HttpGet(url);
 		return get;
 	}
 

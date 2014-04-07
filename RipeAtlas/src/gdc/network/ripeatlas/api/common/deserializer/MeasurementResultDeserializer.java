@@ -28,6 +28,7 @@ public class MeasurementResultDeserializer implements
 		// mresult.setDstAddr(jsonObject.get("dst_addr").getAsString());
 		mresult.setDstName(jsonObject.get("dst_name").getAsString());
 		mresult.setEndTime(new Date(jsonObject.get("endtime").getAsLong()));
+		mresult.setFrom(jsonObject.get("from").getAsString());
 		mresult.setFw(jsonObject.get("fw").getAsInt());
 		mresult.setMeasurementId(jsonObject.get("msm_id").getAsInt());
 		mresult.setProbeId(jsonObject.get("prb_id").getAsInt());

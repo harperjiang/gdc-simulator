@@ -17,7 +17,7 @@ public class GetMeasurementResult {
 		Service service = new Service();
 
 		List<MeasurementResult> results = service.measurements()
-				.result("1592553").execute().getResult();
+				.result("1613913").execute().getResult();
 		long start = 0;
 		for (MeasurementResult result : results) {
 			Output o = result.getOutputs().get(result.getOutputs().size() - 1);

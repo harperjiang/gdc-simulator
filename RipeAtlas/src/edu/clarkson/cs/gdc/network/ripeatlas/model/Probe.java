@@ -1,6 +1,6 @@
 package edu.clarkson.cs.gdc.network.ripeatlas.model;
 
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.deserializer.JsonAttribute;
+import edu.clarkson.cs.gdc.network.common.deserializer.JsonAttribute;
 
 import java.util.Date;
 

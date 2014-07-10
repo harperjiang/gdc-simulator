@@ -1,7 +1,7 @@
 package edu.clarkson.cs.gdc.network.ripeatlas.api.measurement;
 
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.Environment;
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.Response;
+import edu.clarkson.cs.gdc.network.common.Environment;
+import edu.clarkson.cs.gdc.network.common.Response;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.Measurement;
 
 import java.io.IOException;

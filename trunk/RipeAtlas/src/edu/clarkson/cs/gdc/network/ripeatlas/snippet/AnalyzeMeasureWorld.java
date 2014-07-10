@@ -1,8 +1,8 @@
 package edu.clarkson.cs.gdc.network.ripeatlas.snippet;
 
-import edu.clarkson.cs.gdc.network.ripeatlas.api.Service;
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.Request;
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.Response;
+import edu.clarkson.cs.gdc.network.Service;
+import edu.clarkson.cs.gdc.network.common.Request;
+import edu.clarkson.cs.gdc.network.common.Response;
 import edu.clarkson.cs.gdc.network.ripeatlas.api.measurement.MeasurementGetResponse;
 import edu.clarkson.cs.gdc.network.ripeatlas.api.measurement.MeasurementResultResponse;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.Measurement;

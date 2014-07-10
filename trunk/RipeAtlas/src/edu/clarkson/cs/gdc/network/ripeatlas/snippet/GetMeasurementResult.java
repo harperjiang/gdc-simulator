@@ -1,6 +1,6 @@
 package edu.clarkson.cs.gdc.network.ripeatlas.snippet;
 
-import edu.clarkson.cs.gdc.network.ripeatlas.api.Service;
+import edu.clarkson.cs.gdc.network.Service;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementResult;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.Output;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.TracerouteOutput;

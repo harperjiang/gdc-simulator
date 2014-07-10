@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.apache.http.HttpResponse;
 
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.Response;
+import edu.clarkson.cs.gdc.network.common.Response;
 
 import com.google.gson.JsonElement;
 

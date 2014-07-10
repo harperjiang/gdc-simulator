@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ripeatlas.api.common.deserializer;
+package edu.clarkson.cs.gdc.network.common.deserializer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

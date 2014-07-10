@@ -1,6 +1,6 @@
-package edu.clarkson.cs.gdc.network.ripeatlas.api.common.deserializer;
+package edu.clarkson.cs.gdc.network.common.deserializer;
 
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.MeasurementType;
+import edu.clarkson.cs.gdc.network.common.MeasurementType;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementResult;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.Output;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.TracerouteOutput;

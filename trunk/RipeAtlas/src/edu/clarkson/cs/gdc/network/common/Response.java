@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ripeatlas.api.common;
+package edu.clarkson.cs.gdc.network.common;
 
 import java.io.IOException;
 import java.io.InputStream;

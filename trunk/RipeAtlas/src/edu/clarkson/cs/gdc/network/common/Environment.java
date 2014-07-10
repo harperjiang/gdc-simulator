@@ -1,10 +1,10 @@
-package edu.clarkson.cs.gdc.network.ripeatlas.api.common;
+package edu.clarkson.cs.gdc.network.common;
 
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.deserializer.BeanDeserializer;
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.deserializer.MeasurementDeserializer;
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.deserializer.MeasurementResultDeserializer;
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.deserializer.TracerouteDeserializer;
-import edu.clarkson.cs.gdc.network.ripeatlas.api.common.serializer.BeanSerializer;
+import edu.clarkson.cs.gdc.network.common.deserializer.BeanDeserializer;
+import edu.clarkson.cs.gdc.network.common.deserializer.MeasurementDeserializer;
+import edu.clarkson.cs.gdc.network.common.deserializer.MeasurementResultDeserializer;
+import edu.clarkson.cs.gdc.network.common.deserializer.TracerouteDeserializer;
+import edu.clarkson.cs.gdc.network.common.serializer.BeanSerializer;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.Measurement;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementCreate;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementResult;

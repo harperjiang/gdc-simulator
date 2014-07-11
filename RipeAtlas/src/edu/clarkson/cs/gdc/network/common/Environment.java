@@ -1,5 +1,8 @@
 package edu.clarkson.cs.gdc.network.common;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
 
@@ -25,8 +28,10 @@ public class Environment {
 
 	private Environment() {
 		super();
+		// Create HTTP Client
 		httpClient = HttpClients.createDefault();
 
+		// Create JSON Parser
 		GsonBuilder builder = new GsonBuilder();
 
 		// Serializer/Deserializers for RipeAtlas
@@ -45,10 +50,15 @@ public class Environment {
 				new BeanSerializer<ProbeSpec>());
 
 		// Serializers/Deserializers for IPAddress
-		builder.registerTypeAdapter(IPInfo.class, new BeanDeserializer<IPInfo>());
-		
+		builder.registerTypeAdapter(IPInfo.class,
+				new BeanDeserializer<IPInfo>());
+
 		parser = builder.create();
 		reader = new JsonParser();
+
+		// Prepare JPA environment
+		em = Persistence.createEntityManagerFactory("network")
+				.createEntityManager();
 	}
 
 	private static Environment instance;
@@ -66,6 +76,8 @@ public class Environment {
 
 	private JsonParser reader;
 
+	private EntityManager em;
+
 	public HttpClient getHttpClient() {
 		return httpClient;
 	}
@@ -76,5 +88,9 @@ public class Environment {
 
 	public JsonParser getReader() {
 		return reader;
+	}
+
+	public EntityManager getEntityManager() {
+		return em;
 	}
 }

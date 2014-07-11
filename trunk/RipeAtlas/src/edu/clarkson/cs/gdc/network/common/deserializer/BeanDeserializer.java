@@ -1,11 +1,10 @@
 package edu.clarkson.cs.gdc.network.common.deserializer;
 
-import edu.clarkson.cs.gdc.network.common.ReflectUtils;
-
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +16,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+
+import edu.clarkson.cs.gdc.network.common.ReflectUtils;
 
 public class BeanDeserializer<T> implements JsonDeserializer<T> {
 
@@ -64,6 +65,9 @@ public class BeanDeserializer<T> implements JsonDeserializer<T> {
 								|| desc.getPropertyType() == Boolean.TYPE) {
 							desc.getWriteMethod().invoke(instance,
 									value.getAsBoolean());
+						} else if (desc.getPropertyType() == BigDecimal.class) {
+							desc.getWriteMethod().invoke(instance,
+									value.getAsBigDecimal());
 						} else {
 							throw new RuntimeException("Unsupported type:"
 									+ desc.getPropertyType().toString());

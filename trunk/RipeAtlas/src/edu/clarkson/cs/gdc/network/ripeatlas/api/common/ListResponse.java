@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.common;
+package edu.clarkson.cs.gdc.network.ripeatlas.api.common;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.apache.http.HttpResponse;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public abstract class ListResponse<T> extends Response<T> {
+public abstract class ListResponse<T> extends RipeAtlasResponse<T> {
 
 	private int count;
 

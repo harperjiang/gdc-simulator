@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import org.apache.http.HttpResponse;
 
-import edu.clarkson.cs.gdc.network.common.Response;
-
 import com.google.gson.JsonElement;
 
-public class MeasurementCreateResponse extends Response<Integer> {
+import edu.clarkson.cs.gdc.network.ripeatlas.api.common.RipeAtlasResponse;
+
+public class MeasurementCreateResponse extends RipeAtlasResponse<Integer> {
 
 	protected MeasurementCreateResponse(HttpResponse response)
 			throws IOException {

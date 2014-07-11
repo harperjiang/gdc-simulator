@@ -1,9 +1,5 @@
 package edu.clarkson.cs.gdc.network.ripeatlas.api.measurement;
 
-import edu.clarkson.cs.gdc.network.common.Environment;
-import edu.clarkson.cs.gdc.network.common.Response;
-import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementResult;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +8,12 @@ import org.apache.http.HttpResponse;
 
 import com.google.gson.JsonElement;
 
+import edu.clarkson.cs.gdc.network.common.Environment;
+import edu.clarkson.cs.gdc.network.ripeatlas.api.common.RipeAtlasResponse;
+import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementResult;
+
 public class MeasurementResultResponse extends
-		Response<List<MeasurementResult>> {
+		RipeAtlasResponse<List<MeasurementResult>> {
 
 	protected MeasurementResultResponse(HttpResponse response)
 			throws IOException {

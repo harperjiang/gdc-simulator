@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 public abstract class Response<T extends Object> {
 
@@ -30,7 +29,8 @@ public abstract class Response<T extends Object> {
 			logger.warn(MessageFormat.format("{0} Http Exception", statusCode));
 			result = null;
 			try {
-				error = buildError(response.getEntity().getContent());
+				error = buildError(statusCode, response.getEntity()
+						.getContent());
 			} catch (Exception e) {
 				error = new ResponseError();
 				error.setCode(statusCode);
@@ -38,19 +38,8 @@ public abstract class Response<T extends Object> {
 		}
 	}
 
-	private ResponseError buildError(InputStream content) {
-
-		JsonObject json = Environment.getEnvironment().getReader()
-				.parse(new InputStreamReader(content)).getAsJsonObject()
-				.get("error").getAsJsonObject();
-		ResponseError error = new ResponseError();
-		error.setCode(json.get("code").getAsInt());
-		error.setMessage(json.get("message").getAsString());
-		logger.warn("Error code:" + error.getCode());
-		logger.warn("Error message:" + error.getMessage());
-		return error;
-
-	}
+	protected abstract ResponseError buildError(int errorCode,
+			InputStream content);
 
 	protected T buildResult(InputStream content) {
 		JsonElement json = Environment.getEnvironment().getReader()

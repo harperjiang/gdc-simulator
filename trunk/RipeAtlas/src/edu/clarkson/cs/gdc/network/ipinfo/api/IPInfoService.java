@@ -2,13 +2,6 @@ package edu.clarkson.cs.gdc.network.ipinfo.api;
 
 import java.nio.charset.Charset;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import org.eclipse.persistence.queries.ScrollableCursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +9,13 @@ import org.slf4j.LoggerFactory;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 
-import edu.clarkson.cs.gdc.network.common.Environment;
 import edu.clarkson.cs.gdc.network.ipinfo.model.IPInfo;
 
 public class IPInfoService {
 
 	private BloomFilter<CharSequence> filter;
+
+	private IPInfoDao ipInfoDao;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -30,15 +24,13 @@ public class IPInfoService {
 	public IPInfoService() {
 		super();
 
+		ipInfoDao = new IPInfoDao();
+
 		// Initalize Bloom Filter
 		filter = BloomFilter.create(
 				Funnels.stringFunnel(Charset.forName("utf8")), 100000, 0.001);
 		// Fill in bloom filter
-		EntityManager em = Environment.getEnvironment().getEntityManager();
-		ScrollableCursor cursor = (ScrollableCursor) em
-				.createQuery("select i from IPInfo i")
-				.setHint("eclipselink.cursor.scrollable", true)
-				.getSingleResult();
+		ScrollableCursor cursor = ipInfoDao.all();
 
 		while (cursor.hasMoreElements()) {
 			IPInfo info = (IPInfo) cursor.next();
@@ -57,18 +49,10 @@ public class IPInfoService {
 	}
 
 	public IPInfo getInfo(String ip) {
-		EntityManager em = Environment.getEnvironment().getEntityManager();
 		if (filter.mightContain(ip)) {
-			CriteriaBuilder builder = em.getCriteriaBuilder();
-			CriteriaQuery<IPInfo> cquery = builder.createQuery(IPInfo.class);
-			Root<IPInfo> root = cquery.from(IPInfo.class);
-			cquery.where(builder.equal(root.get("ip"), ip));
-			try {
-				IPInfo info = em.createQuery(cquery).getSingleResult();
+			IPInfo info = ipInfoDao.find(ip);
+			if (info != null)
 				return info;
-			} catch (NoResultException e) {
-				// Eat this exception and go on to request the data
-			}
 		}
 
 		try {
@@ -84,12 +68,7 @@ public class IPInfoService {
 			capChecker.requested();
 			if (info != null) {
 				filter.put(info.getIp());
-
-				EntityTransaction transaction = em.getTransaction();
-				// Insert this item
-				transaction.begin();
-				em.persist(info);
-				transaction.commit();
+				ipInfoDao.save(info);
 			}
 			return info;
 		} catch (Exception e) {

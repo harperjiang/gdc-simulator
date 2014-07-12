@@ -38,7 +38,7 @@ public class TracerouteDeserializer implements JsonDeserializer<Output> {
 				 * strange result including "late"/"ittl" will also be ignored.
 				 */
 				data.setFrom(sro.get("from").getAsString());
-				data.setRoundTripTime(sro.get("rtt").getAsDouble());
+				data.setRoundTripTime(sro.get("rtt").getAsBigDecimal());
 				data.setSize(sro.get("size").getAsInt());
 				data.setTimeToLive(sro.get("ttl").getAsInt());
 				tr.getData().add(data);

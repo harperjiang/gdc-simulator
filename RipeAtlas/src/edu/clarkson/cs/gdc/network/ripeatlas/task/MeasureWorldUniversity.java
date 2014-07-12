@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ripeatlas.snippet;
+package edu.clarkson.cs.gdc.network.ripeatlas.task;
 
 import edu.clarkson.cs.gdc.network.Service;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementCreate;

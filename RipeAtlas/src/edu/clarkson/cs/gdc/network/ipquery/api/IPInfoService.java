@@ -1,7 +1,6 @@
 package edu.clarkson.cs.gdc.network.ipquery.api;
 
 import java.nio.charset.Charset;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -26,6 +25,8 @@ public class IPInfoService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
+	private CapChecker capChecker;
+
 	public IPInfoService() {
 		super();
 
@@ -38,13 +39,15 @@ public class IPInfoService {
 				.createQuery("select i from IPInfo i")
 				.setHint("eclipselink.cursor.scrollable", true)
 				.getSingleResult();
-		while(cursor.hasMoreElements()) {
-			List<Object> infos = cursor.next(1000);
-			for(Object i : infos) {
-				IPInfo info = (IPInfo)i;
-				filter.put(info.getIp());
-			}
+
+		while (cursor.hasMoreElements()) {
+			IPInfo info = (IPInfo) cursor.next();
+			filter.put(info.getIp());
 		}
+
+		capChecker = new CapChecker();
+		capChecker.addDailyCap(REQ_DAILY);
+		capChecker.addMinuteCap(REQ_PER_MIN);
 	}
 
 	public QueryIPInfoRequest queryip(String ip) {
@@ -69,7 +72,16 @@ public class IPInfoService {
 		}
 
 		try {
+			// Query remote info, check time constraint
+			while (!capChecker.couldRequest()) {
+				try {
+					Thread.sleep(capChecker.available());
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}
 			IPInfo info = queryip(ip).execute().getResult();
+			capChecker.requested();
 			if (info != null) {
 				filter.put(info.getIp());
 
@@ -84,6 +96,9 @@ public class IPInfoService {
 			logger.error("Exception when requesting ip info", e);
 			return null;
 		}
-
 	}
+
+	private static final int REQ_PER_MIN = 300;
+
+	private static final int REQ_DAILY = 100000;
 }

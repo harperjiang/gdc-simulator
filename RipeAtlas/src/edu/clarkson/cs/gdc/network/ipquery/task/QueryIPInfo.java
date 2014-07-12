@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ipquery.snippet;
+package edu.clarkson.cs.gdc.network.ipquery.task;
 
 import edu.clarkson.cs.gdc.network.Service;
 import edu.clarkson.cs.gdc.network.ipquery.api.QueryIPInfoResponse;

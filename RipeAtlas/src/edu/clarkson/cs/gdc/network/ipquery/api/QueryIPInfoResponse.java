@@ -23,11 +23,22 @@ public class QueryIPInfoResponse extends Response<IPInfo> {
 	@Override
 	protected IPInfo buildResult(JsonElement json) {
 		JsonObject object = json.getAsJsonObject();
-		JsonElement geoData = object.get("geolocation_data");
-		IPInfo info = Environment.getEnvironment().getParser()
-				.fromJson(geoData, IPInfo.class);
-		info.setIp(object.get("ip_address").getAsString());
-		return info;
+		JsonObject queryStatus = object.get("query_status").getAsJsonObject();
+		if ("OK".equals(queryStatus.get("query_status_code").getAsString())) {
+			JsonElement geoData = object.get("geolocation_data");
+			IPInfo info = Environment.getEnvironment().getParser()
+					.fromJson(geoData, IPInfo.class);
+			info.setIp(object.get("ip_address").getAsString());
+			return info;
+		} else {
+			error = new ResponseError();
+			error.setCode(queryStatus.get("query_status_code").getAsString());
+			error.setMessage(queryStatus.get("query_status_description")
+					.getAsString());
+			logger.warn("Error code:" + error.getCode());
+			logger.warn("Error message:" + error.getMessage());
+			return null;
+		}
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import edu.clarkson.cs.gdc.network.common.deserializer.MeasurementDeserializer;
 import edu.clarkson.cs.gdc.network.common.deserializer.MeasurementResultDeserializer;
 import edu.clarkson.cs.gdc.network.common.deserializer.TracerouteDeserializer;
 import edu.clarkson.cs.gdc.network.common.serializer.BeanSerializer;
-import edu.clarkson.cs.gdc.network.ipquery.model.IPInfo;
+import edu.clarkson.cs.gdc.network.ipinfo.model.IPInfo;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.Measurement;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementCreate;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementResult;

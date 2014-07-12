@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ipquery.api;
+package edu.clarkson.cs.gdc.network.ipinfo.api;
 
 import java.nio.charset.Charset;
 
@@ -17,7 +17,7 @@ import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 
 import edu.clarkson.cs.gdc.network.common.Environment;
-import edu.clarkson.cs.gdc.network.ipquery.model.IPInfo;
+import edu.clarkson.cs.gdc.network.ipinfo.model.IPInfo;
 
 public class IPInfoService {
 

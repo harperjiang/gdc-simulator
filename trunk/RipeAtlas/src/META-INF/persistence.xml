@@ -4,8 +4,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="network"
 		transaction-type="RESOURCE_LOCAL">
-		<class>edu.clarkson.cs.gdc.network.ipquery.model.IPInfo</class>
+		<class>edu.clarkson.cs.gdc.network.ipinfo.model.IPInfo</class>
 		<class>edu.clarkson.cs.gdc.network.tracedata.model.TraceData</class>
+		<class>edu.clarkson.cs.gdc.network.ipinfo.model.RingNode</class>
 		<properties>
 			<property name="eclipselink.target-database" value="MySQL" />
 			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />

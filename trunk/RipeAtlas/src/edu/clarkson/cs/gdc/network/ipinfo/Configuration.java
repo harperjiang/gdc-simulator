@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ipquery;
+package edu.clarkson.cs.gdc.network.ipinfo;
 
 public class Configuration {
 

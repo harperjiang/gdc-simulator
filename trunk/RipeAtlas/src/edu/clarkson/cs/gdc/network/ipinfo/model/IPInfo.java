@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ipquery.model;
+package edu.clarkson.cs.gdc.network.ipinfo.model;
 
 import java.math.BigDecimal;
 

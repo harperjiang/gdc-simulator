@@ -1,6 +1,6 @@
 package edu.clarkson.cs.gdc.network;
 
-import edu.clarkson.cs.gdc.network.ipquery.api.IPInfoService;
+import edu.clarkson.cs.gdc.network.ipinfo.api.IPInfoService;
 import edu.clarkson.cs.gdc.network.ripeatlas.api.measurement.MeasurementService;
 import edu.clarkson.cs.gdc.network.ripeatlas.api.probe.ProbeService;
 

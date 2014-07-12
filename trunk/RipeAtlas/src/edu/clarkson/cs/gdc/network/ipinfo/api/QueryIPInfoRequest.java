@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ipquery.api;
+package edu.clarkson.cs.gdc.network.ipinfo.api;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicNameValuePair;
 
 import edu.clarkson.cs.gdc.network.common.Request;
-import edu.clarkson.cs.gdc.network.ipquery.Configuration;
-import edu.clarkson.cs.gdc.network.ipquery.Constants;
+import edu.clarkson.cs.gdc.network.ipinfo.Configuration;
+import edu.clarkson.cs.gdc.network.ipinfo.Constants;
 
 public class QueryIPInfoRequest extends Request<QueryIPInfoResponse> {
 

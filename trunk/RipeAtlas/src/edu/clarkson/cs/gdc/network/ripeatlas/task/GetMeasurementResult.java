@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ripeatlas.snippet;
+package edu.clarkson.cs.gdc.network.ripeatlas.task;
 
 import edu.clarkson.cs.gdc.network.Service;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementResult;
@@ -27,8 +27,9 @@ public class GetMeasurementResult {
 					BigDecimal value = BigDecimal.ZERO;
 
 					for (TracerouteData data : output.getData()) {
-						value = value.add(new BigDecimal(data
-								.getRoundTripTime() / 2));
+						value = value.add(data.getRoundTripTime().divide(
+								new BigDecimal("2"), 4,
+								BigDecimal.ROUND_HALF_UP));
 					}
 					value = value.divide(
 							new BigDecimal(output.getData().size()), 5,
@@ -41,8 +42,8 @@ public class GetMeasurementResult {
 						time = time - start;
 					}
 					System.out.println(MessageFormat.format(
-							"{0}\t{1,number,.00000}", String.valueOf(time/1000),
-							value));
+							"{0}\t{1,number,.0000}",
+							String.valueOf(time / 1000), value));
 				}
 			}
 		}

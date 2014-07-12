@@ -5,6 +5,7 @@
 	<persistence-unit name="network"
 		transaction-type="RESOURCE_LOCAL">
 		<class>edu.clarkson.cs.gdc.network.ipquery.model.IPInfo</class>
+		<class>edu.clarkson.cs.gdc.network.tracedata.model.TraceData</class>
 		<properties>
 			<property name="eclipselink.target-database" value="MySQL" />
 			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />

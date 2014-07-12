@@ -16,7 +16,11 @@ public abstract class Response<T extends Object> {
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
-	private ResponseError error;
+	protected ResponseError error;
+	
+	protected Response() {
+		super();
+	}
 
 	protected Response(HttpResponse response) throws IOException {
 		super();
@@ -53,9 +57,9 @@ public abstract class Response<T extends Object> {
 
 	protected abstract T buildResult(JsonElement json);
 
-	private int statusCode;
+	protected int statusCode;
 
-	private T result;
+	protected T result;
 
 	public int getStatusCode() {
 		return statusCode;

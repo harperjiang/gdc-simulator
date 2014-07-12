@@ -1,5 +1,6 @@
 package edu.clarkson.cs.gdc.network.ripeatlas.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class TracerouteOutput extends Output {
 
 		private String from;
 
-		private Double roundTripTime;
+		private BigDecimal roundTripTime;
 
 		private int size;
 
@@ -48,11 +49,11 @@ public class TracerouteOutput extends Output {
 			this.from = from;
 		}
 
-		public Double getRoundTripTime() {
+		public BigDecimal getRoundTripTime() {
 			return roundTripTime;
 		}
 
-		public void setRoundTripTime(Double roundTripTime) {
+		public void setRoundTripTime(BigDecimal roundTripTime) {
 			this.roundTripTime = roundTripTime;
 		}
 

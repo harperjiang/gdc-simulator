@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ipquery.api;
+package edu.clarkson.cs.gdc.network.ipinfo.api;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 import edu.clarkson.cs.gdc.network.common.Environment;
 import edu.clarkson.cs.gdc.network.common.Response;
 import edu.clarkson.cs.gdc.network.common.ResponseError;
-import edu.clarkson.cs.gdc.network.ipquery.model.IPInfo;
+import edu.clarkson.cs.gdc.network.ipinfo.model.IPInfo;
 
 public class QueryIPInfoResponse extends Response<IPInfo> {
 

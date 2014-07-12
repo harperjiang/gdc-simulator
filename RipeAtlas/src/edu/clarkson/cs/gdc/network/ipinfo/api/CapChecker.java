@@ -1,4 +1,4 @@
-package edu.clarkson.cs.gdc.network.ipquery.api;
+package edu.clarkson.cs.gdc.network.ipinfo.api;
 
 import java.util.ArrayList;
 import java.util.Calendar;

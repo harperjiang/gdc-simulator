@@ -1,6 +1,7 @@
 package edu.clarkson.cs.gdc.network.ipinfo.api;
 
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.eclipse.persistence.queries.ScrollableCursor;
 import org.slf4j.Logger;
@@ -32,9 +33,16 @@ public class IPInfoService {
 		// Fill in bloom filter
 		ScrollableCursor cursor = ipInfoDao.all();
 
-		while (cursor.hasMoreElements()) {
-			IPInfo info = (IPInfo) cursor.next();
-			filter.put(info.getIp());
+		int size = cursor.size();
+		int count = 0;
+		while (count < size) {
+			int page = Math.min(1000, size - count);
+			List<Object> infos = cursor.next(page);
+			for (Object i : infos) {
+				IPInfo info = (IPInfo) i;
+				filter.put(info.getIp());
+			}
+			count += page;
 		}
 
 		capChecker = new CapChecker();

@@ -1,9 +1,6 @@
 package edu.clarkson.cs.gdc.network.ripeatlas.task;
 
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -18,85 +15,68 @@ import edu.clarkson.cs.gdc.network.ripeatlas.model.MeasurementResult;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.Output;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.TracerouteOutput;
 import edu.clarkson.cs.gdc.network.ripeatlas.model.TracerouteOutput.TracerouteData;
+import edu.clarkson.cs.gdc.network.tracedata.api.TraceDataDao;
+import edu.clarkson.cs.gdc.network.tracedata.model.TraceData;
 
 public class AnalyzeMeasureWorld {
 
-	public static class Section {
-
-		String sourceIp;
-
-		String fromIp;
-
-		String toIp;
-
-		BigDecimal rtt;
-
-		BigDecimal rttFromSource;
-	}
-
 	static Service service = new Service();
 
+	static TraceDataDao traceDataDao = new TraceDataDao();
+
 	public static void main(String[] args) throws Exception {
-
-		PrintWriter pw = new PrintWriter(new FileOutputStream(
-				"traceroute_output"));
-
-		for (int i = 1617885; i <= 1617978; i++) {
-			loadMeasurement(i, pw);
+		for (int i = 1696261; i <= 1696294; i++) {
+			loadMeasurement(i);
 		}
-		pw.close();
 	}
 
-	protected static void loadMeasurement(int id, PrintWriter pw)
-			throws Exception {
+	protected static void loadMeasurement(int id) throws Exception {
 		MeasurementGetResponse get = execute(service.measurements().get(
 				String.valueOf(id)));
 
 		Measurement measurement = get.getResult();
-		if (measurement.getDescription().startsWith("MeasureWorld")) {
+		if (measurement.getDescription().startsWith("MeasureRingNode")) {
 			MeasurementResultResponse resultResp = execute(service
 					.measurements().result(String.valueOf(id)));
 			List<MeasurementResult> results = resultResp.getResult();
 			for (MeasurementResult result : results) {
 
-				List<Section> sections = new ArrayList<Section>();
+				List<TraceData> sections = new ArrayList<TraceData>();
 
 				for (Output output : result.getOutputs()) {
 					if (validStep(output)) {
 						TracerouteOutput to = (TracerouteOutput) output;
 						TracerouteData summary = summarize(to.getData());
-						Section section = new Section();
-						section.toIp = summary.getFrom();
+						TraceData section = new TraceData();
+						section.setToIp(summary.getFrom());
 
-						Section validStart = validStart(sections, summary);
+						TraceData validStart = validStart(sections, summary);
 
 						if (validStart == null) {
-							section.fromIp = result.getFrom();
-							section.rtt = summary.getRoundTripTime();
+							section.setFromIp(result.getFrom());
+							section.setRtt(summary.getRoundTripTime());
 						} else {
-							section.fromIp = validStart.toIp;
-							section.rtt = summary.getRoundTripTime().subtract(
-									validStart.rttFromSource);
+							section.setFromIp(validStart.getToIp());
+							section.setRtt(summary.getRoundTripTime().subtract(
+									validStart.getRttSource()));
 						}
-						section.rttFromSource = summary.getRoundTripTime();
-						section.sourceIp = result.getFrom();
+						section.setRttSource(summary.getRoundTripTime());
+						section.setSourceIp(result.getFrom());
 						sections.add(section);
 					}
 				}
 				// Output section
-				for (Section s : sections) {
-					pw.println(MessageFormat
-							.format("insert into trace_data (source_ip,from_ip,to_ip,rtt,rtt_source) values(''{0}'',''{1}'',''{2}'',{3,number,0.0000},{4,number,0.0000});",
-									s.sourceIp, s.fromIp, s.toIp, s.rtt,
-									s.rttFromSource));
+				for (TraceData td : sections) {
+					traceDataDao.save(td);
 				}
 			}
 		}
 	}
 
-	private static Section validStart(List<Section> exist, TracerouteData data) {
+	private static TraceData validStart(List<TraceData> exist,
+			TracerouteData data) {
 		for (int i = exist.size() - 1; i > 0; i--) {
-			if (exist.get(i).rttFromSource.compareTo(data.getRoundTripTime()) <= 0)
+			if (exist.get(i).getRttSource().compareTo(data.getRoundTripTime()) <= 0)
 				return exist.get(i);
 		}
 		return null;
